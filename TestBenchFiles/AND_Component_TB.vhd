@@ -3,18 +3,18 @@ use ieee.std_logic_1164.all;
 use ieee.std_logic_textio.all;
 use std.textio.all;
 
-entity AND_Gate_TB is
-end entity AND_Gate_TB;
+entity AND_Component_TB is
+end entity AND_Component_TB;
 
-architecture Behavioral of AND_Gate_TB is
+architecture Behavioral of AND_Component_TB is
     -- Component declaration for the AND_Gate module
-    component AND_Gate
+    component AND_Component
         port (
             A       : in  std_logic_vector(7 downto 0);
             B       : in  std_logic_vector(7 downto 0);
             Y       : out std_logic_vector(7 downto 0)
         );
-    end component AND_Gate;
+    end component AND_Component;
 
     -- Signal declarations
     signal A_TB    : std_logic_vector(7 downto 0);
@@ -22,8 +22,8 @@ architecture Behavioral of AND_Gate_TB is
     signal Y_TB    : std_logic_vector(7 downto 0);
 
 begin
-    -- Instantiate the AND_Gate module
-    UUT: AND_Gate
+    -- Instantiate the AND_Component module
+    UUT: AND_Component
         port map (
             A       => A_TB,
             B       => B_TB,
