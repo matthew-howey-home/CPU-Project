@@ -3,12 +3,13 @@ use ieee.std_logic_1164.all;
 
 entity AND_Gate is
     port (
-        A, B: in std_logic;
-        Y: out std_logic
+        A       : in  std_logic_vector(7 downto 0);
+        B       : in  std_logic_vector(7 downto 0);
+        Y	: out std_logic_vector(7 downto 0)
     );
 end entity AND_Gate;
 
-architecture rtl of AND_Gate is
+architecture Behavioral of AND_Gate is
 begin
     Y <= A and B;
-end architecture rtl;
+end architecture Behavioral;

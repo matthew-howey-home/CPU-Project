@@ -1,54 +1,79 @@
-
-library IEEE;
-use IEEE.std_logic_1164.all;
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.std_logic_textio.all;
+use std.textio.all;
 
 entity AND_Gate_TB is
 end entity AND_Gate_TB;
 
-architecture tb_arch of AND_Gate_TB is
-  component AND_Gate
-    port (
-      A, B: in std_logic;
-      Y: out std_logic
-    );
-  end component;
+architecture Behavioral of AND_Gate_TB is
+    -- Component declaration for the AND_Gate module
+    component AND_Gate
+        port (
+            A       : in  std_logic_vector(7 downto 0);
+            B       : in  std_logic_vector(7 downto 0);
+            Y       : out std_logic_vector(7 downto 0)
+        );
+    end component AND_Gate;
 
-  signal A_tb, B_tb: std_logic := '0';
-  signal Y_tb: std_logic;
+    -- Signal declarations
+    signal A_TB    : std_logic_vector(7 downto 0);
+    signal B_TB    : std_logic_vector(7 downto 0);
+    signal Y_TB    : std_logic_vector(7 downto 0);
 
 begin
-  UUT: AND_Gate
-    port map (
-      A => A_tb,
-      B => B_tb,
-      Y => Y_tb
-    );
+    -- Instantiate the AND_Gate module
+    UUT: AND_Gate
+        port map (
+            A       => A_TB,
+            B       => B_TB,
+            Y       => Y_TB
+        );
 
-  stimulus_proc: process
-  begin
-    A_tb <= '0';
-    B_tb <= '0';
-    wait for 10 ns;
-    report "Separate Test Bench! Input: " & std_logic'image(A_tb) & ", " & std_logic'image(B_tb);
-    report "Output: " & std_logic'image(Y_tb);
+    -- Stimulus process to apply test vectors
+    stimulus_proc: process
 
-    A_tb <= '0';
-    B_tb <= '1';
-    wait for 10 ns;
-    report "Input: " & std_logic'image(A_tb) & ", " & std_logic'image(B_tb);
-    report "Hello First! Output: " & std_logic'image(Y_tb);
+    begin
+        -- Test case 1
+        A_TB <= "00000000";
+        B_TB <= "00000000";
+        wait for 10 ns;
 
-    A_tb <= '1';
-    B_tb <= '0';
-    wait for 10 ns;
-    report "Input: " & std_logic'image(A_tb) & ", " & std_logic'image(B_tb);
-    report "Hello First! Output: " & std_logic'image(Y_tb);
+	assert Y_TB = "00000000" report "Y_TB should equal 00000000" severity error;
 
-    A_tb <= '1';
-    B_tb <= '1';
-    wait for 10 ns;
-    report "Input: " & std_logic'image(A_tb) & ", " & std_logic'image(B_tb);
-    report "Hello First! Output: " & std_logic'image(Y_tb);
-    
-  end process;
-end architecture tb_arch;
+        -- Test case 2
+        A_TB <= "11111111";
+        B_TB <= "00000000";
+        wait for 10 ns;
+
+	assert Y_TB = "00000000" report "Y_TB should equal 00000000" severity error;
+
+        -- Test case 3
+        A_TB <= "10101010";
+        B_TB <= "01010101";
+        wait for 10 ns;
+
+	assert Y_TB = "00000000" report "Y_TB should equal 00000000" severity error;
+
+	-- Test case 4
+        A_TB <= "11111111";
+        B_TB <= "11111111";
+        wait for 10 ns;
+
+	assert Y_TB = "11111111" report "Y_TB should equal 11111111" severity error;
+
+	-- Test case 5
+        A_TB <= "10110101";
+        B_TB <= "00101101";
+        wait for 10 ns;
+
+	assert Y_TB = "00100101" report "Y_TB should equal 00100101" severity error;
+
+        -- Add more test cases here if needed
+
+        -- End the simulation
+        wait;
+    end process stimulus_proc;
+
+end architecture Behavioral;
+
