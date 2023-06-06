@@ -7,7 +7,7 @@ entity AND_Component_TB is
 end entity AND_Component_TB;
 
 architecture Behavioral of AND_Component_TB is
-    -- Component declaration for the AND_Gate module
+    -- Component declaration for the AND_Component module
     component AND_Component
         port (
             A       : in  std_logic_vector(7 downto 0);
