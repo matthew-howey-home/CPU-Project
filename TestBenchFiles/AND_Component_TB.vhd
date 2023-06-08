@@ -34,40 +34,47 @@ begin
     stimulus_proc: process
 
     begin
+	report "Running Tests for AND Component";
+
         -- Test case 1
         A_TB <= "00000000";
         B_TB <= "00000000";
         wait for 10 ns;
 
-	assert Y_TB = "00000000" report "Y_TB should equal 00000000" severity error;
+	report "Running Test case 1";
+	assert Y_TB = "00000000" report "Test 1: Y_TB should equal 00000000" severity error;
 
         -- Test case 2
         A_TB <= "11111111";
         B_TB <= "00000000";
         wait for 10 ns;
 
-	assert Y_TB = "00000000" report "Y_TB should equal 00000000" severity error;
+	report "Running Test case 2";
+	assert Y_TB = "00000000" report "Test 2: Y_TB should equal 00000000" severity error;
 
         -- Test case 3
         A_TB <= "10101010";
         B_TB <= "01010101";
         wait for 10 ns;
 
-	assert Y_TB = "00000000" report "Y_TB should equal 00000000" severity error;
+	report "Running Test case 3";
+	assert Y_TB = "00000000" report "Test 3: Y_TB should equal 00000000" severity error;
 
 	-- Test case 4
         A_TB <= "11111111";
         B_TB <= "11111111";
         wait for 10 ns;
 
-	assert Y_TB = "11111111" report "Y_TB should equal 11111111" severity error;
+	report "Running Test case 4";
+	assert Y_TB = "11111111" report "Test 4: Y_TB should equal 11111111" severity error;
 
 	-- Test case 5
         A_TB <= "10110101";
         B_TB <= "00101101";
         wait for 10 ns;
 
-	assert Y_TB = "00100101" report "Y_TB should equal 00100101" severity error;
+	report "Running Test case 5";
+	assert Y_TB = "00100101" report "Test 5: Y_TB should equal 00100101" severity error;
 
         -- Add more test cases here if needed
 

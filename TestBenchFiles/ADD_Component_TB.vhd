@@ -40,12 +40,15 @@ begin
     stimulus_proc: process
 
     begin
+	report "Running Tests for ADD Component";
+
         -- Test case 1
 	CIN_TB <= '0';
         A_TB <= "00101011";
         B_TB <= "11011010";
         wait for 10 ns;
-
+	
+	report "Running Test case 1";
 	assert SUM_TB = "00000101" report "Test 1: SUM_TB should equal 00000101" severity error;
 	assert COUT_TB = '1' report "COUT_TB should equal 1" severity error;
 
@@ -55,6 +58,7 @@ begin
         B_TB <= "01100101";
         wait for 10 ns;
 
+	report "Running Test case 2";
 	assert SUM_TB = "00000011" report "Test 2: SUM_TB should equal 00000011" severity error;
 	assert COUT_TB = '1' report "COUT_TB should equal 1" severity error;
 
@@ -65,6 +69,7 @@ begin
         B_TB <= "00001111";
         wait for 10 ns;
 
+	report "Running Test case 3";
 	assert SUM_TB = "11111111" report "Test 3: SUM_TB should equal 11111111" severity error;
 	assert COUT_TB = '0' report "COUT_TB should equal 0" severity error;
 
@@ -75,6 +80,7 @@ begin
         B_TB <= "10101010";
         wait for 10 ns;
 
+	report "Running Test case 4";
 	assert SUM_TB = "00000000" report "Test 4: SUM_TB should equal 00000000" severity error;
 	assert COUT_TB = '1' report "COUT_TB should equal 1" severity error;
 
@@ -85,6 +91,7 @@ begin
         B_TB <= "11111111";
         wait for 10 ns;
 
+	report "Running Test case 5";
 	assert SUM_TB = "11111110" report "Test 5: SUM_TB should equal 11111110" severity error;
 	assert COUT_TB = '1' report "COUT_TB should equal 1" severity error;
 

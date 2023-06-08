@@ -35,11 +35,15 @@ begin
     stimulus_proc: process
 
     begin
+	
+	report "Running Tests for OR Component";
+
         -- Test case 1
         A_TB <= "00000000";
         B_TB <= "00000000";
         wait for 10 ns;
 
+	report "Running Test case 1";
 	assert Y_TB = "00000000" report "Y_TB should equal 00000000" severity error;
 
         -- Test case 2
@@ -47,6 +51,7 @@ begin
         B_TB <= "00000000";
         wait for 10 ns;
 
+	report "Running Test case 2";
 	assert Y_TB = "11111111" report "Y_TB should equal 11111111" severity error;
 
         -- Test case 3
@@ -54,6 +59,7 @@ begin
         B_TB <= "01010101";
         wait for 10 ns;
 
+	report "Running Test case 3";
 	assert Y_TB = "11111111" report "Y_TB should equal 11111111" severity error;
 
 	-- Test case 4
@@ -61,6 +67,7 @@ begin
         B_TB <= "11111111";
         wait for 10 ns;
 
+	report "Running Test case 4";
 	assert Y_TB = "11111111" report "Y_TB should equal 11111111" severity error;
 
 	-- Test case 5
@@ -68,6 +75,7 @@ begin
         B_TB <= "00101101";
         wait for 10 ns;
 
+	report "Running Test case 5";
 	assert Y_TB = "10111101" report "Y_TB should equal 10111101" severity error;
 
         -- Add more test cases here if needed
