@@ -19,21 +19,21 @@ architecture Behavioral of ADD_Component_TB is
     end component ADD_Component;
 
     -- Signal declarations
-    signal CIN_TB: std_logic;
-    signal A_TB    : std_logic_vector(7 downto 0);
-    signal B_TB    : std_logic_vector(7 downto 0);
-    signal SUM_TB    : std_logic_vector(7 downto 0);
-    signal COUT_TB : std_logic;
+    signal cin_tb: std_logic;
+    signal a_tb   : std_logic_vector(7 downto 0);
+    signal b_tb    : std_logic_vector(7 downto 0);
+    signal sum_tb    : std_logic_vector(7 downto 0);
+    signal cout_tb : std_logic;
 
 begin
     -- Instantiate the ADD_Component module
     UUT: ADD_Component
         port map (
-	    cin     => CIN_TB,
-            a       => A_TB,
-            b       => B_TB,
-            sum       => SUM_TB,
-            cout    => COUT_TB
+	    cin     => cin_tb,
+            a       => a_tb,
+            b       => b_tb,
+            sum       => sum_tb,
+            cout    => cout_tb
         );
 
     -- Stimulus process to apply test vectors
@@ -43,57 +43,57 @@ begin
 	report "Running Tests for ADD Component";
 
         -- Test case 1
-	CIN_TB <= '0';
-        A_TB <= "00101011";
-        B_TB <= "11011010";
+	cin_tb <= '0';
+        a_tb <= "00101011";
+        b_tb <= "11011010";
         wait for 10 ns;
 	
 	report "Running Test case 1";
-	assert SUM_TB = "00000101" report "Test 1: SUM_TB should equal 00000101" severity error;
-	assert COUT_TB = '1' report "COUT_TB should equal 1" severity error;
+	assert sum_tb = "00000101" report "Test 1: SUM_TB should equal 00000101" severity error;
+	assert cout_tb = '1' report "COUT_TB should equal 1" severity error;
 
         -- Test case 2
-	CIN_TB <= '1';
-        A_TB <= "10011101";
-        B_TB <= "01100101";
+	cin_tb <= '1';
+        a_tb <= "10011101";
+        b_tb <= "01100101";
         wait for 10 ns;
 
 	report "Running Test case 2";
-	assert SUM_TB = "00000011" report "Test 2: SUM_TB should equal 00000011" severity error;
-	assert COUT_TB = '1' report "COUT_TB should equal 1" severity error;
+	assert sum_tb = "00000011" report "Test 2: SUM_TB should equal 00000011" severity error;
+	assert cout_tb = '1' report "COUT_TB should equal 1" severity error;
 
 
         -- Test case 3
-	CIN_TB <= '0';
-        A_TB <= "11110000";
-        B_TB <= "00001111";
+	cin_tb <= '0';
+        a_tb <= "11110000";
+        b_tb <= "00001111";
         wait for 10 ns;
 
 	report "Running Test case 3";
-	assert SUM_TB = "11111111" report "Test 3: SUM_TB should equal 11111111" severity error;
-	assert COUT_TB = '0' report "COUT_TB should equal 0" severity error;
+	assert sum_tb = "11111111" report "Test 3: SUM_TB should equal 11111111" severity error;
+	assert cout_tb = '0' report "COUT_TB should equal 0" severity error;
 
 
 	-- Test case 4
-	CIN_TB <= '1';
-        A_TB <= "01010101";
-        B_TB <= "10101010";
+	cin_tb <= '1';
+        a_tb <= "01010101";
+        b_tb <= "10101010";
         wait for 10 ns;
 
 	report "Running Test case 4";
-	assert SUM_TB = "00000000" report "Test 4: SUM_TB should equal 00000000" severity error;
-	assert COUT_TB = '1' report "COUT_TB should equal 1" severity error;
+	assert sum_tb = "00000000" report "Test 4: SUM_TB should equal 00000000" severity error;
+	assert cout_tb = '1' report "COUT_TB should equal 1" severity error;
 
 
 	-- Test case 5
-	CIN_TB <= '0';
-        A_TB <= "11111111";
-        B_TB <= "11111111";
+	cin_tb <= '0';
+        a_tb <= "11111111";
+        b_tb <= "11111111";
         wait for 10 ns;
 
 	report "Running Test case 5";
-	assert SUM_TB = "11111110" report "Test 5: SUM_TB should equal 11111110" severity error;
-	assert COUT_TB = '1' report "COUT_TB should equal 1" severity error;
+	assert sum_tb = "11111110" report "Test 5: SUM_TB should equal 11111110" severity error;
+	assert cout_tb = '1' report "COUT_TB should equal 1" severity error;
 
 
         -- Add more test cases here if needed
