@@ -46,8 +46,8 @@ begin
         wait for 10 ns;
 
 	report "Running Test case 1";
-	assert diff_tb = "00000000" report "Test 1: Difference_TB should equal 00000000" severity error;
-	assert borrow_tb = '0' report "Test 1: Borrow_TB should equal 0" severity error;
+	assert diff_tb = "00000000" report "Test 1: diff_tb should equal 00000000" severity error;
+	assert borrow_tb = '0' report "Test 1: borrow_tb should equal 0" severity error;
 
         -- End the simulation
         wait;
