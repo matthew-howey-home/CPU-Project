@@ -49,6 +49,42 @@ begin
 	assert diff_tb = "00000000" report "Test 1: diff_tb should equal 00000000" severity error;
 	assert borrow_tb = '0' report "Test 1: borrow_tb should equal 0" severity error;
 
+	-- Test case 2
+        a_tb <= "11111111";
+        b_tb <= "00000000";
+        wait for 10 ns;
+
+	report "Running Test case 2";
+	assert diff_tb = "11111111" report "Test 2: diff_tb should equal 11111111" severity error;
+	assert borrow_tb = '0' report "Test 2: borrow_tb should equal 0" severity error;
+
+	-- Test case 3
+        a_tb <= "00000000";
+        b_tb <= "00000001";
+        wait for 10 ns;
+
+	report "Running Test case 3";
+	assert diff_tb = "11111111" report "Test 3: diff_tb should equal 11111111" severity error;
+	assert borrow_tb = '1' report "Test 3: borrow_tb should equal 1" severity error;
+
+	-- Test case 4
+        a_tb <= "01110001";
+        b_tb <= "01011000";
+        wait for 10 ns;
+
+	report "Running Test case 4";
+	assert diff_tb = "00011001" report "Test 4: diff_tb should equal 00011001" severity error;
+	assert borrow_tb = '0' report "Test 4: borrow_tb should equal 0" severity error;
+
+	-- Test case 5
+        a_tb <= "00001100";
+        b_tb <= "11001001";
+        wait for 10 ns;
+
+	report "Running Test case 5";
+	assert diff_tb = "01000011" report "Test 5: diff_tb should equal 01000011" severity error;
+	assert borrow_tb = '1' report "Test 5: borrow_tb should equal 1" severity error;
+
         -- End the simulation
         wait;
     end process stimulus_proc;
