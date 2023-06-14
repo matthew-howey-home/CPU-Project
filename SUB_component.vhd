@@ -4,18 +4,20 @@ use ieee.std_logic_1164.all;
 entity SUB_Component is
   port (
     a, b: in std_logic_vector(7 downto 0);  -- Inputs
+    borrow_in: in std_logic; -- Borrow input
     diff: out std_logic_vector(7 downto 0);  -- Output
-    borrow: out std_logic  -- Borrow output
+    borrow_out: out std_logic  -- Borrow output
   );
 end entity SUB_Component;
 
 architecture Behavioral of SUB_Component is
   signal sub: std_logic_vector(7 downto 0);
   signal not_b: std_logic_vector(7 downto 0);
-  signal cin: std_logic;
+  signal not_borrow_in: std_logic;
   signal c : std_logic_vector(8 downto 0);
 begin
   not_b <= not b;
+  not_borrow_in <= not borrow_in;
 
   -- Subtractor
   FA_0: entity work.FullAdder
@@ -23,7 +25,7 @@ begin
 		-- into FullAdder
 		a => a(0),
 		b => not_b(0),
-		cin => '1',
+		cin => not_borrow_in,
 		-- out of FullAdder
 		sum => sub(0),
 		cout => c(1)
@@ -107,6 +109,6 @@ begin
 	);
 
   diff <= sub;
-  borrow <= not c(8);
+  borrow_out <= not c(8);
 end architecture Behavioral;
 
