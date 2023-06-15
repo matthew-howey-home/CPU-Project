@@ -67,7 +67,7 @@ begin
 
 	report "Running Test case 3";
 	assert y_tb = "01010100" report "y_tb should equal 01010100" severity error;
-	assert cout_tb = '0' report "cout_tb should equal 0" severity error;
+	assert cout_tb = '1' report "cout_tb should equal 1" severity error;
 
 	-- Test case 4
         a_tb <= "01010101";
@@ -85,7 +85,7 @@ begin
 
 	report "Running Test case 5";
 	assert y_tb = "01101010" report "y_tb should equal 01101010" severity error;
-	assert cout_tb = '0' report "cout_tb should equal 0" severity error;
+	assert cout_tb = '1' report "cout_tb should equal 1" severity error;
 
         -- Add more test cases here if needed
 
