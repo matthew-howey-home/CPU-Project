@@ -46,6 +46,16 @@ begin
 	
 	report "Running Test case 1";
 	assert y_tb = "00101011" report "Test 1: y_tb should equal 00101011" severity error;
+
+	-- Test case 2
+        a_tb <= "00101011";
+	-- enable is active low
+        en_tb <= '1';
+        wait for 10 ns;
+	
+	report "Running Test case 2";
+	assert y_tb = "ZZZZZZZZ" report "Test 1: y_tb should equal ZZZZZZZZ" severity error;
+
         -- Add more test cases here if needed
 
         -- End the simulation
