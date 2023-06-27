@@ -53,16 +53,25 @@ begin
     stimulus_proc: process
 
     begin
-	report "Running Tests for AND Component";
+	report "Running Tests for AND Component - opcode 000";
 
-        -- Test case 0
         opcode_tb <= "000";
 	a_tb <= "11010110";
 	b_tb <= "00110011";
         wait for 10 ns;
 
-	report "Running Test case 1";
+	report "Running Test case 1 for AND Component - opcode 001";
 	assert y_tb = "00010010" report "Test 1: y_tb should equal 00010010" severity error;
+
+	report "Running Tests for OR Component";
+
+        opcode_tb <= "001";
+	a_tb <= "11010110";
+	b_tb <= "00110011";
+        wait for 10 ns;
+
+	report "Running Test case 1 for OR Component";
+	assert y_tb = "11110111" report "Test 1: y_tb should equal 11110111" severity error;
 
         -- End the simulation
         wait;

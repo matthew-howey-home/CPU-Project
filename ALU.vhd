@@ -37,6 +37,7 @@ architecture Behavioral of ALU is
 	signal not_control_7: std_logic;
 
 	signal and_output: std_logic_vector(7 downto 0);
+	signal or_output: std_logic_vector(7 downto 0);
 	
 begin
 	decoder: entity work.three_bit_decoder
@@ -73,6 +74,20 @@ begin
 		port map (
 			a => and_output,
 			en => not_control_0,
+			y => y
+		);
+
+	or_component: entity work.OR_Component
+		port map (
+			a => a,
+			b => b,
+			y => or_output
+		);
+
+	or_tristate: entity work.Tristate_Buffer
+		port map (
+			a => or_output,
+			en => not_control_1,
 			y => y
 		);
 
