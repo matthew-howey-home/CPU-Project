@@ -79,7 +79,6 @@ begin
 	-- Set UUT1 to enable
 	a_tb_1 <= "11110000";
         en_tb_1 <= '0';
-        wait for 10 ns;
 
 	-- Set UUT2 to not enabled
 	a_tb_2 <= "00001111";
@@ -95,7 +94,6 @@ begin
 	-- Set UUT1 to not enabled
 	a_tb_1 <= "11110000";
         en_tb_1 <= '1';
-        wait for 10 ns;
 
 	-- Set UUT2 to enabled
 	a_tb_2 <= "00001111";
