@@ -4,7 +4,6 @@ use IEEE.STD_LOGIC_1164.all;
 
 entity Tristate_Buffer is
     Port ( 
-           -- 4 input / output buffer with one enable
            a  : in  std_logic_vector(7 downto 0);
 	   -- enable is active low
            en  : in  std_logic;
