@@ -63,6 +63,8 @@ begin
 	not_control_6 <= not control_6;
 	not_control_7 <= not control_6;
 	
+	-- AND connections (opcode 0)--------------------
+
 	and_component: entity work.AND_Component
 		port map (
 			a => a,
@@ -76,6 +78,22 @@ begin
 			en => not_control_0,
 			y => y
 		);
+	
+	and_one_bit_tristate_cout: entity work.One_Bit_Tristate_Buffer
+		port map (
+			a => '0',
+			en => not_control_0,
+			y => cout
+		);
+
+	and_one_bit_tristate_negative_out: entity work.One_Bit_Tristate_Buffer
+		port map (
+			a => '0',
+			en => not_control_0,
+			y => negative_out
+		);
+
+	-- OR connections (opcode 1) --------------------
 
 	or_component: entity work.OR_Component
 		port map (
@@ -89,6 +107,20 @@ begin
 			a => or_output,
 			en => not_control_1,
 			y => y
+		);
+
+	or_one_bit_tristate_cout: entity work.One_Bit_Tristate_Buffer
+		port map (
+			a => '0',
+			en => not_control_1,
+			y => cout
+		);
+
+	or_and_one_bit_tristate_negative_out: entity work.One_Bit_Tristate_Buffer
+		port map (
+			a => '0',
+			en => not_control_1,
+			y => negative_out
 		);
 
     

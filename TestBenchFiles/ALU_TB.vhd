@@ -62,6 +62,8 @@ begin
 
 	report "Running Test case 1 for AND Component - opcode 001";
 	assert y_tb = "00010010" report "Test 1: y_tb should equal 00010010" severity error;
+	assert cout_tb = '0' report "Test 1: cout_tb should equal 0" severity error;
+	assert negative_out = '0' report "Test 1: negative_out should equal 0" severity error;
 
 	report "Running Tests for OR Component";
 
@@ -70,8 +72,10 @@ begin
 	b_tb <= "00110011";
         wait for 10 ns;
 
-	report "Running Test case 1 for OR Component";
+	report "Running Test case 2 for OR Component";
 	assert y_tb = "11110111" report "Test 1: y_tb should equal 11110111" severity error;
+	assert cout_tb = '0' report "Test 2: cout_tb should equal 0" severity error;
+	assert negative_out = '0' report "Test 2: negative_out should equal 0" severity error;
 
         -- End the simulation
         wait;
