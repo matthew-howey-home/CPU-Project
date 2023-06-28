@@ -85,6 +85,17 @@ begin
 	assert cout_tb = '0' report "Test 2: cout_tb should equal 0" severity error;
 	assert negative_out_tb = '0' report "Test 3: negative_out should equal 0" severity error;
 
+	report "Running Tests for XOR Component - opcode 011";
+
+        opcode_tb <= "011";
+	a_tb <= "11010110";
+	b_tb <= "00110011";
+        wait for 10 ns;
+
+	assert y_tb = "11100101" report "Test 1: y_tb should equal 11100101" severity error;
+	assert cout_tb = '0' report "Test 2: cout_tb should equal 0" severity error;
+	assert negative_out_tb = '0' report "Test 3: negative_out should equal 0" severity error;
+
         -- End the simulation
         wait;
     end process stimulus_proc;

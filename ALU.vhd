@@ -39,6 +39,7 @@ architecture Behavioral of ALU is
 	signal and_output: std_logic_vector(7 downto 0);
 	signal or_output: std_logic_vector(7 downto 0);
 	signal not_output: std_logic_vector(7 downto 0);
+	signal xor_output: std_logic_vector(7 downto 0);
 
 	
 begin
@@ -154,5 +155,34 @@ begin
 			y => negative_out
 		);
 
+	-- XOR connections (opcode 3) --------------------
+
+	xor_component: entity work.XOR_Component
+		port map (
+			a => a,
+			b => b,
+			y => xor_output
+		);
+
+	xor_tristate: entity work.Tristate_Buffer
+		port map (
+			a => xor_output,
+			en => not_control_3,
+			y => y
+		);
+
+	xor_one_bit_tristate_cout: entity work.One_Bit_Tristate_Buffer
+		port map (
+			a => '0',
+			en => not_control_3,
+			y => cout
+		);
+
+	xor_one_bit_tristate_negative_out: entity work.One_Bit_Tristate_Buffer
+		port map (
+			a => '0',
+			en => not_control_3,
+			y => negative_out
+		);
     
 end architecture Behavioral;
