@@ -38,6 +38,8 @@ architecture Behavioral of ALU is
 
 	signal and_output: std_logic_vector(7 downto 0);
 	signal or_output: std_logic_vector(7 downto 0);
+	signal not_output: std_logic_vector(7 downto 0);
+
 	
 begin
 	decoder: entity work.three_bit_decoder
@@ -120,6 +122,35 @@ begin
 		port map (
 			a => '0',
 			en => not_control_1,
+			y => negative_out
+		);
+
+	-- NOT connections (opcode 2) --------------------
+
+	not_component: entity work.NOT_Component
+		port map (
+			a => a,
+			y => not_output
+		);
+
+	not_tristate: entity work.Tristate_Buffer
+		port map (
+			a => not_output,
+			en => not_control_2,
+			y => y
+		);
+
+	not_one_bit_tristate_cout: entity work.One_Bit_Tristate_Buffer
+		port map (
+			a => '0',
+			en => not_control_2,
+			y => cout
+		);
+
+	not_one_bit_tristate_negative_out: entity work.One_Bit_Tristate_Buffer
+		port map (
+			a => '0',
+			en => not_control_2,
 			y => negative_out
 		);
 
