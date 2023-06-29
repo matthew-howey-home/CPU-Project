@@ -41,6 +41,7 @@ architecture Behavioral of ALU is
 	signal not_output: std_logic_vector(7 downto 0);
 	signal xor_output: std_logic_vector(7 downto 0);
 	signal shr_output: std_logic_vector(7 downto 0);
+	signal shl_output: std_logic_vector(7 downto 0);
 
 	
 begin
@@ -212,6 +213,35 @@ begin
 		port map (
 			a => '0',
 			en => not_control_4,
+			y => negative_out
+		);
+
+	-- SHL connections (opcode 5) --------------------
+
+	shl_component: entity work.SHL_Component
+		port map (
+			a => a,
+			y => shl_output
+		);
+
+	shl_tristate: entity work.Tristate_Buffer
+		port map (
+			a => shl_output,
+			en => not_control_5,
+			y => y
+		);
+
+	shl_one_bit_tristate_cout: entity work.One_Bit_Tristate_Buffer
+		port map (
+			a => '0',
+			en => not_control_5,
+			y => cout
+		);
+
+	shl_one_bit_tristate_negative_out: entity work.One_Bit_Tristate_Buffer
+		port map (
+			a => '0',
+			en => not_control_5,
 			y => negative_out
 		);
     
