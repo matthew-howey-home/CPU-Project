@@ -96,6 +96,16 @@ begin
 	assert cout_tb = '0' report "Test 2: cout_tb should equal 0" severity error;
 	assert negative_out_tb = '0' report "Test 3: negative_out should equal 0" severity error;
 
+	report "Running Tests for SHR Component - opcode 100";
+
+        opcode_tb <= "100";
+	a_tb <= "11010110";
+        wait for 10 ns;
+
+	assert y_tb = "01101011" report "Test 1: y_tb should equal 01101011" severity error;
+	assert cout_tb = '0' report "Test 2: cout_tb should equal 0" severity error;
+	assert negative_out_tb = '0' report "Test 3: negative_out should equal 0" severity error;
+
         -- End the simulation
         wait;
     end process stimulus_proc;
