@@ -116,6 +116,18 @@ begin
 	assert cout_tb = '0' report "Test 2: cout_tb should equal 0" severity error;
 	assert negative_out_tb = '0' report "Test 3: negative_out should equal 0" severity error;
 
+	report "Running Tests for ADD Component - opcode 110";
+
+        opcode_tb <= "110";
+	a_tb <= "11010110";
+	b_tb <= "00110011";
+	cin_tb <= '1';
+        wait for 10 ns;
+
+	assert y_tb = "00001010" report "Test 1: y_tb should equal 00001010" severity error;
+	assert cout_tb = '1' report "Test 2: cout_tb should equal 1" severity error;
+	assert negative_out_tb = '0' report "Test 3: negative_out should equal 0" severity error;
+
 
         -- End the simulation
         wait;
