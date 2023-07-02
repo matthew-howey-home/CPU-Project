@@ -1,92 +1,99 @@
 
+-- ***** ALU 8 BIT ADD COMPONENT *****
+
 library ieee;
 use ieee.std_logic_1164.all;
 
+-- INPUTS AND OUTPUTS OF ADD COMPONENT
 entity ADD_Component is
     port (
-        a : in std_logic_vector(7 downto 0);
-        b : in std_logic_vector(7 downto 0);
-        cin : in std_logic;
-        sum : out std_logic_vector(7 downto 0);
-        cout : out std_logic
+        input_1		: in std_logic_vector(7 downto 0);
+        input_2		: in std_logic_vector(7 downto 0);
+        carry_in	: in std_logic;
+        output		: out std_logic_vector(7 downto 0);
+        carry_out	: out std_logic
     );
 end entity ADD_Component;
 
 architecture Behavioral of ADD_Component is
-    signal s : std_logic_vector(7 downto 0);
-    signal c : std_logic_vector(8 downto 0);
+    signal output_internal 	: std_logic_vector(7 downto 0);
+    signal carry_out_internal 	: std_logic_vector(8 downto 0);
 begin
+    -- LEFT SIDE SHOWS ONE_BIT_ADDER INPUTS/OUTPUTS
+    -- RIGHT SIDE SHOWS ADD_Component Internal Signals
     -- First Full Adder
-    FA0: entity work.FullAdder
+    FA0: entity work.One_Bit_Adder
         port map (
-            a => a(0),
-            b => b(0),
-            cin => cin,
-            sum => s(0),
-            cout => c(1)
+            input_1	=> input_1(0),
+            input_2 	=> input_2(0),
+            carry_in	=> carry_in,
+            output	=> output_internal(0),
+            carry_out	=> carry_out_internal(1)
         );
 
     -- Intermediate Full Adders
-    FA1: entity work.FullAdder
+    FA1: entity work.One_Bit_Adder
         port map (
-            a => a(1),
-            b => b(1),
-            cin => c(1),
-            sum => s(1),
-            cout => c(2)
+            input_1	=> input_1(1),
+            input_2 	=> input_2(1),
+            carry_in	=> carry_out_internal(1),
+            output	=> output_internal(1),
+            carry_out	=> carry_out_internal(2)
         );
-    FA2: entity work.FullAdder
+    FA2: entity work.One_Bit_Adder
         port map (
-            a => a(2),
-            b => b(2),
-            cin => c(2),
-            sum => s(2),
-            cout => c(3)
+            input_1	=> input_1(2),
+            input_2 	=> input_2(2),
+            carry_in	=> carry_out_internal(2),
+            output	=> output_internal(2),
+            carry_out	=> carry_out_internal(3)
         );
-    FA3: entity work.FullAdder
+    FA3: entity work.One_Bit_Adder
         port map (
-            a => a(3),
-            b => b(3),
-            cin => c(3),
-            sum => s(3),
-            cout => c(4)
+            input_1	=> input_1(3),
+            input_2 	=> input_2(3),
+            carry_in	=> carry_out_internal(3),
+            output	=> output_internal(3),
+            carry_out	=> carry_out_internal(4)
         );
-    FA4: entity work.FullAdder
+    FA4: entity work.One_Bit_Adder
         port map (
-            a => a(4),
-            b => b(4),
-            cin => c(4),
-            sum => s(4),
-            cout => c(5)
+            input_1	=> input_1(4),
+            input_2 	=> input_2(4),
+            carry_in	=> carry_out_internal(4),
+            output	=> output_internal(4),
+            carry_out	=> carry_out_internal(5)
         );
-    FA5: entity work.FullAdder
+    FA5: entity work.One_Bit_Adder
         port map (
-            a => a(5),
-            b => b(5),
-            cin => c(5),
-            sum => s(5),
-            cout => c(6)
+            input_1	=> input_1(5),
+            input_2 	=> input_2(5),
+            carry_in	=> carry_out_internal(5),
+            output	=> output_internal(5),
+            carry_out	=> carry_out_internal(6)
         );
-    FA6: entity work.FullAdder
+    FA6: entity work.One_Bit_Adder
         port map (
-            a => a(6),
-            b => b(6),
-            cin => c(6),
-            sum => s(6),
-            cout => c(7)
+            input_1	=> input_1(6),
+            input_2 	=> input_2(6),
+            carry_in	=> carry_out_internal(6),
+            output	=> output_internal(6),
+            carry_out	=> carry_out_internal(7)
         );
 
     -- Last Full Adder
-    FA7: entity work.FullAdder
+    FA7: entity work.One_Bit_Adder
         port map (
-            a => a(7),
-            b => b(7),
-            cin => c(7),
-            sum => s(7),
-            cout => c(8)
+            input_1	=> input_1(7),
+            input_2 	=> input_2(7),
+            carry_in	=> carry_out_internal(7),
+            output	=> output_internal(7),
+            carry_out	=> carry_out_internal(8)
         );
-
+   
+    -- LEFT SIDE SHOWS FINAL OUTPUTS OF ADD COMPONENT
+    -- RIGHT SIDE SHOWS INTERNAL SIGNALS OF ADD COMPONENT
     -- Output
-    sum <= s;
-    cout <= c(8);
+    output 	<= output_internal;
+    carry_out	<= carry_out_internal(8);
 end architecture Behavioral;
