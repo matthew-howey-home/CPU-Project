@@ -1,114 +1,119 @@
 library ieee;
 use ieee.std_logic_1164.all;
 
-entity SUB_Component is
+entity SUB_component is
   port (
-    a, b: in std_logic_vector(7 downto 0);  -- Inputs
-    borrow_in: in std_logic; -- Borrow input
-    diff: out std_logic_vector(7 downto 0);  -- Output
-    borrow_out: out std_logic  -- Borrow output
+    -- Inputs
+    input_1	: in std_logic_vector(7 downto 0);
+    input_2	: in std_logic_vector(7 downto 0); 
+    borrow_in	: in std_logic;
+    
+    -- Outputs
+    output 	: out std_logic_vector(7 downto 0);  
+    borrow_out	: out std_logic
   );
-end entity SUB_Component;
+end entity SUB_component;
 
-architecture Behavioral of SUB_Component is
-  signal sub: std_logic_vector(7 downto 0);
-  signal not_b: std_logic_vector(7 downto 0);
-  signal not_borrow_in: std_logic;
-  signal c : std_logic_vector(8 downto 0);
+architecture Behavioral of SUB_component is
+  signal output_internal	: std_logic_vector(7 downto 0);
+  signal not_input_2		: std_logic_vector(7 downto 0);
+  signal not_borrow_in		: std_logic;
+  signal carry_out_internal	: std_logic_vector(8 downto 0);
+
 begin
-  not_b <= not b;
+  not_input_2	<= not input_2;
   not_borrow_in <= not borrow_in;
 
-  -- Subtractor
-  FA_0: entity work.FullAdder
+  -- output_internaltractor
+  FA_0: entity work.One_Bit_Adder
 	port map (
-		-- into FullAdder
-		a => a(0),
-		b => not_b(0),
-		cin => not_borrow_in,
-		-- out of FullAdder
-		sum => sub(0),
-		cout => c(1)
+		-- into One_Bit_Adder
+		input_1		=> input_1(0),
+		input_2		=> not_input_2(0),
+		carry_in	=> not_borrow_in,
+		-- out of One_Bit_Adder
+		output		=> output_internal(0),
+		carry_out	=> carry_out_internal(1)
   	);
 
-  FA_1: entity work.FullAdder
+  FA_1: entity work.One_Bit_Adder
 	port map (
-		-- into FullAdder
-		a => a(1),
-		b => not_b(1),
-		cin => c(1),
-		-- out of FullAdder
-		sum => sub(1),
-		cout => c(2)
+		-- into One_Bit_Adder
+		input_1		=> input_1(1),
+		input_2		=> not_input_2(1),
+		carry_in	=> carry_out_internal(1),
+		-- out of One_Bit_Adder
+		output		=> output_internal(1),
+		carry_out	=> carry_out_internal(2)
 	);
 
-  FA_2: entity work.FullAdder
+  FA_2: entity work.One_Bit_Adder
 	port map (
-		-- into FullAdder
-		a => a(2),
-		b => not_b(2),
-		cin => c(2),
-		-- out of FullAdder
-		sum => sub(2),
-		cout => c(3)
+		-- into One_Bit_Adder
+		input_1		=> input_1(2),
+		input_2		=> not_input_2(2),
+		carry_in	=> carry_out_internal(2),
+		-- out of One_Bit_Adder
+		output		=> output_internal(2),
+		carry_out	=> carry_out_internal(3)
 	);
 
-  FA_3: entity work.FullAdder
+  FA_3: entity work.One_Bit_Adder
 	port map (
-		-- into FullAdder
-		a => a(3),
-		b => not_b(3),
-		cin => c(3),
-		-- out of FullAdder
-		sum => sub(3),
-		cout => c(4)
+		-- into One_Bit_Adder
+		input_1		=> input_1(3),
+		input_2		=> not_input_2(3),
+		carry_in	=> carry_out_internal(3),
+		-- out of One_Bit_Adder
+		output		=> output_internal(3),
+		carry_out	=> carry_out_internal(4)
 	);
 
-  FA_4: entity work.FullAdder
+  FA_4: entity work.One_Bit_Adder
 	port map (
-		-- into FullAdder
-		a => a(4),
-		b => not_b(4),
-		cin => c(4),
-		-- out of FullAdder
-		sum => sub(4),
-		cout => c(5)
+		-- into One_Bit_Adder
+		input_1		=> input_1(4),
+		input_2		=> not_input_2(4),
+		carry_in	=> carry_out_internal(4),
+		-- out of One_Bit_Adder
+		output		=> output_internal(4),
+		carry_out	=> carry_out_internal(5)
 	);
 
-  FA_5: entity work.FullAdder
+  FA_5: entity work.One_Bit_Adder
 	port map (
-		-- into FullAdder
-		a => a(5),
-		b => not_b(5),
-		cin => c(5),
-		-- out of FullAdder
-		sum => sub(5),
-		cout => c(6)
+		-- into One_Bit_Adder
+		input_1		=> input_1(5),
+		input_2		=> not_input_2(5),
+		carry_in	=> carry_out_internal(5),
+		-- out of One_Bit_Adder
+		output		=> output_internal(5),
+		carry_out	=> carry_out_internal(6)
 	);
 
-  FA_6: entity work.FullAdder
+  FA_6: entity work.One_Bit_Adder
 	port map (
-		-- into FullAdder
-		a => a(6),
-		b => not_b(6),
-		cin => c(6),
-		-- out of FullAdder
-		sum => sub(6),
-		cout => c(7)
+		-- into One_Bit_Adder
+		input_1		=> input_1(6),
+		input_2		=> not_input_2(6),
+		carry_in	=> carry_out_internal(6),
+		-- out of One_Bit_Adder
+		output		=> output_internal(6),
+		carry_out	=> carry_out_internal(7)
 	);
 
-  FA_7: entity work.FullAdder
+  FA_7: entity work.One_Bit_Adder
 	port map (
-		-- into FullAdder
-		a => a(7),
-		b => not_b(7),
-		cin => c(7),
-		-- out of FullAdder
-		sum => sub(7),
-		cout => c(8)
+		-- into One_Bit_Adder
+		input_1		=> input_1( 7),
+		input_2		=> not_input_2(7),
+		carry_in	=> carry_out_internal(7),
+		-- out of One_Bit_Adder
+		output		=> output_internal(7),
+		carry_out	=> carry_out_internal(8)
 	);
 
-  diff <= sub;
-  borrow_out <= not c(8);
+  output 	<= output_internal;
+  borrow_out	<= not carry_out_internal(8);
 end architecture Behavioral;
 
