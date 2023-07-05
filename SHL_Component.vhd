@@ -4,19 +4,19 @@ use ieee.std_logic_1164.all;
 
 entity SHL_Component is
     port (
-        a : in std_logic_vector(7 downto 0);
-        y : out std_logic_vector(7 downto 0)
+        input	: in std_logic_vector(7 downto 0);
+        output	: out std_logic_vector(7 downto 0)
     );
 end entity SHL_Component;
 
 architecture Behavioral of SHL_Component is
 begin
-    y(0) <= '0';
-    y(1) <= a(0);
-    y(2) <= a(1);
-    y(3) <= a(2);
-    y(4) <= a(3);
-    y(5) <= a(4);
-    y(6) <= a(5);
-    y(7) <= a(6);
+    output(0) <= '0';
+    output(1) <= input(0);
+    output(2) <= input(1);
+    output(3) <= input(2);
+    output(4) <= input(3);
+    output(5) <= input(4);
+    output(6) <= input(5);
+    output(7) <= input(6);
 end architecture Behavioral;
