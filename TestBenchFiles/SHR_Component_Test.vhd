@@ -5,28 +5,28 @@ use ieee.std_logic_1164.all;
 use ieee.std_logic_textio.all;
 use std.textio.all;
 
-entity SHR_Component_TB is
-end entity SHR_Component_TB;
+entity SHR_Component_Test is
+end entity SHR_Component_Test;
 
-architecture Behavioral of SHR_Component_TB is
+architecture Behavioral of SHR_Component_Test is
     -- Component declaration for the SHR_Component module
     component SHR_Component
         port (
-            a       : in  std_logic_vector(7 downto 0);
-            y       : out std_logic_vector(7 downto 0)
+            input	: in  std_logic_vector(7 downto 0);
+            output	: out std_logic_vector(7 downto 0)
         );
     end component SHR_Component;
 
     -- Signal declarations
-    signal a_tb    : std_logic_vector(7 downto 0);
-    signal y_tb    : std_logic_vector(7 downto 0);
+    signal input_test	: std_logic_vector(7 downto 0);
+    signal output_test	: std_logic_vector(7 downto 0);
 
 begin
     -- Instantiate the SHR_Component module
     UUT: SHR_Component
         port map (
-            a       => a_tb,
-            y       => y_tb
+            input	=> input_test ,
+            output	=> output_test 
         );
 
     -- Stimulus process to apply test vectors
@@ -37,40 +37,40 @@ begin
 	report "Running Tests for SHR Component";
 
         -- Test case 1
-        a_tb <= "00000000";
+        input_test <= "00000000";
         wait for 10 ns;
 
 	report "Running Test case 1";
-	assert y_tb = "00000000" report "y_tb should equal 00000000" severity error;
+	assert output_test = "00000000"		report "output_test should equal 00000000" severity error;
 
 
         -- Test case 2
-        a_tb <= "11111111";
+        input_test <= "11111111";
         wait for 10 ns;
 
 	report "Running Test case 2";
-	assert y_tb = "01111111" report "y_tb should equal 01111111" severity error;
+	assert output_test = "01111111"		report "output_test should equal 01111111" severity error;
 
         -- Test case 3
-        a_tb <= "10101010";
+        input_test <= "10101010";
         wait for 10 ns;
 
 	report "Running Test case 3";
-	assert y_tb = "01010101" report "y_tb should equal 01010101" severity error;
+	assert output_test = "01010101" 	report "output_test should equal 01010101" severity error;
 
 	-- Test case 4
-        a_tb <= "01010101";
+        input_test <= "01010101";
         wait for 10 ns;
 
 	report "Running Test case 4";
-	assert y_tb = "00101010" report "y_tb should equal 00101010" severity error;
+	assert output_test = "00101010"		report "output_test should equal 00101010" severity error;
 
 	-- Test case 5
-        a_tb <= "10110101";
+        input_test <= "10110101";
         wait for 10 ns;
 
 	report "Running Test case 5";
-	assert y_tb = "01011010" report "y_tb should equal 01011010" severity error;
+	assert output_test = "01011010" 	report "output_test should equal 01011010" severity error;
 
         -- Add more test cases here if needed
 
