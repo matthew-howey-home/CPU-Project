@@ -2,7 +2,7 @@
 library ieee;
 use ieee.std_logic_1164.all;
 
-entity three_bit_decoder is
+entity Three_Bit_Decoder is
     port (
         code  : in  std_logic_vector(2 downto 0);
 	
@@ -15,7 +15,7 @@ entity three_bit_decoder is
 	control_6: out std_logic;
 	control_7: out std_logic
     );
-end entity three_bit_decoder;
+end entity Three_Bit_Decoder;
 
 architecture Behavioral of three_bit_decoder is
 begin
