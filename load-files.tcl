@@ -1,8 +1,8 @@
 project open CPUProject2
 
-set baseFilePath "..\\VHDLProjectFiles\\CPUProject\\MainProject\\"
-
 # -------- Add CPU Components to Project for Editing ---------
+
+set baseFilePath "..\\VHDLProjectFiles\\CPUProject\\MainProject\\"
 
 proc addFileWithBase {filePath projectFolder} {
     global baseFilePath
@@ -66,3 +66,73 @@ compileWithBase ALU\\ALU-Components\\XOR_Component.vhd
 
 # ALU
 compileWithBase ALU\\ALU.vhd
+
+# -------- Add TestBench Files to Project for Editing ---------
+
+set testBaseFilePath "..\\VHDLProjectFiles\\CPUProject\\TestBenchFiles\\"
+
+proc addTestFileWithBase {filePath projectFolder} {
+    global testBaseFilePath
+    set fullPath [file join $testBaseFilePath $filePath]
+    # Rest of the code to add the file
+    project addfile $fullPath VHDL $projectFolder   
+}
+
+catch {project addfolder TestBenches}
+
+catch {project addfolder ALU_Test TestBenches}
+
+addTestFileWithBase ALU_Test\\ALU_Test.vhd ALU_Test
+
+catch {project addfolder ALU_Components_Test ALU_Test}
+
+addTestFileWithBase ALU_Test\\ALU_Components_Test\\ADD_Component_Test.vhd ALU_Components_Test
+addTestFileWithBase ALU_Test\\ALU_Components_Test\\AND_Component_Test.vhd ALU_Components_Test
+addTestFileWithBase ALU_Test\\ALU_Components_Test\\NOT_Component_Test.vhd ALU_Components_Test
+addTestFileWithBase ALU_Test\\ALU_Components_Test\\OR_Component_Test.vhd ALU_Components_Test
+addTestFileWithBase ALU_Test\\ALU_Components_Test\\SHL_Component_Test.vhd ALU_Components_Test
+addTestFileWithBase ALU_Test\\ALU_Components_Test\\SHR_Component_Test.vhd ALU_Components_Test
+addTestFileWithBase ALU_Test\\ALU_Components_Test\\SUB_Component_Test.vhd ALU_Components_Test
+addTestFileWithBase ALU_Test\\ALU_Components_Test\\XOR_Component_Test.vhd ALU_Components_Test
+
+catch {project addfolder General_Utils_Test TestBenches}
+
+addTestFileWithBase General_Utils_Test\\Eight_Bit_Tristate_Buffer_Test.vhd General_Utils_Test
+addTestFileWithBase General_Utils_Test\\One_Bit_Tristate_Buffer_Test.vhd General_Utils_Test
+addTestFileWithBase General_Utils_Test\\Three_Bit_Decoder_Test.vhd General_Utils_Test
+
+# -------- Compile Test Bench Files ---------
+
+proc compileWithTestBase {filePath} {
+    global testBaseFilePath
+    set fullPath [file join $testBaseFilePath $filePath]
+    vcom $fullPath
+}
+
+# General Utils
+compileWithTestBase General_Utils_Test\\Eight_Bit_Tristate_Buffer_Test.vhd
+compileWithTestBase General_Utils_Test\\One_Bit_Tristate_Buffer_Test.vhd
+compileWithTestBase General_Utils_Test\\Three_Bit_Decoder_Test.vhd
+
+# ALU Components
+compileWithTestBase ALU_Test\\ALU_Components_Test\\ADD_Component_Test.vhd
+compileWithTestBase ALU_Test\\ALU_Components_Test\\SUB_Component_Test.vhd 
+compileWithTestBase ALU_Test\\ALU_Components_Test\\NOT_Component_Test.vhd
+compileWithTestBase ALU_Test\\ALU_Components_Test\\AND_Component_Test.vhd
+compileWithTestBase ALU_Test\\ALU_Components_Test\\OR_Component_Test.vhd
+compileWithTestBase ALU_Test\\ALU_Components_Test\\SHL_Component_Test.vhd
+compileWithTestBase ALU_Test\\ALU_Components_Test\\SHR_Component_Test.vhd
+compileWithTestBase ALU_Test\\ALU_Components_Test\\XOR_Component_Test.vhd
+
+# ALU
+compileWithTestBase ALU_Test\\ALU_Test.vhd
+
+
+
+# -------- Run Tests ---------
+vsim work.ALU_test
+run -all
+quit -sim
+
+
+
