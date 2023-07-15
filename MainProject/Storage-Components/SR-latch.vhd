@@ -16,11 +16,8 @@ architecture Behavioral of SR_Latch is
     signal internal_q_complement : std_logic;
 begin
     -- NAND gates implementation
-    -- process (S, R)
-    -- begin
-        internal_q_complement <= R nand internal_q;
-        internal_q <= S nand internal_q_complement;
-    -- end process;
+    internal_q_complement <= R nand internal_q;
+    internal_q <= S nand internal_q_complement;
 
     Q <= internal_q;
     QN <= internal_q_complement;

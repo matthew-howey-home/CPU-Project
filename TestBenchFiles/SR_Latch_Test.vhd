@@ -35,7 +35,7 @@ begin
     -- Stimulus process
     stim_proc: process
     begin
-        -- Apply test vectors
+        -- ****** 1: Test Setting Latch, so Q output is 1, QN is 0
 
 	-- Quiescent state (1 is quiescent as they are active low)
  	S_tb <= '1';
@@ -52,8 +52,33 @@ begin
         R_tb <= '1';
         wait for 10 ns;
 
+	report "Testing Setting Latch";
         assert Q_tb = '1' report "Error: Q_tb should be '1'." severity error;
         assert QN_tb = '0' report "Error: QN_tb should be '0'." severity error;
+
+
+	-- ****** 12: Test Resetting Latch, so Q output is 0, QN is 1.
+
+	-- Quiescent state (1 is quiescent as they are active low)
+ 	S_tb <= '1';
+        R_tb <= '1';
+        wait for 10 ns;
+        
+	-- Set to 'on' (S = '0' means set as it is active low
+	S_tb <= '1';
+        R_tb <= '0';
+        wait for 10 ns;
+
+	-- Quiescent state (1 is quiescent as they are active low)
+	S_tb <= '1';
+        R_tb <= '1';
+        wait for 10 ns;
+
+	report "Testing Resetting Latch";
+        assert Q_tb = '0' report "Error: Q_tb should be '0'." severity error;
+        assert QN_tb = '1' report "Error: QN_tb should be '1'." severity error;
+
+
 
           -- End simulation
         wait;
