@@ -1,5 +1,5 @@
 
--- TestBench for SR Latch
+-- TestBench for D Latch
 
 library ieee;
 use ieee.std_logic_1164.all;
@@ -25,7 +25,7 @@ architecture behavior of D_Latch_Test is
     signal Q_Complement_Test	: std_logic;
 
 begin
-    -- Instantiate the SR Latch
+    -- Instantiate the D Latch
     UUT: D_Latch port map (
         D		=> D_Test,
         E		=> E_Test,
