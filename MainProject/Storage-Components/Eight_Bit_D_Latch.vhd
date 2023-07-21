@@ -4,96 +4,107 @@ use ieee.std_logic_1164.all;
 
 entity Eight_Bit_D_Latch is
     port (
-        D		: in std_logic_vector(7 downto 0);     	-- Data input
-        E		: in std_logic;				-- Input enable
-	OE		: in std_logic;				-- Output enable
+        Data_Input	: in std_logic_vector(7 downto 0);
+        Input_Enable	: in std_logic;
+	Clock		: in std_logic;
+	Output_Enable	: in std_logic;
 
-        Q		: out std_logic_vector(7 downto 0)	-- Output Q
+        Output		: out std_logic_vector(7 downto 0)
     );
 end entity Eight_Bit_D_Latch;
 
 architecture Behavioral of Eight_Bit_D_Latch is
-	signal q_internal		: std_logic_vector(7 downto 0);
-	signal q_output			: std_logic_vector(7 downto 0);
+	signal internal_state		: std_logic_vector(7 downto 0);
+	signal internal_output		: std_logic_vector(7 downto 0);
 begin
-	D_Latch_0: entity work.D_Latch
+	Flip_Flop_0: entity work.Edge_Triggered_Flip_Flop
        		port map (
 			-- input
-   			D		=> D(0),
-       			E	 	=> E,
+   			Data_Input	=> Data_Input(0),
+       			Input_Enable	=> Input_Enable,
+			Clock		=> Clock,
        			-- output
-			Q		=> q_internal(0)
+			Output		=> internal_state(0)
         	);
 
-	D_Latch_1: entity work.D_Latch
+	Flip_Flop_1: entity work.Edge_Triggered_Flip_Flop
        		port map (
 			-- input
-   			D		=> D(1),
-       			E	 	=> E,
+   			Data_Input	=> Data_Input(1),
+       			Input_Enable	=> Input_Enable,
+			Clock		=> Clock,
        			-- output
-			Q		=> q_internal(1)
+			Output		=> internal_state(1)
         	);
 
-	D_Latch_2: entity work.D_Latch
+	Flip_Flop_2: entity work.Edge_Triggered_Flip_Flop
        		port map (
 			-- input
-   			D		=> D(2),
-       			E	 	=> E,
+   			Data_Input	=> Data_Input(2),
+       			Input_Enable	=> Input_Enable,
+			Clock		=> Clock,
        			-- output
-			Q		=> q_internal(2)
+			Output		=> internal_state(2)
         	);
 
-	D_Latch_3: entity work.D_Latch
+	Flip_Flop_3: entity work.Edge_Triggered_Flip_Flop
        		port map (
 			-- input
-   			D		=> D(3),
-       			E	 	=> E,
+   			Data_Input	=> Data_Input(3),
+       			Input_Enable	=> Input_Enable,
+			Clock		=> Clock,
        			-- output
-			Q		=> q_internal(3)
+			Output		=> internal_state(3)
         	);
 
-	D_Latch_4: entity work.D_Latch
+	Flip_Flop_4: entity work.Edge_Triggered_Flip_Flop
        		port map (
 			-- input
-   			D		=> D(4),
-       			E	 	=> E,
+   			Data_Input	=> Data_Input(4),
+       			Input_Enable	=> Input_Enable,
+			Clock		=> Clock,
        			-- output
-			Q		=> q_internal(4)
+			Output		=> internal_state(4)
         	);
 
-	D_Latch_5: entity work.D_Latch
+	Flip_Flop_5: entity work.Edge_Triggered_Flip_Flop
        		port map (
 			-- input
-   			D		=> D(5),
-       			E	 	=> E,
+   			Data_Input	=> Data_Input(5),
+       			Input_Enable	=> Input_Enable,
+			Clock		=> Clock,
        			-- output
-			Q		=> q_internal(5)
+			Output		=> internal_state(5)
         	);
 
-	D_Latch_6: entity work.D_Latch
+	Flip_Flop_6: entity work.Edge_Triggered_Flip_Flop
        		port map (
 			-- input
-   			D		=> D(6),
-       			E	 	=> E,
+   			Data_Input	=> Data_Input(6),
+       			Input_Enable	=> Input_Enable,
+			Clock		=> Clock,
        			-- output
-			Q		=> q_internal(6)
+			Output		=> internal_state(6)
         	);
 
-	D_Latch_7: entity work.D_Latch
+	Flip_Flop_7: entity work.Edge_Triggered_Flip_Flop
        		port map (
 			-- input
-   			D		=> D(7),
-       			E	 	=> E,
+   			Data_Input	=> Data_Input(7),
+       			Input_Enable	=> Input_Enable,
+			Clock		=> Clock,
        			-- output
-			Q		=> q_internal(7)
+			Output		=> internal_state(7)
         	);
+
+	
 	
 	Eight_Bit_Tristate_Buffer: entity work.Eight_Bit_Tristate_Buffer
         	port map (
-            		input	=> 	q_internal,
-            		enable	=> 	OE,
-            		output  =>	q_output
+            		input	=> 	internal_state,
+            		enable	=> 	Output_Enable,
+            		output  =>	internal_output
         	);
 	 -- Output
-	 Q	 	<= q_output;
+	 Output	 	<= internal_output;
 end architecture Behavioral;

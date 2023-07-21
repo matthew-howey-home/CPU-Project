@@ -12,60 +12,104 @@ architecture behavior of Eight_Bit_D_Latch_Test is
     -- Component declaration for the 8 bit D Latch
     component Eight_Bit_D_Latch is
         port (
-            D			: in std_logic_vector(7 downto 0);      -- Data
-            E			: in std_logic;        			-- Input Enable
-	    OE			: in std_logic;				-- Output Enable
-            Q			: out std_logic_vector(7 downto 0)      -- Output Q
+	    -- inputs            
+	    Data_Input		: in std_logic_vector(7 downto 0);
+            Input_Enable	: in std_logic;
+	    Clock		: in std_logic;
+	    Output_Enable	: in std_logic;
+	    
+            -- output
+            Output		: out std_logic_vector(7 downto 0)
         );
     end component Eight_Bit_D_Latch;
 
     -- Signal declarations
-    signal D_Test		: std_logic_vector(7 downto 0); 
-    signal E_Test		: std_logic;
-    signal OE_Test		: std_logic;
-    signal Q_Test		: std_logic_vector(7 downto 0); 
+    signal Data_Input_Test	: std_logic_vector(7 downto 0); 
+    signal Input_Enable_Test	: std_logic;
+    signal Clock_Test		: std_logic; 
+    signal Output_Enable_Test	: std_logic;
+    signal Output_Test		: std_logic_vector(7 downto 0); 
 
 begin
     -- Instantiate the 8 bit D Latch
     UUT: Eight_Bit_D_Latch port map (
-        D		=> D_Test,
-        E		=> E_Test,
-	OE		=> OE_Test,
-        Q		=> Q_Test
+        Data_Input	=> Data_Input_Test,
+        Input_Enable	=> Input_Enable_Test,
+	Clock		=> Clock_Test,
+	Output_Enable	=> Output_Enable_Test,
+        Output		=> Output_Test
     );
 
-    -- Stimulus process
+     -- Stimulus process
     stim_proc: process
     begin
-	-- Initialise Quiescent state (Input enable switched off)
- 	E_Test	<= '0';
-	OE_Test <= '1'; -- active low
+	report "Running Edge Triggered Flip Flop tests";
+	
+	Data_Input_Test		<= "11010101";
+	Input_Enable_Test	<= '1';
+	Clock_Test		<= '0';
 
-        wait for 10 ns;
-        -- ****** 1: Test input
-
-	-- Set Data
-	D_Test	<= "10110101";
-        wait for 10 ns;
-
-	-- Enable
-	E_Test	<= '1';
-        wait for 10 ns;
-
-	-- Return to Quiescent state (Input Enable switched off)
-	E_Test	<= '0';
-        wait for 10 ns;
-
-	-- Remove data input
-	D_Test 	<= "ZZZZZZZZ";
- 	wait for 10 ns;
-
-	-- Set Output Enable to 0 (= enabled, is active low)
-	OE_Test <= '0';
 	wait for 10 ns;
 
-	report "Test content of Latch following output";
-        assert Q_Test			= "10110101"	report "Error: Q_Test should be '10110101'." severity error;
+	-- Output should now be change to 1 on rising edge
+	Clock_Test		<= '1';
+	Output_Enable_Test	<= '0'; -- active low, this means enable output
+
+	wait for 10 ns;
+
+	report "Running Test 1: Output should be set to 11010101 on rising edge";
+	assert Output_Test = "11010101"	report "Error: Output_Test should be '11010101'." severity error;
+
+	Clock_Test	<= '0';
+	
+	-- now set Data to 0 but Enable is Off, it should maintain output of 11010101
+	Data_Input_Test		<= "00000000";
+	Input_Enable_Test	<= '0';
+
+	wait for 10 ns;
+	
+	Clock_Test	<= '1';
+
+	wait for 10 ns;
+
+	report "Running Test 2: Output should remain 1 as input enable is off";
+	assert Output_Test = "11010101"	report "Error: Output_Test should be '1'." severity error;
+
+	Data_Input_Test		<= "01110010";
+	Input_Enable_Test	<= '1';
+	Clock_Test		<= '0';
+
+	wait for 10 ns;
+
+        -- Output should now be change to 0 on rising edge
+	Clock_Test	<= '1';
+
+	wait for 10 ns;
+
+	report "Running Test 3: Output should be set to 01110010 on rising edge";
+	assert Output_Test = "01110010"	report "Error: Output_Test should be '01110010'." severity error;
+
+	Clock_Test	<= '0';
+	
+	-- now set Data to 1 but Enable is Off, it should maintain output of 01110010
+	Data_Input_Test		<= "11111111";
+	Input_Enable_Test	<= '0';
+
+	wait for 10 ns;
+	
+	Clock_Test	<= '1';
+
+	wait for 10 ns;
+
+	report "Running Test 4: Output should remain 01110010 as input enable is off";
+	assert Output_Test = "01110010"	report "Error: Output_Test should be '01110010'." severity error;
+	
+	Output_Enable_Test <= '1'; -- active low, this switches off output enable
+
+	wait for 10 ns;
+
+	report "Running Test 5: Output should be ZZZZZZZZ as output enable is off";
+	assert Output_Test = "ZZZZZZZZ"		report "Error: Output_Test should be 'ZZZZZZZZ'." severity error;
 
         -- End simulation
         wait;
