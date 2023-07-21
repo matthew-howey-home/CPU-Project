@@ -12,51 +12,51 @@ architecture behavior of Edge_Triggered_Flip_Flop_Test is
     -- Component declaration for the Edge_Triggered_Flip_Flop
     component Edge_Triggered_Flip_Flop is
         port (
-        	D		: in std_logic;        	-- Data input
-        	E		: in std_logic;        	-- Enable input
-		clk		: in std_logic;		-- Clock input
-        	Q		: out std_logic       	-- Output Q
+        	Data_Input	: in std_logic;
+        	Input_Enable	: in std_logic;
+		Clock		: in std_logic;
+        	Output		: out std_logic
     	);
     end component Edge_Triggered_Flip_Flop;
 
     -- Signal declarations
-    signal D_Test		: std_logic;
-    signal E_Test		: std_logic;
-    signal clk_Test		: std_logic;
-    signal Q_Test		: std_logic;
+    signal Data_Input_Test	: std_logic;
+    signal Input_Enable_Test	: std_logic;
+    signal Clock_Test		: std_logic;
+    signal Output_Test		: std_logic;
 
 begin
     -- Instantiate the Edge_Triggered_Flip_Flop
     UUT: Edge_Triggered_Flip_Flop port map (
-        D		=> D_Test,
-        E		=> E_Test,
-	clk		=> clk_Test,
-        Q		=> Q_Test
+        Data_Input	=> Data_Input_Test,
+        Input_Enable	=> Input_Enable_Test,
+	Clock		=> Clock_Test,
+        Output		=> Output_Test
     );
 
     -- Stimulus process
     stim_proc: process
     begin
-	D_Test		<= '1';
-	E_Test		<= '1';
-	clk_Test	<= '0';
+	Data_Input_Test		<= '1';
+	Input_Enable_Test	<= '1';
+	Clock_Test		<= '0';
 
 	wait for 10 ns;
 
 	-- Output should now be change to 1 on rising edge
-	clk_Test	<= '1';
+	Clock_Test	<= '1';
 
 	wait for 10 ns;
 
-	clk_Test	<= '0';
+	Clock_Test	<= '0';
 	
 	-- now set Data to 0 but Enable is Off, it should maintain output of 1
-	D_Test		<= '0';
-	E_Test		<= '0';
+	Data_Input_Test		<= '0';
+	Input_Enable_Test	<= '0';
 
 	wait for 10 ns;
 	
-	clk_Test	<= '1';
+	Clock_Test		<= '1';
 
 
 	-- report "Test Setting Latch";

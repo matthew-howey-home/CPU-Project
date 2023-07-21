@@ -11,80 +11,73 @@ architecture behavior of D_Latch_Test is
     -- Component declaration for the D Latch
     component D_Latch is
         port (
-            D			: in std_logic;        -- Data
-            E			: in std_logic;        -- Enable input
-            Q			: out std_logic;       -- Output Q
-            Q_Complement	: out std_logic        -- Output Q complement
+            Data_Input		: in std_logic;
+            Input_Enable	: in std_logic;
+            Output		: out std_logic
         );
     end component D_Latch;
 
     -- Signal declarations
-    signal D_Test		: std_logic;
-    signal E_Test		: std_logic;
-    signal Q_Test		: std_logic;
-    signal Q_Complement_Test	: std_logic;
+    signal Data_Input_Test	: std_logic;
+    signal Input_Enable_Test	: std_logic;
+    signal Output_Test		: std_logic;
 
 begin
     -- Instantiate the D Latch
     UUT: D_Latch port map (
-        D		=> D_Test,
-        E		=> E_Test,
-        Q		=> Q_Test,
-        Q_Complement	=> Q_Complement_Test
+        Data_Input		=> Data_Input_Test,
+        Input_Enable		=> Input_Enable_Test,
+        Output			=> Output_Test
     );
 
     -- Stimulus process
     stim_proc: process
     begin
 	-- Initialise Quiescent state (Enable switched off)
- 	E_Test	<= '0';
+ 	Input_Enable_Test	<= '0';
 
         wait for 10 ns;
         -- ****** 1: Test Setting Latch, so Q output is 1, Q_Complement is 0
 
 	-- Set Data to '1'
-	D_Test	<= '1';
+	Data_Input_Test	<= '1';
         wait for 10 ns;
 
 	-- Enable
-	E_Test	<= '1';
+	Input_Enable_Test	<= '1';
         wait for 10 ns;
 
 	-- Return to Quiescent state (Enable switched off)
-	E_Test	<= '0';
+	Input_Enable_Test	<= '0';
         wait for 10 ns;
 
 	-- Remove data input
-	D_Test 	<= 'Z';
+	Data_Input_Test 	<= 'Z';
 
 
 	report "Test Setting Latch";
-        assert Q_Test			= '1'	report "Error: Q_Test should be '1'." severity error;
-        assert Q_Complement_Test	= '0'	report "Error: Q_Complement_Test should be '0'." severity error;
+        assert Output_Test			= '1'	report "Error: Output_Test should be '1'." severity error;
 
         -- ****** 2: Test Resetting Latch, so Q output is 0, Q_Complement is 1
 
 	-- Set Data to '1'
-	D_Test	<= '0';
+	Data_Input_Test	<= '0';
         wait for 10 ns;
 
 	-- Enable
-	E_Test	<= '1';
+	Input_Enable_Test	<= '1';
         wait for 10 ns;
 
 	-- Return to Quiescent state (Enable switched off)
-	E_Test	<= '0';
+	Input_Enable_Test	<= '0';
         wait for 10 ns;
 
 	-- Remove data input
-	D_Test 	<= 'Z';
+	Data_Input_Test 	<= 'Z';
 
 
 	report "Test Setting Latch";
-        assert Q_Test			= '0'	report "Error: Q_Test should be '0'." severity error;
-        assert Q_Complement_Test	= '1'	report "Error: Q_Complement_Test should be '1'." severity error;
-
-
+        assert Output_Test			= '0'	report "Error: Output_Test should be '0'." severity error;
 
         -- End simulation
         wait;

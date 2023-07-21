@@ -5,31 +5,31 @@ use ieee.std_logic_1164.all;
 
 entity Edge_Triggered_Flip_Flop is
     port (
-        D		: in std_logic;        	-- Data input
-        E		: in std_logic;        	-- Enable input
-	clk		: in std_logic;		-- Clock input
-        Q		: out std_logic       	-- Output Q
+        Data_Input	: in std_logic;
+        Input_Enable	: in std_logic;
+	Clock		: in std_logic;
+        Output		: out std_logic
     );
 end entity Edge_Triggered_Flip_Flop;
 
 architecture Behavioral of Edge_Triggered_Flip_Flop is
     signal Latch_A_Output		: std_logic;
     signal Latch_B_Output		: std_logic;
-    signal not_clk			: std_logic;
+    signal Not_Clock			: std_logic;
     signal Mux_Output			: std_logic;
  
 begin
 
-    not_clk <= not clk;
+    Not_Clock <= not Clock;
     
     Two_to_One_Mux: entity work.Two_to_One_Mux
 	port map (
 	    -- If Enable is off, feed output of Flip Flop back in to maintain current value
-	    -- If Enable is on, feed in external Data input (D) 
+	    -- If Enable is on, feed in external Data input
 	    -- inputs
 	    input_1	=> Latch_B_Output,
-	    input_2	=> D,
-            selector	=> E,
+	    input_2	=> Data_Input,
+            selector	=> Input_Enable,
 	    -- output
 	    output      => Mux_Output
         );
@@ -37,20 +37,22 @@ begin
     Latch_A: entity work.D_Latch
         port map (
 	    -- inputs
-            D		=> Mux_Output,
-            E 		=> not_clk,
+            Data_Input		=> Mux_Output,
+            Input_Enable 	=> Not_Clock,
 	    -- output
-	    Q		=> Latch_A_Output
+	    Output		=> Latch_A_Output
         );
 
     Latch_B: entity work.D_Latch
         port map (
 	    -- inputs
-            D		=> Latch_A_Output,
-            E 		=> clk,
+            Data_Input		=> Latch_A_Output,
+            Input_Enable 	=> Clock,
 	    -- output
-	    Q		=> Latch_B_Output
-        );
+	    Output		=> Latch_B_Output
+	);
+    
+    -- Final output of Edge Triggered Flip Flop
+    Output 	<= Latch_B_Output;
 
-    Q 	<= Latch_B_Output;
 end architecture Behavioral;
