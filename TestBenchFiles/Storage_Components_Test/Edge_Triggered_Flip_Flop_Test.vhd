@@ -37,6 +37,8 @@ begin
     -- Stimulus process
     stim_proc: process
     begin
+	report "Running Edge Triggered Flip Flop tests";
+	
 	Data_Input_Test		<= '1';
 	Input_Enable_Test	<= '1';
 	Clock_Test		<= '0';
@@ -48,6 +50,9 @@ begin
 
 	wait for 10 ns;
 
+	report "Running Test 1: Output should be set to 1 on rising edge";
+	assert Output_Test = '1'	report "Error: Output_Test should be '1'." severity error;
+
 	Clock_Test	<= '0';
 	
 	-- now set Data to 0 but Enable is Off, it should maintain output of 1
@@ -56,12 +61,41 @@ begin
 
 	wait for 10 ns;
 	
-	Clock_Test		<= '1';
+	Clock_Test	<= '1';
 
+	wait for 10 ns;
 
-	-- report "Test Setting Latch";
-        -- assert Q_Test			= '1'	report "Error: Q_Test should be '1'." severity error;
-        -- assert Q_Complement_Test	= '0'	report "Error: Q_Complement_Test should be '0'." severity error;
+	report "Running Test 2: Output should remain 1 as input enable is off";
+	assert Output_Test = '1'	report "Error: Output_Test should be '1'." severity error;
+
+	Data_Input_Test		<= '0';
+	Input_Enable_Test	<= '1';
+	Clock_Test		<= '0';
+
+	wait for 10 ns;
+
+        -- Output should now be change to 0 on rising edge
+	Clock_Test	<= '1';
+
+	wait for 10 ns;
+
+	report "Running Test 3: Output should be set to 0 on rising edge";
+	assert Output_Test = '0'	report "Error: Output_Test should be '0'." severity error;
+
+	Clock_Test	<= '0';
+	
+	-- now set Data to 1 but Enable is Off, it should maintain output of 0
+	Data_Input_Test		<= '1';
+	Input_Enable_Test	<= '0';
+
+	wait for 10 ns;
+	
+	Clock_Test	<= '1';
+
+	wait for 10 ns;
+
+	report "Running Test 2: Output should remain 0 as input enable is off";
+	assert Output_Test = '0'	report "Error: Output_Test should be '0'." severity error;
 
         -- End simulation
         wait;
