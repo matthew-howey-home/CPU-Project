@@ -27,15 +27,6 @@ architecture Behavioral of ALU is
 	signal control_6: std_logic;
 	signal control_7: std_logic;
 
-	signal not_control_0: std_logic;
-	signal not_control_1: std_logic;
-	signal not_control_2: std_logic;
-	signal not_control_3: std_logic;
-	signal not_control_4: std_logic;
-	signal not_control_5: std_logic;
-	signal not_control_6: std_logic;
-	signal not_control_7: std_logic;
-
 	signal and_output: 		std_logic_vector(7 downto 0);
 	signal or_output: 		std_logic_vector(7 downto 0);
 	signal not_output:		std_logic_vector(7 downto 0);
@@ -62,16 +53,6 @@ begin
             		control_7 => control_7
         	);
 	
-	-- invert control signals as tri state buffer is active low
-	not_control_0 <= not control_0;
-	not_control_1 <= not control_1;
-	not_control_2 <= not control_2;
-	not_control_3 <= not control_3;
-	not_control_4 <= not control_4;
-	not_control_5 <= not control_5;
-	not_control_6 <= not control_6;
-	not_control_7 <= not control_7;
-	
 	-- AND connections (opcode 0)--------------------
 
 	and_component: entity  work.AND_Component
@@ -84,21 +65,21 @@ begin
 	and_tristate: entity  work.Eight_Bit_Tristate_Buffer 
 		port map (
 			input	=> and_output,
-			enable	=> not_control_0,
+			enable	=> control_0,
 			output	=> output
 		);
 	
 	and_one_bit_tristate_carry_out: entity  work.One_Bit_Tristate_Buffer  
 		port map (
 			input	=> '0',
-			enable	=> not_control_0,
+			enable	=> control_0,
 			output	=> carry_out
 		);
 
 	and_one_bit_tristate_negative_out: entity  work.One_Bit_Tristate_Buffer  
 		port map (
 			input	=> '0',
-			enable	=> not_control_0,
+			enable	=> control_0,
 			output	=> negative_out
 		);
 
@@ -114,21 +95,21 @@ begin
 	or_tristate: entity  work.Eight_Bit_Tristate_Buffer 
 		port map (
 			input	=> or_output,
-			enable	=> not_control_1,
+			enable	=> control_1,
 			output	=> output
 		);
 
 	or_one_bit_tristate_carry_out: entity  work.One_Bit_Tristate_Buffer  
 		port map (
 			input	=> '0',
-			enable	=> not_control_1,
+			enable	=> control_1,
 			output	=> carry_out
 		);
 
 	or_and_one_bit_tristate_negative_out: entity  work.One_Bit_Tristate_Buffer  
 		port map (
 			input	=> '0',
-			enable	=> not_control_1,
+			enable	=> control_1,
 			output	=> negative_out
 		);
 
@@ -143,21 +124,21 @@ begin
 	not_tristate: entity work.Eight_Bit_Tristate_Buffer 
 		port map (
 			input	=> not_output,
-			enable	=> not_control_2,
+			enable	=> control_2,
 			output	=> output
 		);
 
 	not_one_bit_tristate_carry_out: entity  work.One_Bit_Tristate_Buffer  
 		port map (
 			input	=> '0',
-			enable	=> not_control_2,
+			enable	=> control_2,
 			output	=> carry_out
 		);
 
 	not_one_bit_tristate_negative_out: entity  work.One_Bit_Tristate_Buffer  
 		port map (
 			input	=> '0',
-			enable	=> not_control_2,
+			enable	=> control_2,
 			output	=> negative_out
 		);
 
@@ -173,21 +154,21 @@ begin
 	xor_tristate: entity  work.Eight_Bit_Tristate_Buffer 
 		port map (
 			input	=> xor_output,
-			enable	=> not_control_3,
+			enable	=> control_3,
 			output	=> output
 		);
 
 	xor_one_bit_tristate_carry_out: entity  work.One_Bit_Tristate_Buffer  
 		port map (
 			input	=> '0',
-			enable	=> not_control_3,
+			enable	=> control_3,
 			output	=> carry_out
 		);
 
 	xor_one_bit_tristate_negative_out: entity  work.One_Bit_Tristate_Buffer  
 		port map (
 			input	=> '0',
-			enable	=> not_control_3,
+			enable	=> control_3,
 			output	=> negative_out
 		);
 
@@ -202,21 +183,21 @@ begin
 	shr_tristate: entity  work.Eight_Bit_Tristate_Buffer 
 		port map (
 			input	=> shr_output,
-			enable	=> not_control_4,
+			enable	=> control_4,
 			output	=> output
 		);
 
 	shr_one_bit_tristate_carry_out: entity  work.One_Bit_Tristate_Buffer  
 		port map (
 			input	=> '0',
-			enable	=> not_control_4,
+			enable	=> control_4,
 			output	=> carry_out
 		);
 
 	shr_one_bit_tristate_negative_out: entity  work.One_Bit_Tristate_Buffer  
 		port map (
 			input	=> '0',
-			enable	=> not_control_4,
+			enable	=> control_4,
 			output	=> negative_out
 		);
 
@@ -231,21 +212,21 @@ begin
 	shl_tristate: entity  work.Eight_Bit_Tristate_Buffer 
 		port map (
 			input	=> shl_output,
-			enable	=> not_control_5,
+			enable	=> control_5,
 			output	=> output
 		);
 
 	shl_one_bit_tristate_carry_out: entity  work.One_Bit_Tristate_Buffer  
 		port map (
 			input	=> '0',
-			enable	=> not_control_5,
+			enable	=> control_5,
 			output	=> carry_out
 		);
 
 	shl_one_bit_tristate_negative_out: entity  work.One_Bit_Tristate_Buffer  
 		port map (
 			input	=> '0',
-			enable	=> not_control_5,
+			enable	=> control_5,
 			output	=> negative_out
 		);
 
@@ -263,21 +244,21 @@ begin
 	add_tristate: entity  work.Eight_Bit_Tristate_Buffer 
 		port map (
 			input	=> add_output,
-			enable	=> not_control_6,
+			enable	=> control_6,
 			output	=> output
 		);
 
 	add_one_bit_tristate_carry_out: entity  work.One_Bit_Tristate_Buffer  
 		port map (
 			input	=> add_carry_out,
-			enable	=> not_control_6,
+			enable	=> control_6,
 			output	=> carry_out
 		);
 
 	add_one_bit_tristate_negative_out: entity  work.One_Bit_Tristate_Buffer  
 		port map (
 			input	=> '0',
-			enable	=> not_control_6,
+			enable	=> control_6,
 			output	=> negative_out
 		);
     
@@ -295,21 +276,21 @@ begin
 	sub_tristate: entity  work.Eight_Bit_Tristate_Buffer 
 		port map (
 			input	=> sub_output,
-			enable	=> not_control_7,
+			enable	=> control_7,
 			output	=> output
 		);
 
 	sub_one_bit_tristate_carry_out: entity  work.One_Bit_Tristate_Buffer  
 		port map (
 			input	=> '0',
-			enable	=> not_control_7,
+			enable	=> control_7,
 			output	=> carry_out
 		);
 
 	sub_one_bit_tristate_negative_out: entity  work.One_Bit_Tristate_Buffer  
 		port map (
 			input	=> sub_negative_out,
-			enable	=> not_control_7,
+			enable	=> control_7,
 			output	=> negative_out
 		);
     
