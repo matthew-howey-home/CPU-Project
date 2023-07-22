@@ -40,7 +40,7 @@ begin
         -- ****** 1: Test Setting Latch, so Q output is 1, Q_Complement is 0
 
 	-- Set Data to '1'
-	Data_Input_Test	<= '1';
+	Data_Input_Test		<= '1';
         wait for 10 ns;
 
 	-- Enable

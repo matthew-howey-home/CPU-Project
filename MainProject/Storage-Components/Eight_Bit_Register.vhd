@@ -2,7 +2,7 @@
 library ieee;
 use ieee.std_logic_1164.all;
 
-entity Eight_Bit_D_Latch is
+entity Eight_Bit_Register is
     port (
         Data_Input	: in std_logic_vector(7 downto 0);
         Input_Enable	: in std_logic;
@@ -11,9 +11,9 @@ entity Eight_Bit_D_Latch is
 
         Output		: out std_logic_vector(7 downto 0)
     );
-end entity Eight_Bit_D_Latch;
+end entity Eight_Bit_Register;
 
-architecture Behavioral of Eight_Bit_D_Latch is
+architecture Behavioral of Eight_Bit_Register is
 	signal internal_state		: std_logic_vector(7 downto 0);
 	signal internal_output		: std_logic_vector(7 downto 0);
 begin

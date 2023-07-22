@@ -5,12 +5,12 @@
 library ieee;
 use ieee.std_logic_1164.all;
 
-entity Eight_Bit_D_Latch_Test is
-end entity Eight_Bit_D_Latch_Test;
+entity Eight_Bit_Register_Test is
+end entity Eight_Bit_Register_Test;
 
-architecture behavior of Eight_Bit_D_Latch_Test is
+architecture behavior of Eight_Bit_Register_Test is
     -- Component declaration for the 8 bit D Latch
-    component Eight_Bit_D_Latch is
+    component Eight_Bit_Register is
         port (
 	    -- inputs            
 	    Data_Input		: in std_logic_vector(7 downto 0);
@@ -21,7 +21,7 @@ architecture behavior of Eight_Bit_D_Latch_Test is
             -- output
             Output		: out std_logic_vector(7 downto 0)
         );
-    end component Eight_Bit_D_Latch;
+    end component Eight_Bit_Register;
 
     -- Signal declarations
     signal Data_Input_Test	: std_logic_vector(7 downto 0); 
@@ -32,7 +32,7 @@ architecture behavior of Eight_Bit_D_Latch_Test is
 
 begin
     -- Instantiate the 8 bit D Latch
-    UUT: Eight_Bit_D_Latch port map (
+    UUT: Eight_Bit_Register port map (
         Data_Input	=> Data_Input_Test,
         Input_Enable	=> Input_Enable_Test,
 	Clock		=> Clock_Test,
