@@ -52,7 +52,7 @@ architecture Behavioral of ALU_Interface is
 			Output			=>  temp_input_register_output
         	);
 	
-	-- carry flag is by the result of an operation (internal_carry_out)
+	-- carry flag is set by the result of an operation (internal_carry_out)
 	-- but if the clear_carry_flag_control bit is set, this overrides it and sets the carry flag to zero. 
 	carry_flag_input <= (not clear_carry_flag_control) and internal_carry_out;
 
@@ -64,7 +64,7 @@ architecture Behavioral of ALU_Interface is
 			output			=> carry_flag_output
 		);
 
-	-- negative flag is by the result of an operation (internal_negative_out)
+	-- negative flag is set by the result of an operation (internal_negative_out)
 	-- but if the clear_negative_flag_control bit is set, this overrides it and sets the negative flag to zero. 
 	negative_flag_input <= not clear_negative_flag_control and internal_negative_out;
 
