@@ -8,7 +8,7 @@ entity ALU_Test is
 end entity ALU_Test;
 
 architecture Behavioral of ALU_Test is
-    -- Component declaration for the AND_Component module
+    -- Component declaration for the ALU module
     component ALU
         port (
             	opcode 		: in  std_logic_vector(2 downto 0);
