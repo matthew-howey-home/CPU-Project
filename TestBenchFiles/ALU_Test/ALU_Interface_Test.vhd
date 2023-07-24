@@ -22,10 +22,12 @@ architecture Behavioral of ALU_Interface_Test is
 		clear_carry_flag_control		: in std_logic;
 		clear_negative_flag_control		: in std_logic;
 		clear_zero_flag_control			: in std_logic;
+		operation_enable			: in std_logic;
+		Output_Enable				: in std_logic;
 
         	output					: out std_logic_vector(7 downto 0);
-		carry_out				: out std_logic;
-		negative_out				: out std_logic
+		carry_flag_output			: out std_logic;
+		negative_flag_output			: out std_logic
         );
     end component ALU_Interface;
 
@@ -41,10 +43,12 @@ architecture Behavioral of ALU_Interface_Test is
 	signal clear_carry_flag_control_test		: std_logic;
 	signal clear_negative_flag_control_test		: std_logic;
 	signal clear_zero_flag_control_test		: std_logic;
+	signal operation_enable_test			: std_logic;
+	signal Output_Enable_test			: std_logic;
 
     	signal output_test		: std_logic_vector(7 downto 0);
-    	signal carry_out_test		: std_logic;
-    	signal negative_out_test	: std_logic;
+    	signal carry_flag_output_test	: std_logic;
+    	signal negative_flag_output_test: std_logic;
 
 begin
 
@@ -61,10 +65,12 @@ begin
 		clear_carry_flag_control		=> clear_carry_flag_control_test,
 		clear_negative_flag_control		=> clear_negative_flag_control_test,
 		clear_zero_flag_control			=> clear_zero_flag_control_test,
+		operation_enable			=> operation_enable_test,
+		Output_Enable				=> Output_Enable_test,
 
         	output					=> output_test,
-		carry_out				=> carry_out_test,
-		negative_out				=> negative_out_test
+		carry_flag_output			=> carry_flag_output_test,
+		negative_flag_output			=> negative_flag_output_test
         );
 
 
@@ -72,18 +78,40 @@ begin
     stimulus_proc: process
 
     begin
-	Clock_Test <= '1';
-	temp_input_register_input_enable_test <= '1';
-	input_1_test <= "01011011";
-
+	-- Operation 1 - AND 01011011 with 11001010
+	Clock_Test <= '0';
+	temp_input_register_input_enable_test	<= '1';
+	input_1_test				<= "01011011";
 	wait for 10 ns;
+
+	Clock_Test <= '1';
+	wait for 10 ns;
+	-- temp input register should now output '01011011'
 
 	Clock_Test <= '0';
-
+	-- clear previous
+	temp_input_register_input_enable_test <= '0';
+	input_1_test 		<= "ZZZZZZZZ";
+	-- set current
+	input_2_test 		<= "11001010";
+	opcode_test 		<= "000"; -- opcode for AND
+	operation_enable_test 	<= '1';
 	wait for 10 ns;
 
 	Clock_Test <= '1';
+	wait for 10 ns;
+	
+	Clock_Test <= '0';
+	-- clear previous
+	operation_enable_test 	<= '0';
+	input_2_test 		<= "ZZZZZZZZ";
+	-- set current
+	Output_Enable_Test <= '1';
+	wait for 10 ns;
 
+	report "Running Test 1: AND 01011011 with 11001010";
+	assert output_test = "01001010" report "Test 1: output_test should equal 01001010" severity error;
+	
 	wait;
 
     end process stimulus_proc;

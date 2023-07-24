@@ -18,28 +18,32 @@ entity  ALU_Interface is
 	clear_carry_flag_control		: in std_logic;
 	clear_negative_flag_control		: in std_logic;
 	clear_zero_flag_control			: in std_logic;
+	operation_enable			: in std_logic;
+	Output_Enable				: in std_logic;
 
         output					: out std_logic_vector(7 downto 0);
-	carry_out				: out std_logic;
-	negative_out				: out std_logic
+	carry_flag_output			: out std_logic;
+	negative_flag_output			: out std_logic
     );
 end entity  ALU_Interface;
 
 architecture Behavioral of ALU_Interface is
-   signal temp_input_register_output	: std_logic_vector(7 downto 0);
+   signal temp_input_register_output		: std_logic_vector(7 downto 0);
 
-   signal carry_flag_input		: std_logic;
-   signal negative_flag_input		: std_logic;
-   signal zero_flag_input   		: std_logic;
+   signal carry_flag_input			: std_logic;
+   signal negative_flag_input			: std_logic;
+   signal zero_flag_input   			: std_logic;
 
-   signal carry_flag_output		: std_logic;
-   signal negative_flag_output		: std_logic;
-   signal zero_flag_output   		: std_logic;
+   signal carry_flag_internal_output		: std_logic;
+   signal negative_flag_internal_output		: std_logic;
+   signal zero_flag_output   			: std_logic;
 
-   signal internal_carry_out		: std_logic;
-   signal internal_negative_out		: std_logic;
-   signal internal_zero_out		: std_logic;
+   signal internal_carry_out			: std_logic;
+   signal internal_negative_out			: std_logic;
+   signal internal_zero_out			: std_logic;
 
+   signal ALU_output				: std_logic_vector(7 downto 0);
+   signal operation_result_register_output	: std_logic_vector(7 downto 0);
 
    begin
 	temp_input_register	: entity work.Eight_Bit_Register
@@ -49,7 +53,7 @@ architecture Behavioral of ALU_Interface is
 			Clock			=> Clock,
             		Output_Enable		=> '1',
 
-			Output			=>  temp_input_register_output
+			Output			=> temp_input_register_output
         	);
 	
 	-- carry flag is set by the result of an operation (internal_carry_out)
@@ -61,7 +65,7 @@ architecture Behavioral of ALU_Interface is
 			Data_Input		=> carry_flag_input,
 			Input_Enable		=> '1',
 			Clock			=> Clock,
-			output			=> carry_flag_output
+			output			=> carry_flag_internal_output
 		);
 
 	-- negative flag is set by the result of an operation (internal_negative_out)
@@ -73,7 +77,7 @@ architecture Behavioral of ALU_Interface is
 			Data_Input		=> negative_flag_input,
 			Input_Enable		=> '1',
 			Clock			=> Clock,
-			output			=> negative_flag_output
+			output			=> negative_flag_internal_output
 		);
 	
 	ALU			: entity work.ALU
@@ -82,17 +86,28 @@ architecture Behavioral of ALU_Interface is
 			input_1			=> temp_input_register_output,
 			input_2			=> input_2,
 			-- carry in is the result of the previous carry out
-			carry_in		=> carry_flag_output,
+			carry_in		=> carry_flag_internal_output,
 			-- negative in is the result of the previous negative out
-			negative_in		=> negative_flag_output,
+			negative_in		=> negative_flag_internal_output,
 	
-			output			=> output,
+			output			=> ALU_output,
 			carry_out		=> internal_carry_out,
 			negative_out		=> internal_negative_out
         	);
-	
-	carry_out	<= internal_carry_out;
-	negative_out	<= internal_negative_out;
 
+	-- loads result of operation, ready for output
+	operation_result_register	: entity work.Eight_Bit_Register
+        	port map (
+	    		Data_Input		=> ALU_output,
+			Input_Enable		=> operation_enable,
+			Clock			=> Clock,
+            		Output_Enable		=> Output_Enable,
+
+			Output			=>  operation_result_register_output
+        	);
+	
+	carry_flag_output			<= carry_flag_internal_output;
+	negative_flag_output			<= negative_flag_internal_output;
+	output					<= operation_result_register_output;
 
 end architecture Behavioral;
