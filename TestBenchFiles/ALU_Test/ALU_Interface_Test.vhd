@@ -112,6 +112,24 @@ begin
 	report "Running Test 1: AND 01011011 with 11001010";
 	assert output_test = "01001010" report "Test 1: output_test should equal 01001010" severity error;
 	
+	-- Operation 2 - Clear Carry Flag
+	
+	Clock_Test <='1';
+	wait for 10 ns;
+
+	Clock_Test <= '0';
+	-- clear previous
+	Output_Enable_Test <= '0';
+	-- set current
+	clear_carry_flag_control_test <= '1';
+	wait for 10 ns;
+
+	Clock_Test <= '1';
+	wait for 10 ns;
+
+	report "Running Test 2: Clear Carry Flag";
+	assert carry_flag_output_test = '0' report "Test 2: carry_flag_output_test should equal 0" severity error;
+
 	wait;
 
     end process stimulus_proc;
