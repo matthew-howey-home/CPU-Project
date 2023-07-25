@@ -10,7 +10,6 @@ entity  ALU_Interface is
     port (
 	Clock					: in std_logic;
        
-
 	-- main inputs
 	Opcode  				: in std_logic_vector(2 downto 0);
 	Input_Operand_1				: in std_logic_vector(7 downto 0);
@@ -22,7 +21,6 @@ entity  ALU_Interface is
 	Enable_Input_For_Temp_Input_Reg		: in std_logic;
 	Enable_Operation			: in std_logic;
 	Enable_Output_Final			: in std_logic;
-	
 	
 	-- Other Control Signals
 

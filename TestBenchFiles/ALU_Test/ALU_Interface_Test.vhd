@@ -11,124 +11,171 @@ end entity ALU_Interface_Test;
 architecture Behavioral of ALU_Interface_Test is
     -- Component declaration for the ALU_Interface module
     component ALU_Interface
-        port (
-            	opcode  				: in std_logic_vector(2 downto 0);
-		input_1					: in std_logic_vector(7 downto 0);
-        	input_2					: in std_logic_vector(7 downto 0);
-		carry_in				: in std_logic;
-		negative_in				: in std_logic;
-		temp_input_register_input_enable	: in std_logic;
+       port (
 		Clock					: in std_logic;
-		clear_carry_flag_control		: in std_logic;
-		clear_negative_flag_control		: in std_logic;
-		clear_zero_flag_control			: in std_logic;
-		operation_enable			: in std_logic;
-		Output_Enable				: in std_logic;
+       
+		-- main inputs
+		Opcode  				: in std_logic_vector(2 downto 0);
+		Input_Operand_1				: in std_logic_vector(7 downto 0);
+        	Input_Operand_2				: in std_logic_vector(7 downto 0);
+		Input_Carry				: in std_logic;
+		Input_Negative				: in std_logic;
+		
+		-- Enable Controls
+		Enable_Input_For_Temp_Input_Reg		: in std_logic;
+		Enable_Operation			: in std_logic;
+		Enable_Output_Final			: in std_logic;
+	
+		-- Other Control Signals
 
-        	output					: out std_logic_vector(7 downto 0);
-		carry_flag_output			: out std_logic;
-		negative_flag_output			: out std_logic
-        );
+		Control_Clear_Carry			: in std_logic;
+		Control_Clear_Negative			: in std_logic;
+		Control_Clear_Zero			: in std_logic;
+
+		-- Final Outputs
+		Output_Final				: out std_logic_vector(7 downto 0);
+		Output_From_Carry_Flag			: out std_logic;
+		Output_From_Negative_Flag		: out std_logic
+    	);
     end component ALU_Interface;
 
 	-- Signal declarations
-    	signal opcode_test				: std_logic_vector(2 downto 0);
+    	signal Clock_Test				: std_logic;
+       
+	-- main inputs
+	signal Opcode_Test  				: std_logic_vector(2 downto 0);
+	signal Input_Operand_1_Test			: std_logic_vector(7 downto 0);
+    	signal Input_Operand_2_Test			: std_logic_vector(7 downto 0);
+	signal Input_Carry_Test				: std_logic;
+	signal Input_Negative_Test			: std_logic;
+	
+	-- Enable Controls
+	signal Enable_Input_For_Temp_Input_Reg_Test	: std_logic;
+	signal Enable_Operation_Test			: std_logic;
+	signal Enable_Output_Final_Test			: std_logic;
+	
+	-- Other Control Signals
+	signal Control_Clear_Carry_Test			: std_logic;
+	signal Control_Clear_Negative_Test		: std_logic;
+	signal Control_Clear_Zero_Test			: std_logic;
 
-    	signal input_1_test				: std_logic_vector(7 downto 0);
-    	signal input_2_test				: std_logic_vector(7 downto 0);
-	signal carry_in_test    			: std_logic;
-    	signal negative_in_test				: std_logic;
-	signal temp_input_register_input_enable_test	: std_logic;
-	signal Clock_Test				: std_logic;
-	signal clear_carry_flag_control_test		: std_logic;
-	signal clear_negative_flag_control_test		: std_logic;
-	signal clear_zero_flag_control_test		: std_logic;
-	signal operation_enable_test			: std_logic;
-	signal Output_Enable_test			: std_logic;
-
-    	signal output_test		: std_logic_vector(7 downto 0);
-    	signal carry_flag_output_test	: std_logic;
-    	signal negative_flag_output_test: std_logic;
+	-- Final Outputs
+	signal Output_Final_Test			: std_logic_vector(7 downto 0);
+	signal Output_From_Carry_Flag_Test		: std_logic;
+	signal Output_From_Negative_Flag_Test		: std_logic;
 
 begin
 
    -- Instantiate the ALU_Interface module
     UUT: ALU_Interface
         port map (
-            	opcode					=> opcode_test,
-		input_1					=> input_1_test,
-		input_2					=> input_2_test,
-		carry_in				=> carry_in_test,
-		negative_in    				=> negative_in_test,
-		temp_input_register_input_enable	=> temp_input_register_input_enable_test,
-		Clock					=> Clock_Test,
-		clear_carry_flag_control		=> clear_carry_flag_control_test,
-		clear_negative_flag_control		=> clear_negative_flag_control_test,
-		clear_zero_flag_control			=> clear_zero_flag_control_test,
-		operation_enable			=> operation_enable_test,
-		Output_Enable				=> Output_Enable_test,
+            	Clock					=> Clock_Test,
+       
+		-- main inputs
+		Opcode  				=> Opcode_Test,
+		Input_Operand_1				=> Input_Operand_1_Test,
+        	Input_Operand_2				=> Input_Operand_2_Test,
+		Input_Carry				=> Input_Carry_Test,
+		Input_Negative				=> Input_Negative_Test,
+	
+		-- Enable Controls
+		Enable_Input_For_Temp_Input_Reg		=> Enable_Input_For_Temp_Input_Reg_Test,
+		Enable_Operation			=> Enable_Operation_Test,
+		Enable_Output_Final			=> Enable_Output_Final_Test,
+	
+		-- Other Control Signals
+		Control_Clear_Carry			=> Control_Clear_Carry_Test,
+		Control_Clear_Negative			=> Control_Clear_Negative_Test,
+		Control_Clear_Zero			=> Control_Clear_Zero_Test,
 
-        	output					=> output_test,
-		carry_flag_output			=> carry_flag_output_test,
-		negative_flag_output			=> negative_flag_output_test
-        );
+		-- Final Outputs
+		Output_Final				=> Output_Final_Test,
+		Output_From_Carry_Flag			=> Output_From_Carry_Flag_Test,
+		Output_From_Negative_Flag		=> Output_From_Negative_Flag_Test
+    	);
+
 
 
     -- Stimulus process to apply test vectors
     stimulus_proc: process
 
     begin
-	-- Operation 1 - AND 01011011 with 11001010
+	-- ################## Operation 1 - AND 01011011 with 11001010
+	
+	-- Load Temp Input Reg with first operand	
 	Clock_Test <= '0';
-	temp_input_register_input_enable_test	<= '1';
-	input_1_test				<= "01011011";
+	Input_Operand_1_Test			<= "01011011";
+	Enable_Input_For_Temp_Input_Reg_Test	<= '1';
 	wait for 10 ns;
-
 	Clock_Test <= '1';
 	wait for 10 ns;
-	-- temp input register should now output '01011011'
 
+	-- clear inputs / controls
+	Enable_Input_For_Temp_Input_Reg_Test 	<= '0';
+	Input_Operand_1_Test 			<= "ZZZZZZZZ";
+	
+	-- Set second operand and opcode, and enable operation
 	Clock_Test <= '0';
-	-- clear previous
-	temp_input_register_input_enable_test <= '0';
-	input_1_test 		<= "ZZZZZZZZ";
-	-- set current
-	input_2_test 		<= "11001010";
-	opcode_test 		<= "000"; -- opcode for AND
-	operation_enable_test 	<= '1';
+	Input_Operand_2_Test 	<= "11001010";
+	Opcode_Test 		<= "000"; -- opcode for AND
+	Enable_Operation_Test 	<= '1';
+	wait for 10 ns;
+	Clock_Test <= '1';
 	wait for 10 ns;
 
-	Clock_Test <= '1';
+	-- clear inputs / controls
+	Enable_Operation_Test 	<= '0';
+	Input_Operand_2_Test 	<= "ZZZZZZZZ";
+	
+	-- Output Result
+	Clock_Test <= '0';
+	Enable_Output_Final_Test <= '1';
 	wait for 10 ns;
 	
-	Clock_Test <= '0';
-	-- clear previous
-	operation_enable_test 	<= '0';
-	input_2_test 		<= "ZZZZZZZZ";
-	-- set current
-	Output_Enable_Test <= '1';
-	wait for 10 ns;
-
 	report "Running Test 1: AND 01011011 with 11001010";
-	assert output_test = "01001010" report "Test 1: output_test should equal 01001010" severity error;
-	
-	-- Operation 2 - Clear Carry Flag
-	
-	Clock_Test <='1';
-	wait for 10 ns;
-
-	Clock_Test <= '0';
-	-- clear previous
-	Output_Enable_Test <= '0';
-	-- set current
-	clear_carry_flag_control_test <= '1';
-	wait for 10 ns;
+	assert Output_Final_Test = "01001010" report "Test 1: output_test should equal 01001010" severity error;
 
 	Clock_Test <= '1';
 	wait for 10 ns;
 
-	report "Running Test 2: Clear Carry Flag";
-	assert carry_flag_output_test = '0' report "Test 2: carry_flag_output_test should equal 0" severity error;
+	-- clear inputs / controls
+	Enable_Output_Final_Test 	<= '0';
+	
+	-- ################## Operation 2 - ADD 11011011 with 11001010
+	-- Load Temp Input Reg with first operand
+	Clock_Test 				<= '0';
+	Input_Operand_1_Test			<= "11011011";
+	Enable_Input_For_Temp_Input_Reg_Test	<= '1';
+	wait for 10 ns;
+	Clock_Test <= '1';
+	wait for 10 ns;
+
+	-- clear inputs / controls
+	Enable_Input_For_Temp_Input_Reg_Test 	<= '0';
+	Input_Operand_1_Test 			<= "ZZZZZZZZ";
+
+	-- Set second operand and opcode, and enable operation
+	Clock_Test <= '0';
+	Input_Operand_2_Test 	<= "11001010";
+	Opcode_Test 		<= "110"; -- opcode for ADD
+	Enable_Operation_Test 	<= '1';
+	wait for 10 ns;
+	Clock_Test <= '1';
+	wait for 10 ns;
+	
+	-- clear previous
+	Enable_Operation_Test 	<= '0';
+	Input_Operand_2_Test 	<= "ZZZZZZZZ";
+	Opcode_Test 		<= "000"; 
+
+	-- Output Result
+	Clock_Test <= '0';
+	Enable_Output_Final_Test <= '1';
+	wait for 10 ns;
+	
+	report "Running Test 2: ADD 11011011 to 11001010";
+	assert Output_Final_Test = "10001001" report "Test 2: Output_Final_Test should equal 10001001" severity error;
+	assert Output_From_Carry_Flag_Test = '1' report "Test 2: Output_From_Carry_Flag_Test should equal 1" severity error;
 
 	wait;
 
