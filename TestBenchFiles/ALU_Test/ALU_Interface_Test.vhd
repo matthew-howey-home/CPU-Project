@@ -100,9 +100,17 @@ begin
     stimulus_proc: process
 
     begin
-	-- ################## Operation 1 - AND 01011011 with 11001010
 	
-	-- Load Temp Input Reg with first operand	
+	-- Set controls to zero
+	Control_Clear_Carry_Test	<= '0';
+	Control_Clear_Negative_Test 	<= '0';
+	Control_Clear_Zero_Test 	<= '0';
+
+	-- ################## Operation 1 - ##################
+
+	report "Starting Operation 1: AND 01011011 with 11001010";
+	
+	report "Load Temp Input Reg with first operand";
 	Clock_Test <= '0';
 	Input_Operand_1_Test			<= "01011011";
 	Enable_Input_For_Temp_Input_Reg_Test	<= '1';
@@ -114,7 +122,7 @@ begin
 	Enable_Input_For_Temp_Input_Reg_Test 	<= '0';
 	Input_Operand_1_Test 			<= "ZZZZZZZZ";
 	
-	-- Set second operand and opcode, and enable operation
+	report "Set second operand and opcode, and enable operation";
 	Clock_Test <= '0';
 	Input_Operand_2_Test 	<= "11001010";
 	Opcode_Test 		<= "000"; -- opcode for AND
@@ -127,7 +135,7 @@ begin
 	Enable_Operation_Test 	<= '0';
 	Input_Operand_2_Test 	<= "ZZZZZZZZ";
 	
-	-- Output Result
+	report "Output Result";
 	Clock_Test <= '0';
 	Enable_Output_Final_Test <= '1';
 	wait for 10 ns;
@@ -141,8 +149,10 @@ begin
 	-- clear inputs / controls
 	Enable_Output_Final_Test 	<= '0';
 	
-	-- ################## Operation 2 - ADD 11011011 with 11001010
-	-- Load Temp Input Reg with first operand
+	-- ################## Operation 2 ########################
+	report "Starting Operation 2: ADD 11011011 with 11001010";
+
+	report "Load Temp Input Reg with first operand";
 	Clock_Test 				<= '0';
 	Input_Operand_1_Test			<= "11011011";
 	Enable_Input_For_Temp_Input_Reg_Test	<= '1';
@@ -154,7 +164,7 @@ begin
 	Enable_Input_For_Temp_Input_Reg_Test 	<= '0';
 	Input_Operand_1_Test 			<= "ZZZZZZZZ";
 
-	-- Set second operand and opcode, and enable operation
+	report "Set second operand and opcode, and enable operation";
 	Clock_Test <= '0';
 	Input_Operand_2_Test 	<= "11001010";
 	Opcode_Test 		<= "110"; -- opcode for ADD
@@ -168,13 +178,13 @@ begin
 	Input_Operand_2_Test 	<= "ZZZZZZZZ";
 	Opcode_Test 		<= "000"; 
 
-	-- Output Result
+	report "Output Result";
 	Clock_Test <= '0';
 	Enable_Output_Final_Test <= '1';
 	wait for 10 ns;
 	
 	report "Running Test 2: ADD 11011011 to 11001010";
-	assert Output_Final_Test = "10001001" report "Test 2: Output_Final_Test should equal 10001001" severity error;
+	assert Output_Final_Test = "10100101" report "Test 2: Output_Final_Test should equal 10100101" severity error;
 	assert Output_From_Carry_Flag_Test = '1' report "Test 2: Output_From_Carry_Flag_Test should equal 1" severity error;
 
 	wait;
