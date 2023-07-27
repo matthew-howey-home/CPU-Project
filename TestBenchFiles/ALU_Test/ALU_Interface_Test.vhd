@@ -24,10 +24,10 @@ architecture Behavioral of ALU_Interface_Test is
 		-- Enable Controls
 		Enable_Input_For_Temp_Input_Reg		: in std_logic;
 		Enable_Operation			: in std_logic;
+		Enable_Flags_Input			: in std_logic;
 		Enable_Output_Final			: in std_logic;
 	
 		-- Other Control Signals
-
 		Control_Clear_Carry			: in std_logic;
 		Control_Clear_Negative			: in std_logic;
 		Control_Clear_Zero			: in std_logic;
@@ -52,6 +52,7 @@ architecture Behavioral of ALU_Interface_Test is
 	-- Enable Controls
 	signal Enable_Input_For_Temp_Input_Reg_Test	: std_logic;
 	signal Enable_Operation_Test			: std_logic;
+	signal Enable_Flags_Input_Test			: std_logic;
 	signal Enable_Output_Final_Test			: std_logic;
 	
 	-- Other Control Signals
@@ -81,6 +82,7 @@ begin
 		-- Enable Controls
 		Enable_Input_For_Temp_Input_Reg		=> Enable_Input_For_Temp_Input_Reg_Test,
 		Enable_Operation			=> Enable_Operation_Test,
+		Enable_Flags_Input			=> Enable_Flags_Input_Test,
 		Enable_Output_Final			=> Enable_Output_Final_Test,
 	
 		-- Other Control Signals
@@ -127,6 +129,7 @@ begin
 	Input_Operand_2_Test 	<= "11001010";
 	Opcode_Test 		<= "000"; -- opcode for AND
 	Enable_Operation_Test 	<= '1';
+	Enable_Flags_Input_Test	<= '1';
 	wait for 10 ns;
 	Clock_Test <= '1';
 	wait for 10 ns;
@@ -134,6 +137,7 @@ begin
 	-- clear inputs / controls
 	Enable_Operation_Test 	<= '0';
 	Input_Operand_2_Test 	<= "ZZZZZZZZ";
+	Enable_Flags_Input_Test	<= '0';
 	
 	report "Output Result";
 	Clock_Test <= '0';
@@ -169,12 +173,14 @@ begin
 	Input_Operand_2_Test 	<= "11001010";
 	Opcode_Test 		<= "110"; -- opcode for ADD
 	Enable_Operation_Test 	<= '1';
+	Enable_Flags_Input_Test	<= '1';
 	wait for 10 ns;
 	Clock_Test <= '1';
 	wait for 10 ns;
 	
 	-- clear previous
 	Enable_Operation_Test 	<= '0';
+	Enable_Flags_Input_Test	<= '0';
 	Input_Operand_2_Test 	<= "ZZZZZZZZ";
 	Opcode_Test 		<= "000"; 
 
@@ -186,6 +192,34 @@ begin
 	report "Running Test 2: ADD 11011011 to 11001010";
 	assert Output_Final_Test = "10100101" report "Test 2: Output_Final_Test should equal 10100101" severity error;
 	assert Output_From_Carry_Flag_Test = '1' report "Test 2: Output_From_Carry_Flag_Test should equal 1" severity error;
+
+	Clock_Test <= '1';
+	wait for 10 ns;
+
+	-- clear inputs / controls
+	Enable_Output_Final_Test 	<= '0';
+
+	assert Output_From_Carry_Flag_Test = '1' report "Test 2: Output_From_Carry_Flag_Test should persist as 1" severity error;
+
+	-- ################## Operation 3 ########################
+	report "Starting Operation 3: Clear Carry Flag";
+
+	report "Setting Clear Carry Control flag";
+	Clock_Test <= '0';
+	Control_Clear_Carry_Test <= '1';
+	Enable_Flags_Input_Test	<= '1';
+	
+	wait for 10 ns;
+
+	Clock_Test <= '1';
+	wait for 10 ns;
+
+	report "Running Test 3: Carry Flag should be 0";
+	assert Output_From_Carry_Flag_Test = '0' report "Test 3: Output_From_Carry_Flag_Test should equal 0" severity error;
+
+	-- clear controls
+	Control_Clear_Carry_Test <= '0';
+	Enable_Flags_Input_Test	 <= '0';
 
 	wait;
 
