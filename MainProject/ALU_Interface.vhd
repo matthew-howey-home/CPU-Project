@@ -50,7 +50,7 @@ architecture Behavioral of ALU_Interface is
 
    signal Internal_Carry_Out_From_Op		: std_logic;
    signal Internal_Negative_Out_From_Op		: std_logic;
-   signal Internal_Zero_Out_From_Op		: std_logic;
+   signal Internal_Output_From_Zero_Check	: std_logic;
 
    signal Internal_Output_From_ALU		: std_logic_vector(7 downto 0);
    signal Internal_Output_From_Result_Register	: std_logic_vector(7 downto 0);
@@ -123,8 +123,12 @@ architecture Behavioral of ALU_Interface is
 	Is_Output_Zero			: entity work.Is_Register_Zero
 		port map (
 			input			=> Internal_Output_From_ALU,
-			output			=> Internal_Input_To_Zero_Flag
+			output			=> Internal_Output_From_Zero_Check
 		);
+
+	-- zero flag is set by the result of an operation followed by check (Internal_Output_From_Zero_Check)
+	-- but if the Control_Clear_Zero bit is set, this overrides it and sets the zero flag to zero. 
+	Internal_Input_To_Zero_Flag <= (not Control_Clear_Zero) and Internal_Output_From_Zero_Check;
 
 	Zero_Flag			: entity work.Edge_Triggered_Flip_Flop
 		port map (
