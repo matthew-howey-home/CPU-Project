@@ -32,7 +32,8 @@ entity  ALU_Interface is
 	-- Final Outputs
 	Output_Final				: out std_logic_vector(7 downto 0);
 	Output_From_Carry_Flag			: out std_logic;
-	Output_From_Negative_Flag		: out std_logic
+	Output_From_Negative_Flag		: out std_logic;
+	Output_From_Zero_Flag			: out std_logic
     );
 end entity  ALU_Interface;
 
@@ -49,7 +50,7 @@ architecture Behavioral of ALU_Interface is
 
    signal Internal_Carry_Out_From_Op		: std_logic;
    signal Internal_Negative_Out_From_Op		: std_logic;
-   -- signal internal_zero_out			: std_logic;
+   signal Internal_Zero_Out_From_Op		: std_logic;
 
    signal Internal_Output_From_ALU		: std_logic_vector(7 downto 0);
    signal Internal_Output_From_Result_Register	: std_logic_vector(7 downto 0);
@@ -118,9 +119,25 @@ architecture Behavioral of ALU_Interface is
 
 			Output			=> Internal_Output_From_Result_Register
         	);
+
+	Is_Output_Zero			: entity work.Is_Register_Zero
+		port map (
+			input			=> Internal_Output_From_ALU,
+			output			=> Internal_Input_To_Zero_Flag
+		);
+
+	Zero_Flag			: entity work.Edge_Triggered_Flip_Flop
+		port map (
+			Data_Input		=> Internal_Input_To_Zero_Flag,
+			-- flags should be loaded when operation takes place
+			Input_Enable		=> Enable_Flags_Input,
+			Clock			=> Clock,
+			output			=> Internal_Output_From_Zero_Flag
+		);
 	
 	Output_From_Carry_Flag			<= Internal_Output_From_Carry_Flag;
 	Output_From_Negative_Flag		<= Internal_Output_From_Negative_Flag;
+	Output_From_Zero_Flag			<= Internal_Output_From_Zero_Flag;
 	Output_Final				<= Internal_Output_From_Result_Register;
 
 end architecture Behavioral;

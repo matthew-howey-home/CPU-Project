@@ -6,9 +6,11 @@ use ieee.std_logic_textio.all;
 use std.textio.all;
 
 entity ALU_Interface_Test is
+	
 end entity ALU_Interface_Test;
-
 architecture Behavioral of ALU_Interface_Test is
+
+
     -- Component declaration for the ALU_Interface module
     component ALU_Interface
        port (
@@ -35,7 +37,8 @@ architecture Behavioral of ALU_Interface_Test is
 		-- Final Outputs
 		Output_Final				: out std_logic_vector(7 downto 0);
 		Output_From_Carry_Flag			: out std_logic;
-		Output_From_Negative_Flag		: out std_logic
+		Output_From_Negative_Flag		: out std_logic;
+		Output_From_Zero_Flag			: out std_logic
     	);
     end component ALU_Interface;
 
@@ -64,6 +67,13 @@ architecture Behavioral of ALU_Interface_Test is
 	signal Output_Final_Test			: std_logic_vector(7 downto 0);
 	signal Output_From_Carry_Flag_Test		: std_logic;
 	signal Output_From_Negative_Flag_Test		: std_logic;
+	signal Output_From_Zero_Flag_Test		: std_logic;
+
+
+ procedure Operation(signal Clock_Test: inout std_logic;   signal Operand1: in std_logic_vector(7 downto 0)) is
+    begin
+      Clock_Test <= '0';
+    end procedure;
 
 begin
 
@@ -93,7 +103,8 @@ begin
 		-- Final Outputs
 		Output_Final				=> Output_Final_Test,
 		Output_From_Carry_Flag			=> Output_From_Carry_Flag_Test,
-		Output_From_Negative_Flag		=> Output_From_Negative_Flag_Test
+		Output_From_Negative_Flag		=> Output_From_Negative_Flag_Test,
+		Output_From_Zero_Flag			=> Output_From_Zero_Flag_Test
     	);
 
 
@@ -103,6 +114,8 @@ begin
 
     begin
 	
+	Operation(Clock_Test, Input_Operand_1_Test);
+
 	-- Set controls to zero
 	Control_Clear_Carry_Test	<= '0';
 	Control_Clear_Negative_Test 	<= '0';
@@ -220,6 +233,55 @@ begin
 	-- clear controls
 	Control_Clear_Carry_Test <= '0';
 	Enable_Flags_Input_Test	 <= '0';
+
+	-- ################## Operation 4 ########################
+	report "Starting Operation 4: SUB 11101010 from 11101010";
+
+	report "Load Temp Input Reg with first operand";
+	Clock_Test 				<= '0';
+	Input_Operand_1_Test			<= "11101010";
+	Enable_Input_For_Temp_Input_Reg_Test	<= '1';
+	wait for 10 ns;
+	Clock_Test <= '1';
+	wait for 10 ns;
+
+	-- clear inputs / controls
+	Enable_Input_For_Temp_Input_Reg_Test 	<= '0';
+	Input_Operand_1_Test 			<= "ZZZZZZZZ";
+
+	report "Set second operand and opcode, and enable operation";
+	Clock_Test <= '0';
+	Input_Operand_2_Test 	<= "11101010";
+	Opcode_Test 		<= "111"; -- opcode for SUB
+	Enable_Operation_Test 	<= '1';
+	Enable_Flags_Input_Test	<= '1';
+	wait for 10 ns;
+	Clock_Test <= '1';
+	wait for 10 ns;
+	
+	-- clear previous
+	Enable_Operation_Test 	<= '0';
+	Enable_Flags_Input_Test	<= '0';
+	Input_Operand_2_Test 	<= "ZZZZZZZZ";
+	Opcode_Test 		<= "000"; 
+
+	report "Output Result";
+	Clock_Test <= '0';
+	Enable_Output_Final_Test <= '1';
+	wait for 10 ns;
+	
+	report "Running Test 2: SUB 11101010 from 11101010";
+	assert Output_Final_Test = "00000000" report "Test 2: Output_Final_Test should equal 00000000" severity error;
+	assert Output_From_Zero_Flag_Test = '1' report "Test 2: Output_From_Zero_Flag_Test should equal 1" severity error;
+
+	Clock_Test <= '1';
+	wait for 10 ns;
+
+	-- clear inputs / controls
+	Enable_Output_Final_Test 	<= '0';
+
+	assert Output_From_Zero_Flag_Test = '1' report "Test 2: Output_From_Zero_Flag_Test should persist as 1" severity error;
+
 
 	wait;
 
