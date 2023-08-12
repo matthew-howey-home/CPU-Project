@@ -57,7 +57,7 @@ begin
 		Internal_Step_1_Load_MAR_Low or
 		Internal_Step_2_Load_MAR_High;
 	FSM_Out(0) <=
-		Internal_Step_1_Load_MAR_Low;
+		Internal_Step_2_Load_MAR_High;
 	
 	PC_Low_Output_Enable	<= Internal_Step_1_Load_MAR_Low;
 	MAR_Low_Input_Enable	<= Internal_Step_1_Load_MAR_Low;
