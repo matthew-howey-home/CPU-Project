@@ -24,7 +24,8 @@ architecture Behavioral of Instruction_Decoder_Test is
 		Memory_Read_Enable			: out std_logic;
 		MDR_Input_Enable			: out std_logic;
 		MDR_Output_Enable			: out std_logic;
-		IR_Input_Enable				: out std_logic
+		IR_Input_Enable				: out std_logic;
+		Increment_PC				: out std_logic
         );
     end component Instruction_Decoder;
 
@@ -43,6 +44,7 @@ architecture Behavioral of Instruction_Decoder_Test is
 	signal MDR_Input_Enable_Test				: std_logic;
 	signal MDR_Output_Enable_Test				: std_logic;
 	signal IR_Input_Enable_Test				: std_logic;
+	signal Increment_PC_Test				: std_logic;
 
 begin
     -- Instantiate the Instruction_Decoder module
@@ -61,7 +63,8 @@ begin
 		Memory_Read_Enable			=> Memory_Read_Enable_Test,
 		MDR_Input_Enable			=> MDR_Input_Enable_Test,
 		MDR_Output_Enable			=> MDR_Output_Enable_Test,
-		IR_Input_Enable				=> IR_Input_Enable_Test
+		IR_Input_Enable				=> IR_Input_Enable_Test,
+		Increment_PC				=> Increment_PC_Test
         );
 
     -- Stimulus process to apply test vectors
@@ -98,14 +101,30 @@ begin
 
 	assert FSM_Out_Test = "00000100"			report "Step 3: FSM_Out_Test should equal 00000100" severity error;
 
-	FSM_In_Test	<= "00000100";
+	report "Running Tests for '00000101' set Step 5 Increment PC";
+	FSM_In_Test	<= "00000101";
         wait for 10 ns;
 
-	assert MDR_Output_Enable_Test = '1'		report "Step 4: MDR_Output_Enable_Test should equal 1" severity error;
-	assert IR_Input_Enable_Test = '1'		report "Step 4: IR_Input_Enable_Test should equal 1" severity error;
+	assert Increment_PC_Test = '1'			report "Step 5: Increment_PC_Test should equal 1" severity error;
+	
+	assert FSM_Out_Test = "00000110"		report "Step 5: FSM_Out_Test should equal 00000110" severity error;
 
-	assert FSM_Out_Test = "00000101"		report "Step 4: FSM_Out_Test should equal 00000101" severity error;
+	report "Running Tests for Branch to Load Register with Absolute Value";
+	FSM_In_Test	<= "00000110";
+	Instruction_Test <= "00010101"; -- instruction needs to be 0001xxxx
+        wait for 10 ns;
 
+	assert FSM_Out_Test = "00000111"		report "Branch to Load Register with Absolute Value: FSM_Out_Test should equal 00000111" severity error;
+
+	-- ************ Tests for Load Register with Absolute Value Subroutine, FSM 00000111 to xxxxxxxx ************
+	
+	report "Running Tests for Load Register with Absolute Value Step One: Load MAR (Low)";
+	FSM_In_Test	<= "00000111";
+        wait for 10 ns;
+	
+	assert PC_Low_Output_Enable_Test = '1'	report "Load Register with Absolute Value Step One: PC_Low_Output_Enable_Test should equal 1" severity error;
+	assert MAR_Low_Input_Enable_Test = '1'	report "Load Register with Absolute Value Step One: MAR_Low_Input_Enable_Test should equal 1" severity error;
+	assert FSM_Out_Test = "00001000"	report "Load Register with Absolute Value Step One: FSM_Out_Test should equal 00001000" severity error;
         -- End the simulation
         wait;
     end process stimulus_proc;
