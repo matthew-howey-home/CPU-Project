@@ -22,7 +22,9 @@ architecture Behavioral of Instruction_Decoder_Test is
 		MAR_Low_Output_To_Memory_Enable		: out std_logic;
 		MAR_High_Output_To_Memory_Enable	: out std_logic;
 		Memory_Read_Enable			: out std_logic;
-		MDR_Input_Enable			: out std_logic
+		MDR_Input_Enable			: out std_logic;
+		MDR_Output_Enable			: out std_logic;
+		IR_Input_Enable				: out std_logic
         );
     end component Instruction_Decoder;
 
@@ -39,6 +41,8 @@ architecture Behavioral of Instruction_Decoder_Test is
 	signal MAR_High_Output_To_Memory_Enable_Test		: std_logic;
 	signal Memory_Read_Enable_Test				: std_logic;
 	signal MDR_Input_Enable_Test				: std_logic;
+	signal MDR_Output_Enable_Test				: std_logic;
+	signal IR_Input_Enable_Test				: std_logic;
 
 begin
     -- Instantiate the Instruction_Decoder module
@@ -55,7 +59,9 @@ begin
 		MAR_Low_Output_To_Memory_Enable		=> MAR_Low_Output_To_Memory_Enable_Test,
 		MAR_High_Output_To_Memory_Enable	=> MAR_High_Output_To_Memory_Enable_Test,
 		Memory_Read_Enable			=> Memory_Read_Enable_Test,
-		MDR_Input_Enable			=> MDR_Input_Enable_Test
+		MDR_Input_Enable			=> MDR_Input_Enable_Test,
+		MDR_Output_Enable			=> MDR_Output_Enable_Test,
+		IR_Input_Enable				=> IR_Input_Enable_Test
         );
 
     -- Stimulus process to apply test vectors
@@ -91,6 +97,14 @@ begin
 	assert MDR_Input_Enable_Test = '1'			report "Step 3: MDR_Input_Enable_Test should equal 1" severity error;
 
 	assert FSM_Out_Test = "00000100"			report "Step 3: FSM_Out_Test should equal 00000100" severity error;
+
+	FSM_In_Test	<= "00000100";
+        wait for 10 ns;
+
+	assert MDR_Output_Enable_Test = '1'		report "Step 4: MDR_Output_Enable_Test should equal 1" severity error;
+	assert IR_Input_Enable_Test = '1'		report "Step 4: IR_Input_Enable_Test should equal 1" severity error;
+
+	assert FSM_Out_Test = "00000101"		report "Step 4: FSM_Out_Test should equal 00000101" severity error;
 
         -- End the simulation
         wait;
