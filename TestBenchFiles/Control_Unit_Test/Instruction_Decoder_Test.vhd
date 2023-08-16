@@ -133,6 +133,17 @@ begin
 	assert PC_High_Output_Enable_Test = '1'	report "Load Register with Absolute Value Step Two: PC_High_Output_Enable_Test should equal 1" severity error;
 	assert MAR_High_Input_Enable_Test = '1'	report "Load Register with Absolute Value Step Two: MAR_High_Input_Enable_Test should equal 1" severity error;
 	assert FSM_Out_Test = "00001001"	report "Load Register with Absolute Value Step Two: FSM_Out_Test should equal 00001001" severity error;
+
+	report "Running Tests for Load Register with Absolute Value Step Three: Fetch Value from Memory";
+	FSM_In_Test	<= "00001001";
+        wait for 10 ns;
+	
+	assert MAR_Low_Output_To_Memory_Enable_Test = '1'	report "Load Register with Absolute Value Step Three: MAR_Low_Output_To_Memory_Enable_Test should equal 1" severity error;
+	assert MAR_High_Output_To_Memory_Enable_Test = '1'	report "Load Register with Absolute Value Step Three: MAR_High_Output_To_Memory_Enable_Test should equal 1" severity error;
+	assert Memory_Read_Enable_Test = '1'			report "Load Register with Absolute Value Step Three: Memory_Read_Enable_Test should equal 1" severity error;
+	assert MDR_Input_Enable_Test = '1'			report "Load Register with Absolute Value Step Three: MDR_Input_Enable_Test should equal 1" severity error;
+	assert FSM_Out_Test = "00001010"			report "Load Register with Absolute Value Step Three: FSM_Out_Test should equal 00001010" severity error;
+
         -- End the simulation
         wait;
     end process stimulus_proc;
