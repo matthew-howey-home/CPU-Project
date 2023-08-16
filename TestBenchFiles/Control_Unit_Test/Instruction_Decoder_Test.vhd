@@ -25,7 +25,8 @@ architecture Behavioral of Instruction_Decoder_Test is
 		MDR_Input_Enable			: out std_logic;
 		MDR_Output_Enable			: out std_logic;
 		IR_Input_Enable				: out std_logic;
-		Increment_PC				: out std_logic
+		Increment_PC				: out std_logic;
+		A_Reg_Input_Enable			: out std_logic
         );
     end component Instruction_Decoder;
 
@@ -45,6 +46,7 @@ architecture Behavioral of Instruction_Decoder_Test is
 	signal MDR_Output_Enable_Test				: std_logic;
 	signal IR_Input_Enable_Test				: std_logic;
 	signal Increment_PC_Test				: std_logic;
+	signal A_Reg_Input_Enable_Test				: std_logic;
 
 begin
     -- Instantiate the Instruction_Decoder module
@@ -64,7 +66,8 @@ begin
 		MDR_Input_Enable			=> MDR_Input_Enable_Test,
 		MDR_Output_Enable			=> MDR_Output_Enable_Test,
 		IR_Input_Enable				=> IR_Input_Enable_Test,
-		Increment_PC				=> Increment_PC_Test
+		Increment_PC				=> Increment_PC_Test,
+		A_Reg_Input_Enable			=> A_Reg_Input_Enable_Test
         );
 
     -- Stimulus process to apply test vectors
@@ -143,6 +146,16 @@ begin
 	assert Memory_Read_Enable_Test = '1'			report "Load Register with Absolute Value Step Three: Memory_Read_Enable_Test should equal 1" severity error;
 	assert MDR_Input_Enable_Test = '1'			report "Load Register with Absolute Value Step Three: MDR_Input_Enable_Test should equal 1" severity error;
 	assert FSM_Out_Test = "00001010"			report "Load Register with Absolute Value Step Three: FSM_Out_Test should equal 00001010" severity error;
+
+	report "Running Tests for Load Register with Absolute Value Step Four: Load Value into A Register";
+	FSM_In_Test	<= "00001010";
+	Instruction_Test <= "00010001"; -- instruction needs to be xxxx0001 indicates A Reg is target
+        wait for 10 ns;
+	
+	assert MDR_Output_Enable_Test = '1'			report "Load Register with Absolute Value Step Four (LDA): MDR_Output_Enable_Test should equal 1" severity error;
+	assert A_Reg_Input_Enable_Test = '1'			report "Load Register with Absolute Value Step Four (LDA): A_Reg_Input_Enable_Test should equal 1" severity error;
+	assert FSM_Out_Test = "00001011"			report "Load Register with Absolute Value Step Four (LDA): FSM_Out_Test should equal 00001011" severity error;
+
 
         -- End the simulation
         wait;
