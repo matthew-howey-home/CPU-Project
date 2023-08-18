@@ -125,7 +125,7 @@ begin
 
 	assert FSM_Out_Test = "00000111"		report "Branch to Load Register with Absolute Value: FSM_Out_Test should equal 00000111" severity error;
 
-	-- ************ Tests for Load Register with Absolute Value Subroutine, FSM 00000111 to xxxxxxxx ************
+	-- ************ Tests for Load Register with Absolute Value Subroutine, FSM 00000111 to 00001011 ************
 	
 	report "Running Tests for Load Register with Absolute Value Step One: Load MAR (Low)";
 	FSM_In_Test	<= "00000111";
@@ -179,6 +179,13 @@ begin
 	assert MDR_Output_Enable_Test = '1'			report "Load Register with Absolute Value Step Four (LDY): MDR_Output_Enable_Test should equal 1" severity error;
 	assert Y_Reg_Input_Enable_Test = '1'			report "Load Register with Absolute Value Step Four (LDY): Y_Reg_Input_Enable_Test should equal 1" severity error;
 	assert FSM_Out_Test = "00001011"			report "Load Register with Absolute Value Step Four (LDY): FSM_Out_Test should equal 00001011" severity error;
+
+	report "Running Tests for Load Register with Absolute Value Step Five: Increment Programme Counter";
+	FSM_In_Test	<= "00001011";
+        wait for 10 ns;
+	
+	assert Increment_PC_Test = '1'				report "Load Register with Absolute Value Step Five: Increment_PC_Test should equal 1" severity error;
+	assert FSM_Out_Test = "00000001"			report "Load Register with Absolute Value Step Five: FSM_Out_Test should equal Increment_PC_Test" severity error;
 
         -- End the simulation
         wait;

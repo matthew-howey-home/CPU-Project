@@ -40,6 +40,7 @@ signal Internal_LD_Reg_Absolute_Step_3		: std_logic;
 signal Internal_LD_Reg_Absolute_Step_4_LDA	: std_logic;
 signal Internal_LD_Reg_Absolute_Step_4_LDX	: std_logic;
 signal Internal_LD_Reg_Absolute_Step_4_LDY	: std_logic;
+signal Internal_LD_Reg_Absolute_Step_5		: std_logic;
 
 begin
 	-- if FSM_In = "00000001" set Step 1 Load MAR (low)
@@ -105,6 +106,11 @@ begin
 		not FSM_In(7) and	not FSM_In(6) and	not FSM_In(5) and	not FSM_In(4) and
 		FSM_In(3) and 		not FSM_In(2) and	FSM_In(1) and		not FSM_In(0) and
 		not Instruction(3) and	not Instruction(2) and	Instruction(1) and 	Instruction(0);
+
+	-- if FSM_In = "00001011" set Step Five of Load Absolute Value to Register - Increment Programme Counter
+	Internal_LD_Reg_Absolute_Step_5 <=
+		not FSM_In(7) and	not FSM_In(6) and	not FSM_In(5) and	not FSM_In(4) and
+		FSM_In(3) and 		not FSM_In(2) and	FSM_In(1) and		FSM_In(0);
  
 	
 	-- if Internal_Step_1_Load_MAR_Low 		set FSM_Out = "00000010" (Step 2)
@@ -119,6 +125,7 @@ begin
 	-- if Internal_LD_Reg_Absolute_Step_4_LDA	set FSM_Out = "00001011" (Ld Abs to Reg Step 5)
 	-- if Internal_LD_Reg_Absolute_Step_4_LDX	set FSM_Out = "00001011" (Ld Abs to Reg Step 5)
 	-- if Internal_LD_Reg_Absolute_Step_4_LDY	set FSM_Out = "00001011" (Ld Abs to Reg Step 5)
+	-- if Internal_LD_Reg_Absolute_Step_5		set FSM_Out = "00000001" (Back to Step 1)
 
 	FSM_Out(7) <= '0';
  	FSM_Out(6) <= '0';
@@ -152,7 +159,8 @@ begin
 		Internal_LD_Reg_Absolute_Step_2 or
 		Internal_LD_Reg_Absolute_Step_4_LDA or
 		Internal_LD_Reg_Absolute_Step_4_LDX or
-		Internal_LD_Reg_Absolute_Step_4_LDY;
+		Internal_LD_Reg_Absolute_Step_4_LDY or
+		Internal_LD_Reg_Absolute_Step_5;
 	
 	PC_Low_Output_Enable	<=
 		Internal_Step_1_Load_MAR_Low or
@@ -196,6 +204,8 @@ begin
 	X_Reg_Input_Enable			<= Internal_LD_Reg_Absolute_Step_4_LDX;
 	Y_Reg_Input_Enable			<= Internal_LD_Reg_Absolute_Step_4_LDY;
 
-	Increment_PC				<= Internal_Step_5_Increment_PC;
+	Increment_PC
+		<= Internal_Step_5_Increment_PC or
+		Internal_LD_Reg_Absolute_Step_5;
 
 end architecture Behavioral;
