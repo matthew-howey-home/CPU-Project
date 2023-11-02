@@ -7,8 +7,8 @@ entity CPU is
 	Clock			: in std_logic;
 
         A_Register_Out		: out std_logic_vector(7 downto 0);
-	X_Register_Out		: out std_logic;
-	Y_Resister_Out		: out std_logic;
+	X_Register_Out		: out std_logic_vector(7 downto 0);
+	Y_Resister_Out		: out std_logic_vector(7 downto 0);
 	Memory_Address_Out_Low	: out std_logic_vector(7 downto 0);
 	Memory_Address_Out_High	: out std_logic_vector(7 downto 0);
 	Memory_Read_Enable	: out std_logic
