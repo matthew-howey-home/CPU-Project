@@ -20,17 +20,25 @@ architecture Behavioral of CPU is
 	signal Data_Bus		: std_logic_vector(7 downto 0);
 	signal Condition_Flags	: std_logic_vector(3 downto 0);
 	signal ALU_Opcode	: std_logic_vector(3 downto 0);
-	signal Current_State	: std_logic_vector(7 downto 0);
+
+	signal FSM_Initial_State: std_logic_vector(7 downto 0);
+	signal FSM_In_Signal	: std_logic_vector(7 downto 0);
+
+	signal FSM_Out_Signal	: std_logic_vector(7 downto 0);
+	
 	signal Instruction	: std_logic_vector(7 downto 0);
 
 begin
+	FSM_Initial_State <= "00000001";
+	FSM_In_Signal <= FSM_Initial_State;
+
 	-- CONTROL UNIT
 	Instruction_Decoder: entity work.Instruction_Decoder
 		port map (
 	    		Instruction 				=> Instruction,
-            		FSM_In	 				=> Current_State,
+            		FSM_In	 				=> FSM_In_Signal,
 
-			FSM_Out					=> Current_State,
+			FSM_Out					=> FSM_Out_Signal,
 			MAR_Low_Input_Enable			=> Control_Bus(0),
 			MAR_High_Input_Enable			=> Control_Bus(1), 	
 			PC_Low_Output_Enable			=> Control_Bus(2), 	
@@ -46,6 +54,18 @@ begin
 			X_Reg_Input_Enable			=> Control_Bus(12), 	
 			Y_Reg_Input_Enable			=> Control_Bus(13) 	
         	);
+ 
+	-- FINITE STATE MACHINE
+	FSM: entity work.Eight_Bit_Register
+		port map (
+	    		Data_Input 	=> FSM_In_Signal,
+            		Input_Enable 	=> '1',
+            		Clock 		=> Clock,
+			Output_Enable 	=> '0',
+
+            		Output 		=> Data_Bus
+        	);
+
 	-- REGISTERS
 	A_Register: entity work.Eight_Bit_Register
 		port map (
