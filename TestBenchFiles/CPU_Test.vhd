@@ -40,8 +40,13 @@ begin
 		Reset_Test	<= '1';
 	
         	wait for 10 ns;
-
 		Clock_Test	<= '1';
+		wait for 10 ns;
+		Clock_Test	<= '0';
+		wait for 10 ns;
+		Clock_Test	<= '1';
+		wait for 10 ns;
+		Clock_Test	<= '0';
 
 		wait;
 	end process stimulus_proc;
