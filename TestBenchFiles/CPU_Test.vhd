@@ -38,8 +38,26 @@ begin
 	-- if clock is low and reset test is asserted, FSM is set to initial state
 		Clock_Test	<= '0';
 		Reset_Test	<= '1';
-	
+		
+		-- FSM will be held in initial state while Reset signal is still asserted
         	wait for 10 ns;
+		Clock_Test	<= '1';
+		wait for 10 ns;
+		Clock_Test	<= '0';
+		wait for 10 ns;
+		Clock_Test	<= '1';
+		wait for 10 ns;
+		Clock_Test	<= '0';
+
+		-- switch off reset to release FSM and allow cycles to start
+		Reset_Test	<= '0';
+		
+		-- continue through CPU cycles
+		wait for 10 ns;
+		Clock_Test	<= '1';
+		wait for 10 ns;
+		Clock_Test	<= '0';
+		wait for 10 ns;
 		Clock_Test	<= '1';
 		wait for 10 ns;
 		Clock_Test	<= '0';
