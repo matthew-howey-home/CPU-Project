@@ -35,7 +35,9 @@ begin
     -- Stimulus process to apply test vectors
     stimulus_proc: process
 	begin
+	-- if clock is low and reset test is asserted, FSM is set to initial state
 		Clock_Test	<= '0';
+		Reset_Test	<= '1';
 	
         	wait for 10 ns;
 
