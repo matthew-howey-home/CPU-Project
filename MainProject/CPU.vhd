@@ -9,9 +9,9 @@ entity CPU is
 end entity  CPU;
 
 architecture Behavioral of CPU is
-	signal Data_Bus	: std_logic_vector(7 downto 0);
-	signal FSM_Initial_State : std_logic_vector(7 downto 0);
-	signal FSM_In_Signal : std_logic_vector(7 downto 0);
+	signal FSM_Initial_State	: std_logic_vector(7 downto 0);
+	signal FSM_In_Signal		: std_logic_vector(7 downto 0);
+	signal FSM_Out_Signal		: std_logic_vector(7 downto 0);
 	
 begin
 	FSM_Initial_State <= "00000001";
@@ -26,7 +26,7 @@ begin
             		Clock 		=> Clock,
 			Output_Enable 	=> '1',
 
-            		Output 		=> Data_Bus
+            		Output 		=> FSM_Out_Signal
         	);
 	
 end architecture Behavioral;
