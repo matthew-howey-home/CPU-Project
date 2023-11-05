@@ -39,7 +39,7 @@ begin
 		Clock_Test	<= '0';
 		Reset_Test	<= '1';
 		
-		-- FSM will be held in initial state while Reset signal is still asserted
+		-- FSM and PC will be held in initial state while Reset signal is still asserted
         	wait for 10 ns;
 		Clock_Test	<= '1';
 		wait for 10 ns;

@@ -14,8 +14,10 @@ architecture Behavioral of CPU is
 
 	signal PC_Low_Initial_State		: std_logic_vector(7 downto 0);
 	signal PC_Low_In			: std_logic_vector(7 downto 0);
+	signal PC_Low_Input_Enable		: std_logic;
 	signal PC_High_Initial_State		: std_logic_vector(7 downto 0);
 	signal PC_High_In			: std_logic_vector(7 downto 0);
+	signal PC_High_Input_Enable		: std_logic;
 
 	signal Decoder_FSM_In			: std_logic_vector(7 downto 0);
 	signal Decoder_FSM_Out			: std_logic_vector(7 downto 0);
@@ -48,6 +50,15 @@ begin
             		Output 		=> PC_Low_In
         	);
 
+	Reset_PC_Low_Input_Mux: entity work.Two_to_One_Mux
+		port map (
+	    		input_1 	=> Control_Bus(2), -- default input to PC Low Input Enable
+            		Input_2 	=> '1',
+            		selector	=> Reset,
+	
+            		Output 		=> PC_Low_Input_Enable
+        	);
+
 	Reset_PC_High_Mux: entity work.Two_to_One_Byte_Mux
 		port map (
 	    		input_1 	=> Data_Bus, -- default input to PC High
@@ -55,6 +66,15 @@ begin
             		selector	=> Reset,
 	
             		Output 		=> PC_High_In
+        	);
+
+	Reset_PC_High_Input_Mux: entity work.Two_to_One_Mux
+		port map (
+	    		input_1 	=> Control_Bus(3), -- default input to PC High Input Enable
+            		Input_2 	=> '1',
+            		selector	=> Reset,
+	
+            		Output 		=> PC_High_Input_Enable
         	);
 
  
@@ -95,7 +115,7 @@ begin
 	PC_Low: entity work.Eight_Bit_Register
 		port map (
 	    		Data_Input 	=> PC_Low_In,
-            		Input_Enable 	=> '1',
+            		Input_Enable 	=> PC_Low_Input_Enable,
             		Clock 		=> Clock,
 			Output_Enable 	=> Control_Bus(2),
 
@@ -105,7 +125,7 @@ begin
 	PC_High: entity work.Eight_Bit_Register
 		port map (
 	    		Data_Input 	=> PC_High_In,
-            		Input_Enable 	=> '1',
+            		Input_Enable 	=> PC_High_Input_Enable,
             		Clock 		=> Clock,
 			Output_Enable 	=> Control_Bus(3),
 
