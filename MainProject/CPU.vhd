@@ -4,7 +4,10 @@ use ieee.std_logic_1164.all;
 entity CPU is
     port (
 	Clock			: in std_logic;
-	Reset			: in std_logic
+	Reset			: in std_logic;
+
+	Memory_Out_Low		: out std_logic_vector(7 downto 0);
+	Memory_Out_High		: out std_logic_vector(7 downto 0)
     );
 end entity  CPU;
 
@@ -132,6 +135,26 @@ begin
 			Output_Enable 	=> Control_Bus(3),
 
             		Output 		=> Data_Bus
+        	);
+
+	MAR_Low: entity work.Eight_Bit_Register
+		port map (
+	    		Data_Input 	=> Data_Bus,
+            		Input_Enable 	=> Control_Bus(0),
+            		Clock 		=> Clock,
+			Output_Enable 	=> Control_Bus(2),
+
+            		Output 		=> Memory_Out_Low
+        	);
+
+	MAR_High: entity work.Eight_Bit_Register
+		port map (
+	    		Data_Input 	=> PC_High_In,
+            		Input_Enable 	=> Control_Bus(1),
+            		Clock 		=> Clock,
+			Output_Enable 	=> Control_Bus(5),
+
+            		Output 		=> Memory_Out_High
         	);
 	
 end architecture Behavioral;
