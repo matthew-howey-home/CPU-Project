@@ -35,7 +35,7 @@ begin
 	Reset_FSM_Mux: entity work.Two_to_One_Byte_Mux
 		port map (
 	    		input_1 	=> Decoder_FSM_Out, -- i.e. next FSM state as output from decoder
-            		Input_2 	=> FSM_Register_Initial_State,
+            		input_2 	=> FSM_Register_Initial_State,
             		selector	=> Reset,
 	
             		Output 		=> FSM_Register_In
@@ -45,7 +45,7 @@ begin
 	Reset_PC_Low_Mux: entity work.Two_to_One_Byte_Mux
 		port map (
 	    		input_1 	=> Data_Bus, -- default input to PC Low
-            		Input_2 	=> PC_Low_Initial_State,
+            		input_2 	=> PC_Low_Initial_State,
             		selector	=> Reset,
 	
             		Output 		=> PC_Low_In
@@ -54,7 +54,7 @@ begin
 	Reset_PC_Low_Input_Mux: entity work.Two_to_One_Mux
 		port map (
 	    		input_1 	=> Control_Bus(2), -- default input to PC Low Input Enable
-            		Input_2 	=> '1', -- assert input enable if Reset siganl is asserted 
+            		input_2 	=> '1', -- assert input enable if Reset siganl is asserted 
             		selector	=> Reset,
 	
             		Output 		=> PC_Low_Input_Enable
@@ -64,7 +64,7 @@ begin
 	Reset_PC_High_Mux: entity work.Two_to_One_Byte_Mux
 		port map (
 	    		input_1 	=> Data_Bus, -- default input to PC High
-            		Input_2 	=> PC_High_Initial_State,
+            		input_2 	=> PC_High_Initial_State,
             		selector	=> Reset,
 	
             		Output 		=> PC_High_In
@@ -73,7 +73,7 @@ begin
 	Reset_PC_High_Input_Mux: entity work.Two_to_One_Mux
 		port map (
 	    		input_1 	=> Control_Bus(3), -- default input to PC High Input Enable
-            		Input_2 	=> '1', -- assert input enable if Reset siganl is asserted 
+            		input_2 	=> '1', -- assert input enable if Reset siganl is asserted 
             		selector	=> Reset,
 	
             		Output 		=> PC_High_Input_Enable
