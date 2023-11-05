@@ -142,7 +142,7 @@ begin
 	    		Data_Input 	=> Data_Bus,
             		Input_Enable 	=> Control_Bus(0),
             		Clock 		=> Clock,
-			Output_Enable 	=> Control_Bus(2),
+			Output_Enable 	=> Control_Bus(4),
 
             		Output 		=> Memory_Out_Low
         	);
