@@ -38,6 +38,8 @@ begin
 	-- if clock is low and reset test is asserted, FSM is set to initial state
 		Clock_Test	<= '0';
 		Reset_Test	<= '1';
+
+		report "Running Clock Cycle while Reset is asserted";
 		
 		-- FSM and PC will be held in initial state while Reset signal is still asserted
         	wait for 10 ns;
@@ -49,18 +51,26 @@ begin
 		wait for 10 ns;
 		Clock_Test	<= '0';
 
+		report "Switching off Reset";
 		-- switch off reset to release FSM and allow cycles to start
 		Reset_Test	<= '0';
 		
 		-- continue through CPU cycles
+		report "Step 1: Load MAR low from PC low";
 		wait for 10 ns;
 		Clock_Test	<= '1';
 		wait for 10 ns;
 		Clock_Test	<= '0';
+
+		report "Step 2: Load MAR High from PC High";
+		
 		wait for 10 ns;
 		Clock_Test	<= '1';
 		wait for 10 ns;
 		Clock_Test	<= '0';
+
+		report "Step 3:  Load MAR into Memory Out and Set Memory Read Enable";
+		
 		wait for 10 ns;
 		Clock_Test	<= '1';
 		wait for 10 ns;
