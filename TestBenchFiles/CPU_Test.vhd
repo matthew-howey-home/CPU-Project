@@ -15,20 +15,35 @@ architecture Behavioral of CPU_Test is
     component CPU
         port (
 		Clock			: in std_logic;
-		Reset			: in std_logic
+		Reset			: in std_logic;
+		Memory_In		: in std_logic_vector(7 downto 0);
+
+		Memory_Out_Low		: out std_logic_vector(7 downto 0);
+		Memory_Out_High		: out std_logic_vector(7 downto 0);
+		Memory_Read_Enable	: out std_logic	
         );
     end component CPU;
 
 	-- Signal declarations
 	signal Clock_Test		: std_logic;
 	signal Reset_Test		: std_logic;
-begin
+	signal Memory_In_Test		: std_logic_vector(7 downto 0);
+	signal Memory_Out_Low_Test	: std_logic_vector(7 downto 0);
+	signal Memory_Out_High_Test	: std_logic_vector(7 downto 0);
+	signal Memory_Read_Enable_Test	: std_logic;
 
+
+begin
    -- Instantiate the three_bit_decoder module
     UUT: CPU
         port map (
-            	Clock		=> Clock_Test,
-		Reset		=> Reset_Test
+            	Clock			=> Clock_Test,
+		Reset			=> Reset_Test,
+		Memory_In		=> Memory_In_Test,
+		
+		Memory_Out_Low		=> Memory_Out_Low_Test,
+		Memory_Out_High		=> Memory_Out_High_Test,
+		Memory_Read_Enable 	=> Memory_Read_Enable_Test
         );
 
 
@@ -71,5 +86,17 @@ begin
 
 		wait;
 	end process stimulus_proc;
+
+	-- Simulate memory response
+    	process
+    	begin
+        	wait for 1 ns;  -- Wait for a small time to simulate memory access time
+        
+        	if Memory_Read_Enable_Test = '1' and Memory_Out_Low_Test = "00000000" and Memory_Out_High_Test = "00000000" then
+            		Memory_In_Test <= "00010001";
+        	else
+            		Memory_In_Test <= "ZZZZZZZZ";  -- Default data value when the condition is not met
+        	end if;
+    end process;
 
 end architecture Behavioral;

@@ -6,8 +6,11 @@ entity CPU is
 	Clock			: in std_logic;
 	Reset			: in std_logic;
 
+	Memory_In		: in std_logic_vector(7 downto 0);
+
 	Memory_Out_Low		: out std_logic_vector(7 downto 0);
-	Memory_Out_High		: out std_logic_vector(7 downto 0)
+	Memory_Out_High		: out std_logic_vector(7 downto 0);
+	Memory_Read_Enable	: out std_logic
     );
 end entity  CPU;
 
@@ -156,5 +159,7 @@ begin
 
             		Output 		=> Memory_Out_High
         	);
+
+	Memory_Read_Enable <= Control_Bus(6);
 	
 end architecture Behavioral;
