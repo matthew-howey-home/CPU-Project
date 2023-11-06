@@ -52,26 +52,19 @@ begin
 		Clock_Test	<= '0';
 
 		report "Switching off Reset";
+		report "Step 1: Load MAR low from PC low";
 		-- switch off reset to release FSM and allow cycles to start
 		Reset_Test	<= '0';
-		
+		wait for 10 ns;
 		-- continue through CPU cycles
-		report "Step 1: Load MAR low from PC low";
-		wait for 10 ns;
-		Clock_Test	<= '1';
-		wait for 10 ns;
-		Clock_Test	<= '0';
-
+		
 		report "Step 2: Load MAR High from PC High";
-		
-		wait for 10 ns;
 		Clock_Test	<= '1';
 		wait for 10 ns;
 		Clock_Test	<= '0';
-
-		report "Step 3:  Load MAR into Memory Out and Set Memory Read Enable";
-		
 		wait for 10 ns;
+
+		report "Step 3:  Load MAR into Memory Out and Set Memory Read Enable";		
 		Clock_Test	<= '1';
 		wait for 10 ns;
 		Clock_Test	<= '0';
