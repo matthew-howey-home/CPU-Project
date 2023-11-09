@@ -28,6 +28,7 @@ end entity Instruction_Decoder;
 
 architecture Behavioral of Instruction_Decoder is
 
+signal Internal_Step_0_Initial_State 		: std_logic;
 signal Internal_Step_1_Load_MAR_Low 		: std_logic;
 signal Internal_Step_2_Load_MAR_High 		: std_logic;
 signal Internal_Step_3_Fetch_Instruction	: std_logic;
@@ -43,6 +44,11 @@ signal Internal_LD_Reg_Absolute_Step_4_LDY	: std_logic;
 signal Internal_LD_Reg_Absolute_Step_5		: std_logic;
 
 begin
+	-- if FSM_In = "00000000" set Step 0 Initial State (No Action)
+	Internal_Step_0_Initial_State <=
+		not FSM_In(7) and	not FSM_In(6) and	not FSM_In(5) and	not FSM_In(4) and
+		not FSM_In(3) and 	not FSM_In(2) and	not FSM_In(1) and 	not FSM_In(0);
+
 	-- if FSM_In = "00000001" set Step 1 Load MAR (low)
 	Internal_Step_1_Load_MAR_Low <=
 		not FSM_In(7) and	not FSM_In(6) and	not FSM_In(5) and	not FSM_In(4) and
@@ -112,7 +118,7 @@ begin
 		not FSM_In(7) and	not FSM_In(6) and	not FSM_In(5) and	not FSM_In(4) and
 		FSM_In(3) and 		not FSM_In(2) and	FSM_In(1) and		FSM_In(0);
  
-	
+	-- If Internal_Step_0_Initial_State		set FSM_Out = "00000001" (Step 1)
 	-- if Internal_Step_1_Load_MAR_Low 		set FSM_Out = "00000010" (Step 2)
 	-- if Internal_Step_2_Load_MAR_High 		set FSM_Out = "00000011" (Step 3)
 	-- if Internal_Step_3_Fetch_Instruction 	set FSM_Out = "00000100" (Step 4)
@@ -153,6 +159,7 @@ begin
 		Internal_LD_Reg_Absolute_Step_4_LDX or
 		Internal_LD_Reg_Absolute_Step_4_LDY;
 	FSM_Out(0) <=
+		Internal_Step_0_Initial_State or
 		Internal_Step_2_Load_MAR_High or
 		Internal_Step_4_Load_Instruction or
 		Internal_Branch_LD_Reg_Absolute or

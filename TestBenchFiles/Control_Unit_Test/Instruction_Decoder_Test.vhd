@@ -80,6 +80,14 @@ begin
     stimulus_proc: process
 
     begin
+
+	report "Running Tests for '00000000' set Step 0 Initial State (No Action)";
+
+        FSM_In_Test	<= "00000000";
+        wait for 10 ns;
+
+	assert FSM_Out_Test = "00000001"	report "Step 0: FSM_Out_Test should equal 00000001" severity error;
+
 	report "Running Tests for '00000001' set Step 1 Load MAR (low)";
 
         FSM_In_Test	<= "00000001";
