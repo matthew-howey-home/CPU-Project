@@ -33,7 +33,7 @@ architecture Behavioral of CPU is
 	signal Data_Bus				: std_logic_vector(7 downto 0);
 	
 begin
-	FSM_Register_Initial_State 	<= "00000001";
+	FSM_Register_Initial_State 	<= "00000000";
 	PC_Low_Initial_State 		<= "00000000";
 	PC_High_Initial_State 		<= "00000000";
 
