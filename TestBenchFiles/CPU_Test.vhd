@@ -104,6 +104,13 @@ begin
         	else
             		Memory_In_Test <= "ZZZZZZZZ";  -- Default data value when the condition is not met
         	end if;
+		--sim_time <= sim_time + 1 ns;
+
+    		-- Stop process after 100 ns
+    		if now = 100 ns then
+        		report "Simulation completed successfully after 100 ns" severity note;
+        		wait;
+    		end if;
     end process;
 
 end architecture Behavioral;
