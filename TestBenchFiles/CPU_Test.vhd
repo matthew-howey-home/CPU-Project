@@ -91,6 +91,10 @@ begin
 		wait for 10 ns;
 		Clock_Test	<= '0';
 
+		wait for 10 ns;
+		Clock_Test	<= '1';
+
+
 		wait;
 	end process stimulus_proc;
 
@@ -106,8 +110,8 @@ begin
         	end if;
 		--sim_time <= sim_time + 1 ns;
 
-    		-- Stop process after 100 ns
-    		if now = 100 ns then
+    		-- Stop process after 200 ns
+    		if now = 200 ns then
         		report "Simulation completed successfully after 100 ns" severity note;
         		wait;
     		end if;

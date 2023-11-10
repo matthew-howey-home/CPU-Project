@@ -150,7 +150,17 @@ begin
             		Output 		=> Memory_Out_Low
         	);
 
-	MAR_High: entity work.Eight_Bit_Register
+	MDR: entity work.Eight_Bit_Register
+		port map (
+	    		Data_Input 	=> Memory_In,
+            		Input_Enable 	=> Control_Bus(7),
+            		Clock 		=> Clock,
+			Output_Enable 	=> Control_Bus(8),
+
+            		Output 		=> Data_Bus
+        	);
+
+MAR_High: entity work.Eight_Bit_Register
 		port map (
 	    		Data_Input 	=> PC_High_In,
             		Input_Enable 	=> Control_Bus(1),
