@@ -112,7 +112,7 @@ begin
 
     		-- Stop process after 200 ns
     		if now = 200 ns then
-        		report "Simulation completed successfully after 100 ns" severity note;
+        		report "Simulation completed successfully after 200 ns" severity note;
         		wait;
     		end if;
     end process;
