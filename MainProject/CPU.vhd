@@ -29,13 +29,39 @@ architecture Behavioral of CPU is
 	signal Decoder_FSM_Out			: std_logic_vector(7 downto 0);
 
 	signal Instruction			: std_logic_vector(7 downto 0);
-	signal Control_Bus			: std_logic_vector(13 downto 0);
+	signal Control_Bus			: std_logic_vector(15 downto 0);
 	signal Data_Bus				: std_logic_vector(7 downto 0);
 	
 begin
 	FSM_Register_Initial_State 	<= "00000000";
 	PC_Low_Initial_State 		<= "00000000";
 	PC_High_Initial_State 		<= "00000000";
+
+	-- CONTROL UNIT INSTRUCTION DECODER
+	Instruction_Decoder: entity work.Instruction_Decoder
+		port map (
+	    		Instruction 				=> Instruction,
+            		FSM_In	 				=> Decoder_FSM_In,
+
+			FSM_Out					=> Decoder_FSM_Out,
+			MAR_Low_Input_Enable			=> Control_Bus(0),
+			MAR_Low_Output_To_Memory_Enable		=> Control_Bus(1),
+			MAR_High_Input_Enable			=> Control_Bus(2),
+			MAR_High_Output_To_Memory_Enable	=> Control_Bus(3),
+			MDR_Input_Enable			=> Control_Bus(4), 	
+			MDR_Output_Enable			=> Control_Bus(5), 	
+			Memory_Read_Enable			=> Control_Bus(6), 
+			PC_Low_Input_Enable			=> Control_Bus(7), 	
+			PC_Low_Output_Enable			=> Control_Bus(8),
+			PC_High_Input_Enable			=> Control_Bus(9),	 	
+			PC_High_Output_Enable			=> Control_Bus(10),			
+			IR_Input_Enable				=> Control_Bus(11), 	
+			Increment_PC				=> Control_Bus(12), 	
+			A_Reg_Input_Enable			=> Control_Bus(13), 	
+			X_Reg_Input_Enable			=> Control_Bus(14), 	
+			Y_Reg_Input_Enable			=> Control_Bus(15) 	
+        	);
+
 
 	-- RESET FSM MUX, connect FSM_Initial_State to FSM input if Reset is asserted, otherwise connect output from decoder (next state)
 	Reset_FSM_Mux: entity work.Two_to_One_Byte_Mux
@@ -59,7 +85,7 @@ begin
 
 	Reset_PC_Low_Input_Mux: entity work.Two_to_One_Mux
 		port map (
-	    		input_1 	=> Control_Bus(2), -- default input to PC Low Input Enable
+	    		input_1 	=> Control_Bus(7), -- default input to PC Low Input Enable
             		input_2 	=> '1', -- assert input enable if Reset siganl is asserted 
             		selector	=> Reset,
 	
@@ -78,7 +104,7 @@ begin
 
 	Reset_PC_High_Input_Mux: entity work.Two_to_One_Mux
 		port map (
-	    		input_1 	=> Control_Bus(3), -- default input to PC High Input Enable
+	    		input_1 	=> Control_Bus(9), -- default input to PC High Input Enable
             		input_2 	=> '1', -- assert input enable if Reset siganl is asserted 
             		selector	=> Reset,
 	
@@ -97,35 +123,44 @@ begin
             		Output 		=> Decoder_FSM_In
         	);
 
-	-- CONTROL UNIT INSTRUCTION DECODER
-	Instruction_Decoder: entity work.Instruction_Decoder
-		port map (
-	    		Instruction 				=> Instruction,
-            		FSM_In	 				=> Decoder_FSM_In,
+	-- SPECIAL PURPOSE REGISTERS
 
-			FSM_Out					=> Decoder_FSM_Out,
-			MAR_Low_Input_Enable			=> Control_Bus(0),
-			MAR_High_Input_Enable			=> Control_Bus(1), 	
-			PC_Low_Output_Enable			=> Control_Bus(2), 	
-			PC_High_Output_Enable			=> Control_Bus(3), 	
-			MAR_Low_Output_To_Memory_Enable		=> Control_Bus(4), 	
-			MAR_High_Output_To_Memory_Enable	=> Control_Bus(5), 	
-			Memory_Read_Enable			=> Control_Bus(6), 	
-			MDR_Input_Enable			=> Control_Bus(7), 	
-			MDR_Output_Enable			=> Control_Bus(8), 	
-			IR_Input_Enable				=> Control_Bus(9), 	
-			Increment_PC				=> Control_Bus(10), 	
-			A_Reg_Input_Enable			=> Control_Bus(11), 	
-			X_Reg_Input_Enable			=> Control_Bus(12), 	
-			Y_Reg_Input_Enable			=> Control_Bus(13) 	
+	MAR_Low: entity work.Eight_Bit_Register
+		port map (
+	    		Data_Input 	=> Data_Bus,
+            		Input_Enable 	=> Control_Bus(0),
+            		Clock 		=> Clock,
+			Output_Enable 	=> Control_Bus(1),
+
+            		Output 		=> Memory_Out_Low
         	);
-	
+
+	MAR_High: entity work.Eight_Bit_Register
+		port map (
+	    		Data_Input 	=> PC_High_In,
+            		Input_Enable 	=> Control_Bus(2),
+            		Clock 		=> Clock,
+			Output_Enable 	=> Control_Bus(3),
+			Output 		=> Memory_Out_High
+        	);
+
+
+	MDR: entity work.Eight_Bit_Register
+		port map (
+	    		Data_Input 	=> Memory_In,
+            		Input_Enable 	=> Control_Bus(4),
+            		Clock 		=> Clock,
+			Output_Enable 	=> Control_Bus(5),
+
+            		Output 		=> Data_Bus
+        	);
+
 	PC_Low: entity work.Eight_Bit_Register
 		port map (
 	    		Data_Input 	=> PC_Low_In,
             		Input_Enable 	=> PC_Low_Input_Enable,
             		Clock 		=> Clock,
-			Output_Enable 	=> Control_Bus(2),
+			Output_Enable 	=> Control_Bus(8),
 
             		Output 		=> Data_Bus
         	);
@@ -135,39 +170,9 @@ begin
 	    		Data_Input 	=> PC_High_In,
             		Input_Enable 	=> PC_High_Input_Enable,
             		Clock 		=> Clock,
-			Output_Enable 	=> Control_Bus(3),
+			Output_Enable 	=> Control_Bus(10),
 
             		Output 		=> Data_Bus
-        	);
-
-	MAR_Low: entity work.Eight_Bit_Register
-		port map (
-	    		Data_Input 	=> Data_Bus,
-            		Input_Enable 	=> Control_Bus(0),
-            		Clock 		=> Clock,
-			Output_Enable 	=> Control_Bus(4),
-
-            		Output 		=> Memory_Out_Low
-        	);
-
-	MDR: entity work.Eight_Bit_Register
-		port map (
-	    		Data_Input 	=> Memory_In,
-            		Input_Enable 	=> Control_Bus(7),
-            		Clock 		=> Clock,
-			Output_Enable 	=> Control_Bus(8),
-
-            		Output 		=> Data_Bus
-        	);
-
-MAR_High: entity work.Eight_Bit_Register
-		port map (
-	    		Data_Input 	=> PC_High_In,
-            		Input_Enable 	=> Control_Bus(1),
-            		Clock 		=> Clock,
-			Output_Enable 	=> Control_Bus(5),
-
-            		Output 		=> Memory_Out_High
         	);
 
 	Memory_Read_Enable <= Control_Bus(6);
