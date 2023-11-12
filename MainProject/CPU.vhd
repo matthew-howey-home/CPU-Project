@@ -175,6 +175,16 @@ begin
             		Output 		=> Data_Bus
         	);
 
+	IR: entity work.Eight_Bit_Register
+		port map (
+	    		Data_Input 	=> Data_Bus,
+            		Input_Enable 	=> Control_Bus(11),
+            		Clock 		=> Clock,
+			Output_Enable 	=> '1', -- always outputting to Instruction Decoder
+
+            		Output 		=> Instruction
+        	);
+
 	Memory_Read_Enable <= Control_Bus(6);
 	
 end architecture Behavioral;
