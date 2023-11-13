@@ -105,6 +105,12 @@ begin
 		Clock_Test	<= '0';
 		wait for 10 ns;
 
+		report "Step 5:  Increment PC";		
+		Clock_Test	<= '1';
+		wait for 10 ns;
+		Clock_Test	<= '0';
+		wait for 10 ns;
+
 		Clock_Test	<= '1';
 
 		wait;
