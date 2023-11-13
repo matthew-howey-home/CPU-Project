@@ -21,9 +21,14 @@ architecture Behavioral of CPU is
 	signal PC_Low_Initial_State		: std_logic_vector(7 downto 0);
 	signal PC_Low_In			: std_logic_vector(7 downto 0);
 	signal PC_Low_Input_Enable		: std_logic;
+	signal PC_Low_Mux_Selector		: std_logic_vector(1 downto 0);
+	signal PC_Low_Incremented		: std_logic_vector(7 downto 0);
+
 	signal PC_High_Initial_State		: std_logic_vector(7 downto 0);
 	signal PC_High_In			: std_logic_vector(7 downto 0);
 	signal PC_High_Input_Enable		: std_logic;
+	signal PC_High_Mux_Selector		: std_logic_vector(1 downto 0);
+	signal PC_High_Incremented		: std_logic_vector(7 downto 0);
 
 	signal Decoder_FSM_In			: std_logic_vector(7 downto 0);
 	signal Decoder_FSM_Out			: std_logic_vector(7 downto 0);
@@ -31,7 +36,7 @@ architecture Behavioral of CPU is
 	signal Instruction			: std_logic_vector(7 downto 0);
 	signal Control_Bus			: std_logic_vector(15 downto 0);
 	signal Data_Bus				: std_logic_vector(7 downto 0);
-	
+
 begin
 	FSM_Register_Initial_State 	<= "00000000";
 	PC_Low_Initial_State 		<= "00000000";
@@ -73,40 +78,62 @@ begin
             		Output 		=> FSM_Register_In
         	);
 
-	-- RESET PC Low Mux, connect PC Low Initial State to PC Low input if Reset is asserted, otherwise connect data bus
-	Reset_PC_Low_Mux: entity work.Two_to_One_Byte_Mux
+	-- RESET PC Low Mux, directs Reset and Increment input
+
+	PC_Low_Mux_Selector(0) <= Control_Bus(12); -- Increment PC
+	PC_Low_Mux_Selector(1) <= Reset;
+	PC_Low_Incremented <= "00000001";
+
+	PC_Low_Input_Mux: entity work.Four_to_One_Byte_Mux
 		port map (
-	    		input_1 	=> Data_Bus, -- default input to PC Low
-            		input_2 	=> PC_Low_Initial_State,
-            		selector	=> Reset,
+	    		input_0 	=> Data_Bus, -- default input to PC High, neither reset nor increment asserted
+            		input_1 	=> PC_Low_Incremented, -- Increment asserted, set to incremented value
+			input_2 	=> PC_Low_Initial_State, -- Reset asserted, set to initial value
+			input_3 	=> PC_Low_Initial_State, -- Both asserted, prioritise reset
+
+            		selector	=> PC_Low_Mux_Selector,
 	
             		Output 		=> PC_Low_In
         	);
 
-	Reset_PC_Low_Input_Mux: entity work.Two_to_One_Mux
-		port map (
-	    		input_1 	=> Control_Bus(7), -- default input to PC Low Input Enable
-            		input_2 	=> '1', -- assert input enable if Reset siganl is asserted 
-            		selector	=> Reset,
+	PC_Low_Input_Enable_Mux: entity work.Four_to_One_Bit_Mux
+		port map (	    		
+			input_0 	=> Control_Bus(9), -- default input to PC High Input Enable
+            		input_1 	=> '1', -- assert input enable if Increment signal is asserted
+			input_2 	=> '1', -- assert input enable if Reset signal is asserted
+			input_3 	=> '1', -- assert input enable if both signals asserted
+
+            		selector	=> PC_Low_Mux_Selector,
 	
             		Output 		=> PC_Low_Input_Enable
         	);
 
-	-- RESET PC High Mux, connect PC High Initial State to PC High input if Reset is asserted, otherwise connect data bus
-	Reset_PC_High_Mux: entity work.Two_to_One_Byte_Mux
+	
+	-- RESET PC High Mux, directs Reset and Increment input
+	PC_High_Mux_Selector(0) <= Control_Bus(12); -- Increment PC
+	PC_High_Mux_Selector(1) <= Reset;
+	PC_High_Incremented <= "00000000";
+
+	PC_High_Input_Mux: entity work.Four_to_One_Byte_Mux
 		port map (
-	    		input_1 	=> Data_Bus, -- default input to PC High
-            		input_2 	=> PC_High_Initial_State,
-            		selector	=> Reset,
+	    		input_0 	=> Data_Bus, -- default input to PC High, neither reset nor increment asserted
+            		input_1 	=> PC_High_Incremented, -- Increment asserted, set to incremented value
+			input_2 	=> PC_High_Initial_State, -- Reset asserted, set to initial value
+			input_3 	=> PC_High_Initial_State, -- Both asserted, prioritise reset
+
+            		selector	=> PC_High_Mux_Selector,
 	
             		Output 		=> PC_High_In
         	);
 
-	Reset_PC_High_Input_Mux: entity work.Two_to_One_Mux
-		port map (
-	    		input_1 	=> Control_Bus(9), -- default input to PC High Input Enable
-            		input_2 	=> '1', -- assert input enable if Reset siganl is asserted 
-            		selector	=> Reset,
+	PC_High_Input_Enable_Mux: entity work.Four_to_One_Bit_Mux
+		port map (	    		
+			input_0 	=> Control_Bus(9), -- default input to PC High Input Enable
+            		input_1 	=> '1', -- assert input enable if Increment signal is asserted
+			input_2 	=> '1', -- assert input enable if Reset signal is asserted
+			input_3 	=> '1', -- assert input enable if both signals asserted
+
+            		selector	=> PC_High_Mux_Selector,
 	
             		Output 		=> PC_High_Input_Enable
         	);
