@@ -1,5 +1,6 @@
 
 
+
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.std_logic_textio.all;
@@ -89,6 +90,12 @@ begin
 		report "Step 3:  Load MAR into Memory Out and Set Memory Read Enable";		
 		Clock_Test	<= '1';
 		wait for 10 ns;
+
+		report "Running tests for CPU reading Memory location 0000000000000000";
+		assert Memory_Out_Low_Test = "00000000"	report "Test 1: Memory_Out_Low_Test should equal 00000000" severity error;
+		assert Memory_Out_High_Test = "00000000" report "Test 2: Memory_Out_High_Test should equal 00000000" severity error;
+		assert Memory_Read_Enable_Test = '1' report "Test 3: Memory_Read_Enable_Test should equal 1" severity error;
+
 		Clock_Test	<= '0';
 		wait for 10 ns;
 	
