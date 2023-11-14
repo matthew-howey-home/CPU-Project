@@ -22,16 +22,16 @@ architecture Behavioral of CPU is
 	signal PC_Low_In			: std_logic_vector(7 downto 0);
 	signal PC_Low_Input_Enable		: std_logic;
 	signal PC_Low_Mux_Selector		: std_logic_vector(1 downto 0);
-	signal PC_Low_Out			: std_logic_vector(1 downto 0);
-	signal Increment_PC_Low_In		: std_logic_vector(1 downto 0);
+	signal PC_Low_Out			: std_logic_vector(7 downto 0);
+	signal Increment_PC_Low_In		: std_logic_vector(7 downto 0);
 	signal PC_Low_Incremented		: std_logic_vector(7 downto 0);
 
 	signal PC_High_Initial_State		: std_logic_vector(7 downto 0);
 	signal PC_High_In			: std_logic_vector(7 downto 0);
 	signal PC_High_Input_Enable		: std_logic;
 	signal PC_High_Mux_Selector		: std_logic_vector(1 downto 0);
-	signal PC_High_Out			: std_logic_vector(1 downto 0);
-	signal Increment_PC_High_In		: std_logic_vector(1 downto 0);
+	signal PC_High_Out			: std_logic_vector(7 downto 0);
+	signal Increment_PC_High_In		: std_logic_vector(7 downto 0);
 	signal PC_High_Incremented		: std_logic_vector(7 downto 0);
 
 	signal Decoder_FSM_In			: std_logic_vector(7 downto 0);
