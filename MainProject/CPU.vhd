@@ -22,12 +22,16 @@ architecture Behavioral of CPU is
 	signal PC_Low_In			: std_logic_vector(7 downto 0);
 	signal PC_Low_Input_Enable		: std_logic;
 	signal PC_Low_Mux_Selector		: std_logic_vector(1 downto 0);
+	signal PC_Low_Out			: std_logic_vector(1 downto 0);
+	signal Increment_PC_Low_In		: std_logic_vector(1 downto 0);
 	signal PC_Low_Incremented		: std_logic_vector(7 downto 0);
 
 	signal PC_High_Initial_State		: std_logic_vector(7 downto 0);
 	signal PC_High_In			: std_logic_vector(7 downto 0);
 	signal PC_High_Input_Enable		: std_logic;
 	signal PC_High_Mux_Selector		: std_logic_vector(1 downto 0);
+	signal PC_High_Out			: std_logic_vector(1 downto 0);
+	signal Increment_PC_High_In		: std_logic_vector(1 downto 0);
 	signal PC_High_Incremented		: std_logic_vector(7 downto 0);
 
 	signal Decoder_FSM_In			: std_logic_vector(7 downto 0);
@@ -189,7 +193,16 @@ begin
             		Clock 		=> Clock,
 			Output_Enable 	=> Control_Bus(8),
 
-            		Output 		=> Data_Bus
+            		Output 		=> PC_Low_Out
+        	);
+
+	PC_Low_Out_Demux: entity work.One_to_Two_Byte_Demux
+		port map (
+	    		input		=> PC_Low_Out,
+            		selector 	=> Control_Bus(12), -- Increment PC
+            		
+			output_0	=> Data_Bus, -- default if increment PC not asserted
+            		output_1 	=> Increment_PC_Low_In
         	);
 
 	PC_High: entity work.Eight_Bit_Register
@@ -199,7 +212,16 @@ begin
             		Clock 		=> Clock,
 			Output_Enable 	=> Control_Bus(10),
 
-            		Output 		=> Data_Bus
+            		Output 		=> PC_High_Out
+        	);
+
+	PC_High_Out_Demux: entity work.One_to_Two_Byte_Demux
+		port map (
+	    		input		=> PC_High_Out,
+            		selector 	=> Control_Bus(12), -- Increment PC
+            		
+			output_0	=> Data_Bus, -- default if increment PC not asserted
+            		output_1 	=> Increment_PC_High_In
         	);
 
 	IR: entity work.Eight_Bit_Register
