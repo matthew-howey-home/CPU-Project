@@ -173,14 +173,18 @@ begin
 	
 	PC_Low_Output_Enable	<=
 		Internal_Step_1_Load_MAR_Low or
-		Internal_LD_Reg_Absolute_Step_1;
+		Internal_LD_Reg_Absolute_Step_1 or
+		Internal_Step_5_Increment_PC or
+		Internal_LD_Reg_Absolute_Step_5;
 	MAR_Low_Input_Enable	<=
 		Internal_Step_1_Load_MAR_Low or
 		Internal_LD_Reg_Absolute_Step_1;
 
 	PC_High_Output_Enable	<=
 		Internal_Step_2_Load_MAR_High or
-		Internal_LD_Reg_Absolute_Step_2;
+		Internal_LD_Reg_Absolute_Step_2 or
+		Internal_Step_5_Increment_PC or
+		Internal_LD_Reg_Absolute_Step_5;
 	MAR_High_Input_Enable	<=
 		Internal_Step_2_Load_MAR_High or
 		Internal_LD_Reg_Absolute_Step_2;

@@ -123,6 +123,8 @@ begin
         wait for 10 ns;
 
 	assert Increment_PC_Test = '1'			report "Step 5: Increment_PC_Test should equal 1" severity error;
+	assert PC_Low_Output_Enable_Test = '1'		report "Step 5: PC_Low_Output_Enable_Test should equal 1" severity error;
+	assert PC_High_Output_Enable_Test = '1'		report "Step 5: PC_High_Output_Enable_Test should equal 1" severity error;
 	
 	assert FSM_Out_Test = "00000110"		report "Step 5: FSM_Out_Test should equal 00000110" severity error;
 
@@ -193,6 +195,8 @@ begin
         wait for 10 ns;
 	
 	assert Increment_PC_Test = '1'				report "Load Register with Absolute Value Step Five: Increment_PC_Test should equal 1" severity error;
+	assert PC_Low_Output_Enable_Test = '1'			report "Load Register with Absolute Value Step Five: PC_Low_Output_Enable_Test should equal 1" severity error;
+	assert PC_High_Output_Enable_Test = '1'			report "Load Register with Absolute Value Step Five: PC_High_Output_Enable_Test should equal 1" severity error;
 	assert FSM_Out_Test = "00000001"			report "Load Register with Absolute Value Step Five: FSM_Out_Test should equal Increment_PC_Test" severity error;
 
         -- End the simulation
