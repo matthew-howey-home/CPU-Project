@@ -129,6 +129,18 @@ begin
 		Clock_Test	<= '0';
 		wait for 10 ns;
 
+		report "Step Three of Load Absolute Value to Register - Fetch Value from Memory";
+		Clock_Test	<= '1';
+		wait for 10 ns;
+
+		report "Running tests for CPU reading Memory location 0000000000000001";
+		assert Memory_Out_Low_Test = "00000001"	report "Test 1: Memory_Out_Low_Test should equal 00000001" severity error;
+		assert Memory_Out_High_Test = "00000000" report "Test 2: Memory_Out_High_Test should equal 00000000" severity error;
+		assert Memory_Read_Enable_Test = '1' report "Test 3: Memory_Read_Enable_Test should equal 1" severity error;
+
+		Clock_Test	<= '0';
+		wait for 10 ns;
+
 		Clock_Test	<= '1';
 		wait for 10 ns;
 
@@ -142,6 +154,8 @@ begin
         
         	if Memory_Read_Enable_Test = '1' and Memory_Out_Low_Test = "00000000" and Memory_Out_High_Test = "00000000" then
             		Memory_In_Test <= "00010001";
+		elsif Memory_Read_Enable_Test = '1' and Memory_Out_Low_Test = "00000001" and Memory_Out_High_Test = "00000000" then
+			Memory_In_Test <= "00110101"; -- #53
         	else
             		Memory_In_Test <= "ZZZZZZZZ";  -- Default data value when the condition is not met
         	end if;
