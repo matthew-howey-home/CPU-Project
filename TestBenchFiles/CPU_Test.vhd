@@ -116,6 +116,18 @@ begin
 		wait for 10 ns;
 		Clock_Test	<= '0';
 		wait for 10 ns;
+		
+		report "Step One of Load Absolute Value to Register - Load MAR (low)";
+		Clock_Test	<= '1';
+		wait for 10 ns;
+		Clock_Test	<= '0';
+		wait for 10 ns;
+
+		report "Step Two of Load Absolute Value to Register - Load MAR (high)";
+		Clock_Test	<= '1';
+		wait for 10 ns;
+		Clock_Test	<= '0';
+		wait for 10 ns;
 
 		Clock_Test	<= '1';
 		wait for 10 ns;
@@ -135,9 +147,9 @@ begin
         	end if;
 		--sim_time <= sim_time + 1 ns;
 
-    		-- Stop process after 200 ns
-    		if now = 200 ns then
-        		report "Simulation completed successfully after 200 ns" severity note;
+    		-- Stop process after 300 ns
+    		if now = 300 ns then
+        		report "Simulation completed successfully after 300 ns" severity note;
         		wait;
     		end if;
     end process;
