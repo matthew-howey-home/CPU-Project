@@ -111,7 +111,14 @@ begin
 		Clock_Test	<= '0';
 		wait for 10 ns;
 
+		report "Instruction is 0001xxxx Branch to Load Absolute Value to Register - FSM 00000111";
 		Clock_Test	<= '1';
+		wait for 10 ns;
+		Clock_Test	<= '0';
+		wait for 10 ns;
+
+		Clock_Test	<= '1';
+		wait for 10 ns;
 
 		wait;
 	end process stimulus_proc;
