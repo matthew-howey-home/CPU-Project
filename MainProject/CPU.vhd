@@ -25,6 +25,7 @@ architecture Behavioral of CPU is
 	signal PC_Low_Out			: std_logic_vector(7 downto 0);
 	signal Increment_PC_Low_In		: std_logic_vector(7 downto 0);
 	signal PC_Low_Incremented		: std_logic_vector(7 downto 0);
+	signal Increment_PC_Low_Carry_Out	: std_logic;
 
 	signal PC_High_Initial_State		: std_logic_vector(7 downto 0);
 	signal PC_High_In			: std_logic_vector(7 downto 0);
@@ -33,6 +34,7 @@ architecture Behavioral of CPU is
 	signal PC_High_Out			: std_logic_vector(7 downto 0);
 	signal Increment_PC_High_In		: std_logic_vector(7 downto 0);
 	signal PC_High_Incremented		: std_logic_vector(7 downto 0);
+	signal Increment_PC_High_Carry_Out	: std_logic;
 
 	signal Decoder_FSM_In			: std_logic_vector(7 downto 0);
 	signal Decoder_FSM_Out			: std_logic_vector(7 downto 0);
@@ -222,6 +224,26 @@ begin
             		
 			output_0	=> Data_Bus, -- default if increment PC not asserted
             		output_1 	=> Increment_PC_High_In
+        	);
+
+	Increment_PC_Low: entity work.ADD_Component
+		port map (
+			carry_in	=> '0',
+			input_1		=> Increment_PC_Low_In,
+			input_2		=> "00000001",
+		
+	    		output		=> PC_Low_Incremented,
+            		carry_out	=> Increment_PC_Low_Carry_Out
+        	);
+
+	Increment_PC_High: entity work.ADD_Component
+		port map (
+			carry_in	=> Increment_PC_Low_Carry_Out,
+			input_1		=> Increment_PC_High_In,
+			input_2		=> "00000000",
+		
+	    		output		=> PC_High_Incremented,
+            		carry_out	=> Increment_PC_High_Carry_Out
         	);
 
 	IR: entity work.Eight_Bit_Register
