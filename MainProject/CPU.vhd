@@ -10,7 +10,9 @@ entity CPU is
 
 	Memory_Out_Low		: out std_logic_vector(7 downto 0);
 	Memory_Out_High		: out std_logic_vector(7 downto 0);
-	Memory_Read_Enable	: out std_logic
+	Memory_Read_Enable	: out std_logic;
+
+	A_Reg_External_Output	: out std_logic_vector(7 downto 0)
     );
 end entity  CPU;
 
@@ -42,6 +44,8 @@ architecture Behavioral of CPU is
 	signal Instruction			: std_logic_vector(7 downto 0);
 	signal Control_Bus			: std_logic_vector(15 downto 0);
 	signal Data_Bus				: std_logic_vector(7 downto 0);
+
+	signal A_Reg_Output			: std_logic_vector(7 downto 0);
 
 begin
 	FSM_Register_Initial_State 	<= "00000000";
@@ -256,6 +260,19 @@ begin
             		Output 		=> Instruction
         	);
 
+	-- Accumulator
+	
+	A_Register: entity work.Eight_Bit_Register
+		port map (
+	    		Data_Input 	=> Data_Bus,
+            		Input_Enable 	=> Control_Bus(13),
+            		Clock 		=> Clock,
+			Output_Enable 	=> '1', -- always outputting to expose for external monitoring
+
+            		Output 		=> A_Reg_Output
+        	);
+	
 	Memory_Read_Enable <= Control_Bus(6);
+	A_Reg_External_Output <= A_Reg_Output;
 	
 end architecture Behavioral;

@@ -1,6 +1,4 @@
 
-
-
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.std_logic_textio.all;
@@ -21,17 +19,20 @@ architecture Behavioral of CPU_Test is
 
 		Memory_Out_Low		: out std_logic_vector(7 downto 0);
 		Memory_Out_High		: out std_logic_vector(7 downto 0);
-		Memory_Read_Enable	: out std_logic	
+		Memory_Read_Enable	: out std_logic;
+
+		A_Reg_External_Output	: out std_logic_vector(7 downto 0)		
         );
     end component CPU;
 
 	-- Signal declarations
-	signal Clock_Test		: std_logic;
-	signal Reset_Test		: std_logic;
-	signal Memory_In_Test		: std_logic_vector(7 downto 0);
-	signal Memory_Out_Low_Test	: std_logic_vector(7 downto 0);
-	signal Memory_Out_High_Test	: std_logic_vector(7 downto 0);
-	signal Memory_Read_Enable_Test	: std_logic;
+	signal Clock_Test			: std_logic;
+	signal Reset_Test			: std_logic;
+	signal Memory_In_Test			: std_logic_vector(7 downto 0);
+	signal Memory_Out_Low_Test		: std_logic_vector(7 downto 0);
+	signal Memory_Out_High_Test		: std_logic_vector(7 downto 0);
+	signal Memory_Read_Enable_Test		: std_logic;
+	signal A_Reg_External_Output_Test	: std_logic_vector(7 downto 0);
 
 
 begin
@@ -44,7 +45,9 @@ begin
 		
 		Memory_Out_Low		=> Memory_Out_Low_Test,
 		Memory_Out_High		=> Memory_Out_High_Test,
-		Memory_Read_Enable 	=> Memory_Read_Enable_Test
+		Memory_Read_Enable 	=> Memory_Read_Enable_Test,
+
+		A_Reg_External_Output => A_Reg_External_Output_Test
         );
 
 
@@ -138,6 +141,12 @@ begin
 		assert Memory_Out_High_Test = "00000000" report "Test 2: Memory_Out_High_Test should equal 00000000" severity error;
 		assert Memory_Read_Enable_Test = '1' report "Test 3: Memory_Read_Enable_Test should equal 1" severity error;
 
+		Clock_Test	<= '0';
+		wait for 10 ns;
+
+		report "Step Four of Load Absolute Value to Register - Load A Reg";
+		Clock_Test	<= '1';
+		wait for 10 ns;
 		Clock_Test	<= '0';
 		wait for 10 ns;
 
