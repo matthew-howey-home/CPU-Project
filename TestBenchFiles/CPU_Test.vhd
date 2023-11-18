@@ -153,6 +153,9 @@ begin
 		Clock_Test	<= '1';
 		wait for 10 ns;
 
+		report "Running tests for Loading A Register with value 00110101 (#53)";
+		assert A_Reg_External_Output_Test = "00110101"	report "Test: A_Reg_External_Output_Test should equal 00110101" severity error;
+
 		wait;
 	end process stimulus_proc;
 
