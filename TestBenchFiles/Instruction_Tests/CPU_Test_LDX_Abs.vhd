@@ -23,7 +23,7 @@ architecture Behavioral of CPU_Test_LDX_Abs is
 		Memory_Out_Low		: out std_logic_vector(7 downto 0);
 		Memory_Out_High		: out std_logic_vector(7 downto 0);
 		Memory_Read_Enable	: out std_logic;
-
+		
 		X_Reg_External_Output	: out std_logic_vector(7 downto 0)		
         );
     end component CPU;

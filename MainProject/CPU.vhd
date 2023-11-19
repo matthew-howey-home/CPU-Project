@@ -286,6 +286,7 @@ begin
         	);
 	
 	Memory_Read_Enable <= Control_Bus(6);
+	A_Reg_External_Output <= A_Reg_Output;
 	X_Reg_External_Output <= X_Reg_Output;
 	
 end architecture Behavioral;
