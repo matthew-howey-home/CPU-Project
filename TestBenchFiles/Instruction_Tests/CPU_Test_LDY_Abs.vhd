@@ -1,6 +1,6 @@
 
 
--- Test of CPU Instruction 00010010 - LDX # 124, Load the X Register with absolute value 124.
+-- Test of CPU Instruction 00010011 - LDY # 251, Load the Y Register with absolute value 251.
 
 library ieee;
 use ieee.std_logic_1164.all;
@@ -8,11 +8,11 @@ use ieee.std_logic_textio.all;
 use std.textio.all;
 
 
-entity CPU_Test_LDX_Abs is
-end entity CPU_Test_LDX_Abs;
+entity CPU_Test_LDY_Abs is
+end entity CPU_Test_LDY_Abs;
 
 
-architecture Behavioral of CPU_Test_LDX_Abs is
+architecture Behavioral of CPU_Test_LDY_Abs is
     -- Component declaration for the CPU module
     component CPU
         port (
@@ -24,7 +24,7 @@ architecture Behavioral of CPU_Test_LDX_Abs is
 		Memory_Out_High		: out std_logic_vector(7 downto 0);
 		Memory_Read_Enable	: out std_logic;
 		
-		X_Reg_External_Output	: out std_logic_vector(7 downto 0)		
+		Y_Reg_External_Output	: out std_logic_vector(7 downto 0)		
         );
     end component CPU;
 
@@ -35,7 +35,7 @@ architecture Behavioral of CPU_Test_LDX_Abs is
 	signal Memory_Out_Low_Test		: std_logic_vector(7 downto 0);
 	signal Memory_Out_High_Test		: std_logic_vector(7 downto 0);
 	signal Memory_Read_Enable_Test		: std_logic;
-	signal X_Reg_External_Output_Test	: std_logic_vector(7 downto 0);
+	signal Y_Reg_External_Output_Test	: std_logic_vector(7 downto 0);
 
 
 begin
@@ -50,7 +50,7 @@ begin
 		Memory_Out_High		=> Memory_Out_High_Test,
 		Memory_Read_Enable 	=> Memory_Read_Enable_Test,
 
-		X_Reg_External_Output => X_Reg_External_Output_Test
+		Y_Reg_External_Output => Y_Reg_External_Output_Test
         );
 
 
@@ -147,7 +147,7 @@ begin
 		Clock_Test	<= '0';
 		wait for 10 ns;
 
-		report "Step Four of Load Absolute Value to Register - Load X Reg";
+		report "Step Four of Load Absolute Value to Register - Load Y Reg";
 		Clock_Test	<= '1';
 		wait for 10 ns;
 		Clock_Test	<= '0';
@@ -156,8 +156,8 @@ begin
 		Clock_Test	<= '1';
 		wait for 10 ns;
 
-		report "Running tests for Loading X Register with value 01111100 (#124)";
-		assert X_Reg_External_Output_Test = "01111100"	report "Test: X_Reg_External_Output_Test should equal 01111100" severity error;
+		report "Running tests for Loading Y Register with value 11111011  (#251)";
+		assert Y_Reg_External_Output_Test = "11111011"	report "Test: Y_Reg_External_Output_Test should equal 11111011" severity error;
 
 		wait;
 	end process stimulus_proc;
@@ -168,9 +168,9 @@ begin
         	wait for 1 ns;  -- Wait for a small time to simulate memory access time
         
         	if Memory_Read_Enable_Test = '1' and Memory_Out_Low_Test = "00000000" and Memory_Out_High_Test = "00000000" then
-            		Memory_In_Test <= "00010010"; -- LDX #
+            		Memory_In_Test <= "00010011"; -- LDY #
 		elsif Memory_Read_Enable_Test = '1' and Memory_Out_Low_Test = "00000001" and Memory_Out_High_Test = "00000000" then
-			Memory_In_Test <= "01111100"; -- #124
+			Memory_In_Test <= "11111011"; -- #251
         	else
             		Memory_In_Test <= "ZZZZZZZZ";  -- Default data value when the condition is not met
         	end if;

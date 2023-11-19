@@ -13,7 +13,8 @@ entity CPU is
 	Memory_Read_Enable	: out std_logic;
 
 	A_Reg_External_Output	: out std_logic_vector(7 downto 0);
-	X_Reg_External_Output	: out std_logic_vector(7 downto 0)
+	X_Reg_External_Output	: out std_logic_vector(7 downto 0);
+	Y_Reg_External_Output	: out std_logic_vector(7 downto 0)
     );
 end entity  CPU;
 
@@ -48,6 +49,7 @@ architecture Behavioral of CPU is
 
 	signal A_Reg_Output			: std_logic_vector(7 downto 0);
 	signal X_Reg_Output			: std_logic_vector(7 downto 0);
+	signal Y_Reg_Output			: std_logic_vector(7 downto 0);
 
 begin
 	FSM_Register_Initial_State 	<= "00000000";
@@ -284,9 +286,20 @@ begin
 
             		Output 		=> X_Reg_Output
         	);
+
+	Y_Register: entity work.Eight_Bit_Register
+		port map (
+	    		Data_Input 	=> Data_Bus,
+            		Input_Enable 	=> Control_Bus(15),
+            		Clock 		=> Clock,
+			Output_Enable 	=> '1', -- always outputting to expose for external monitoring
+
+            		Output 		=> Y_Reg_Output
+        	);
 	
 	Memory_Read_Enable <= Control_Bus(6);
 	A_Reg_External_Output <= A_Reg_Output;
 	X_Reg_External_Output <= X_Reg_Output;
+	Y_Reg_External_Output <= Y_Reg_Output;
 	
 end architecture Behavioral;
