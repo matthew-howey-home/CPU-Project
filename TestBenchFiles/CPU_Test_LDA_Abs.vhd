@@ -1,15 +1,17 @@
 
+-- Test of CPU Instruction 00010001 - LDA # 53, Load the accumulator with absolute value 53.
+
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.std_logic_textio.all;
 use std.textio.all;
 
 
-entity CPU_Test is
-end entity CPU_Test;
+entity CPU_Test_LDA_Abs is
+end entity CPU_Test_LDA_Abs;
 
 
-architecture Behavioral of CPU_Test is
+architecture Behavioral of CPU_Test_LDA_Abs is
     -- Component declaration for the CPU module
     component CPU
         port (
@@ -165,7 +167,7 @@ begin
         	wait for 1 ns;  -- Wait for a small time to simulate memory access time
         
         	if Memory_Read_Enable_Test = '1' and Memory_Out_Low_Test = "00000000" and Memory_Out_High_Test = "00000000" then
-            		Memory_In_Test <= "00010001";
+            		Memory_In_Test <= "00010001"; -- LDA #
 		elsif Memory_Read_Enable_Test = '1' and Memory_Out_Low_Test = "00000001" and Memory_Out_High_Test = "00000000" then
 			Memory_In_Test <= "00110101"; -- #53
         	else
