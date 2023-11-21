@@ -195,6 +195,14 @@ begin
 
             		Output 		=> Data_Bus
         	);
+	
+	-- connects byte fetched from memory to Data Bus if Memory Read Enable is set
+	Memory_In_Tristate_Buffer: entity work.Eight_Bit_Tristate_Buffer
+		port map (
+			input		=> Memory_In,
+			enable		=> Control_Bus(6), -- Memory Read Enable
+			output		=> Data_Bus
+		);
 
 	PC_Low: entity work.Eight_Bit_Register
 		port map (
@@ -211,7 +219,7 @@ begin
 	    		input		=> PC_Low_Out,
             		selector 	=> Control_Bus(12), -- Increment PC
             		
-			output_0	=> Data_Bus, -- default if increment PC not asserted
+			output_0	=> Memory_Out_Low, -- default if increment PC not asserted
             		output_1 	=> Increment_PC_Low_In
         	);
 
@@ -230,7 +238,7 @@ begin
 	    		input		=> PC_High_Out,
             		selector 	=> Control_Bus(12), -- Increment PC
             		
-			output_0	=> Data_Bus, -- default if increment PC not asserted
+			output_0	=> Memory_Out_High, -- default if increment PC not asserted
             		output_1 	=> Increment_PC_High_In
         	);
 

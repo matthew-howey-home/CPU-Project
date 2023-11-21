@@ -80,22 +80,10 @@ begin
 		wait for 10 ns;
 		-- continue through CPU cycles
 
-		report "Step 1: Load MAR low from PC low";
+		report "Step 1: Fetch Instruction";
 		Clock_Test	<= '1';
-		wait for 10 ns;
-		Clock_Test	<= '0';
 		wait for 10 ns;
 		
-		report "Step 2: Load MAR High from PC High";
-		Clock_Test	<= '1';
-		wait for 10 ns;
-		Clock_Test	<= '0';
-		wait for 10 ns;
-
-		report "Step 3:  Load MAR into Memory Out and Set Memory Read Enable";		
-		Clock_Test	<= '1';
-		wait for 10 ns;
-
 		report "Running tests for CPU reading Memory location 0000000000000000";
 		assert Memory_Out_Low_Test = "00000000"	report "Test 1: Memory_Out_Low_Test should equal 00000000" severity error;
 		assert Memory_Out_High_Test = "00000000" report "Test 2: Memory_Out_High_Test should equal 00000000" severity error;
@@ -103,14 +91,8 @@ begin
 
 		Clock_Test	<= '0';
 		wait for 10 ns;
-	
-		report "Step 4:  Load Instruction from MDR";		
-		Clock_Test	<= '1';
-		wait for 10 ns;
-		Clock_Test	<= '0';
-		wait for 10 ns;
-
-		report "Step 5:  Increment PC";		
+		
+		report "Step 2: Increment PC";
 		Clock_Test	<= '1';
 		wait for 10 ns;
 		Clock_Test	<= '0';
