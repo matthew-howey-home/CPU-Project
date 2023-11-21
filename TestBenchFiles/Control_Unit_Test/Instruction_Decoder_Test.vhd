@@ -24,6 +24,8 @@ architecture Behavioral of Instruction_Decoder_Test is
 		Memory_Read_Enable			: out std_logic;
 		MDR_Input_Enable			: out std_logic;
 		MDR_Output_Enable			: out std_logic;
+		Temp_Memory_Address_Low_Input_Enable	: out std_logic;
+		Temp_Memory_Address_High_Input_Enable	: out std_logic;
 		IR_Input_Enable				: out std_logic;
 		Increment_PC				: out std_logic;
 		A_Reg_Input_Enable			: out std_logic;
@@ -46,6 +48,8 @@ architecture Behavioral of Instruction_Decoder_Test is
 	signal Memory_Read_Enable_Test				: std_logic;
 	signal MDR_Input_Enable_Test				: std_logic;
 	signal MDR_Output_Enable_Test				: std_logic;
+	signal Temp_Memory_Address_Low_Input_Enable_Test	: std_logic;
+	signal Temp_Memory_Address_High_Input_Enable_Test	: std_logic;
 	signal IR_Input_Enable_Test				: std_logic;
 	signal Increment_PC_Test				: std_logic;
 	signal A_Reg_Input_Enable_Test				: std_logic;
@@ -56,24 +60,26 @@ begin
     -- Instantiate the Instruction_Decoder module
     UUT: Instruction_Decoder
         port map (
-            	Instruction				=> Instruction_Test,
-		FSM_In					=> FSM_In_Test,
+            	Instruction					=> Instruction_Test,
+		FSM_In						=> FSM_In_Test,
 
-		FSM_Out					=> FSM_Out_Test,
-		MAR_Low_Input_Enable			=> MAR_Low_Input_Enable_Test,
-		MAR_High_Input_Enable   	 	=> MAR_High_Input_Enable_Test,
-		PC_Low_Output_Enable			=> PC_Low_Output_Enable_Test,
-		PC_High_Output_Enable   	 	=> PC_High_Output_Enable_Test,
-		MAR_Low_Output_To_Memory_Enable		=> MAR_Low_Output_To_Memory_Enable_Test,
-		MAR_High_Output_To_Memory_Enable	=> MAR_High_Output_To_Memory_Enable_Test,
-		Memory_Read_Enable			=> Memory_Read_Enable_Test,
-		MDR_Input_Enable			=> MDR_Input_Enable_Test,
-		MDR_Output_Enable			=> MDR_Output_Enable_Test,
-		IR_Input_Enable				=> IR_Input_Enable_Test,
-		Increment_PC				=> Increment_PC_Test,
-		A_Reg_Input_Enable			=> A_Reg_Input_Enable_Test,
-		X_Reg_Input_Enable			=> X_Reg_Input_Enable_Test,
-		Y_Reg_Input_Enable			=> Y_Reg_Input_Enable_Test
+		FSM_Out						=> FSM_Out_Test,
+		MAR_Low_Input_Enable				=> MAR_Low_Input_Enable_Test,
+		MAR_High_Input_Enable   	 		=> MAR_High_Input_Enable_Test,
+		PC_Low_Output_Enable				=> PC_Low_Output_Enable_Test,
+		PC_High_Output_Enable   	 		=> PC_High_Output_Enable_Test,
+		MAR_Low_Output_To_Memory_Enable			=> MAR_Low_Output_To_Memory_Enable_Test,
+		MAR_High_Output_To_Memory_Enable		=> MAR_High_Output_To_Memory_Enable_Test,
+		Memory_Read_Enable				=> Memory_Read_Enable_Test,
+		MDR_Input_Enable				=> MDR_Input_Enable_Test,
+		MDR_Output_Enable				=> MDR_Output_Enable_Test,
+		Temp_Memory_Address_Low_Input_Enable		=> Temp_Memory_Address_Low_Input_Enable_Test,
+		Temp_Memory_Address_High_Input_Enable		=> Temp_Memory_Address_High_Input_Enable_Test,
+		IR_Input_Enable					=> IR_Input_Enable_Test,
+		Increment_PC					=> Increment_PC_Test,
+		A_Reg_Input_Enable				=> A_Reg_Input_Enable_Test,
+		X_Reg_Input_Enable				=> X_Reg_Input_Enable_Test,
+		Y_Reg_Input_Enable				=> Y_Reg_Input_Enable_Test
         );
 
     -- Stimulus process to apply test vectors
@@ -239,6 +245,16 @@ begin
 	
 	assert FSM_Out_Test = "00001110"	report "Load Register with Absolute Value Step Two: FSM_Out_Test should equal 00001110" severity error;
 
+	report "Running Tests for Load Register with Absolute Value Step Three: Load High Byte into Temp Memory Address Reg";
+	FSM_In_Test	<= "00001110";
+        wait for 10 ns;
+	
+	assert MAR_Low_Output_To_Memory_Enable_Test = '1'	report "Load Register with Absolute Value Step Three: MAR_Low_Output_To_Memory_Enable_Test should equal 1" severity error;
+	assert MAR_High_Output_To_Memory_Enable_Test = '1'	report "Load Register with Absolute Value Step Three: MAR_High_Output_To_Memory_Enable_Test should equal 1" severity error;
+	assert Memory_Read_Enable_Test = '1'			report "Load Register with Absolute Value Step Three: Memory_Read_Enable_Test should equal 1" severity error;
+	assert Temp_Memory_Address_High_Input_Enable_Test = '1'	report "Load Register with Absolute Value Step Three: Temp_Memory_Address_High_Input_Enable_Test should equal 1" severity error;
+	
+	assert FSM_Out_Test = "00001111"	report "Load Register with Absolute Value Step Two: FSM_Out_Test should equal 00001111" severity error;
 
         -- End the simulation
         wait;
