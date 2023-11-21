@@ -53,6 +53,7 @@ signal Internal_LD_Reg_Absolute_Step_3		: std_logic;
 signal Internal_LD_Reg_Absolute_Step_4		: std_logic;
 signal Internal_LD_Reg_Absolute_Step_5		: std_logic;
 signal Internal_LD_Reg_Absolute_Step_6		: std_logic;
+signal Internal_LD_Reg_Absolute_Step_7		: std_logic;
 
 
 begin
@@ -168,6 +169,11 @@ begin
 		not FSM_In(7) and	not FSM_In(6) and	not FSM_In(5) and	FSM_In(4) and
 		not FSM_In(3) and 	not FSM_In(2) and	not FSM_In(1) and	FSM_In(0);
 
+	-- if FSM_In = "00010010" set Step Seven of Load Absolute Value to Register - Load Low Byte of Address into Temp Address Reg
+	Internal_LD_Reg_Absolute_Step_7 <=
+		not FSM_In(7) and	not FSM_In(6) and	not FSM_In(5) and	FSM_In(4) and
+		not FSM_In(3) and 	not FSM_In(2) and	FSM_In(1) and		not FSM_In(0);
+
 
  	--************** Set next value of FSM based on Current Step **************--
 
@@ -191,7 +197,8 @@ begin
 	-- if Internal_LD_Reg_Absolute_Step_3 		set FSM_Out = "00001111" (Branch to Ld Reg Absolute Step 4)
 	-- if Internal_LD_Reg_Absolute_Step_4		set FSM_Out = "00010000" (Branch to Ld Reg Absolute Step 5)
 	-- if Internal_LD_Reg_Absolute_Step_5		set FSM_Out = "00010001" (Branch to Ld Reg Absolute Step 6)
-	-- if Internal_LD_Reg_Absolute_Step_6		set FSM_Out = "00010010" (Branch to Ld Reg Absolute Step 6)
+	-- if Internal_LD_Reg_Absolute_Step_6		set FSM_Out = "00010010" (Branch to Ld Reg Absolute Step 7)
+	-- if Internal_LD_Reg_Absolute_Step_7		set FSM_Out = "00010011" (Branch to Ld Reg Absolute Step 8)
 
 	FSM_Out(7) <= '0';
  	FSM_Out(6) <= '0';
@@ -199,7 +206,8 @@ begin
 	FSM_Out(4) <=
 		Internal_LD_Reg_Absolute_Step_4 or
 		Internal_LD_Reg_Absolute_Step_5 or
-		Internal_LD_Reg_Absolute_Step_6;
+		Internal_LD_Reg_Absolute_Step_6 or
+		Internal_LD_Reg_Absolute_Step_7;
 	FSM_Out(3) <=
 		Internal_LD_Reg_Immediate_Step_1 or
 		Internal_LD_Reg_Immediate_Step_2 or
@@ -231,7 +239,8 @@ begin
 		Internal_LD_Reg_Immediate_Step_4_LDY or
 		Internal_LD_Reg_Absolute_Step_2 or
 		Internal_LD_Reg_Absolute_Step_3 or
-		Internal_LD_Reg_Absolute_Step_6;
+		Internal_LD_Reg_Absolute_Step_6 or
+		Internal_LD_Reg_Absolute_Step_7;
 	FSM_Out(0) <=
 		Internal_Step_0_Initial_State or
 		Internal_Step_2_Load_MAR_High or
@@ -244,7 +253,8 @@ begin
 		Internal_LD_Reg_Immediate_Step_5 or
 		Internal_LD_Reg_Absolute_Step_1 or
 		Internal_LD_Reg_Absolute_Step_3 or
-		Internal_LD_Reg_Absolute_Step_5;
+		Internal_LD_Reg_Absolute_Step_5 or
+		Internal_LD_Reg_Absolute_Step_7;
 	
 	PC_Low_Output_Enable	<=
 		Internal_Step_1_Load_MAR_Low or
@@ -280,17 +290,20 @@ begin
 	MAR_Low_Output_To_Memory_Enable		<=
 		Internal_Step_3_Fetch_Instruction or
 		Internal_LD_Reg_Immediate_Step_3 or
-		Internal_LD_Reg_Absolute_Step_3;
+		Internal_LD_Reg_Absolute_Step_3 or
+		Internal_LD_Reg_Absolute_Step_7;
 
 	MAR_High_Output_To_Memory_Enable	<=
 		Internal_Step_3_Fetch_Instruction or
 		Internal_LD_Reg_Immediate_Step_3 or
-		Internal_LD_Reg_Absolute_Step_3;
+		Internal_LD_Reg_Absolute_Step_3 or
+		Internal_LD_Reg_Absolute_Step_7;
 
 	Memory_Read_Enable			<=
 		Internal_Step_3_Fetch_Instruction or
 		Internal_LD_Reg_Immediate_Step_3 or
-		Internal_LD_Reg_Absolute_Step_3;
+		Internal_LD_Reg_Absolute_Step_3 or
+		Internal_LD_Reg_Absolute_Step_7;
 
 	MDR_Input_Enable			<=
 		Internal_Step_3_Fetch_Instruction or
@@ -303,6 +316,8 @@ begin
 		Internal_LD_Reg_Immediate_Step_4_LDY;
 
 	Temp_Memory_Address_High_Input_Enable <= Internal_LD_Reg_Absolute_Step_3;
+
+	Temp_Memory_Address_Low_Input_Enable <= Internal_LD_Reg_Absolute_Step_7;
 
 	IR_Input_Enable				<= Internal_Step_4_Load_Instruction;
 

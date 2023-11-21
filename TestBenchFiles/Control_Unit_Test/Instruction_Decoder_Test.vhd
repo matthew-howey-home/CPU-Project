@@ -284,6 +284,19 @@ begin
 	
 	assert FSM_Out_Test = "00010010"	report "Load Register with Absolute Value Step Six: FSM_Out_Test should equal 00010010" severity error;
 
+	report "Running Tests for Load Register with Absolute Value Step Seven: Load Low Byte into Temp Memory Address Reg";
+	FSM_In_Test	<= "00010010";
+        wait for 10 ns;
+	
+	assert MAR_Low_Output_To_Memory_Enable_Test = '1'	report "Load Register with Absolute Value Step Seven: MAR_Low_Output_To_Memory_Enable_Test should equal 1" severity error;
+	assert MAR_High_Output_To_Memory_Enable_Test = '1'	report "Load Register with Absolute Value Step Seven: MAR_High_Output_To_Memory_Enable_Test should equal 1" severity error;
+	assert Memory_Read_Enable_Test = '1'			report "Load Register with Absolute Value Step Seven: Memory_Read_Enable_Test should equal 1" severity error;
+	assert Temp_Memory_Address_Low_Input_Enable_Test = '1'	report "Load Register with Absolute Value Step Seven: Temp_Memory_Address_Low_Input_Enable_Test should equal 1" severity error;
+	
+	assert FSM_Out_Test = "00010011"	report "Load Register with Absolute Value Step Seven: FSM_Out_Test should equal 00010011" severity error;
+
+
+
         -- End the simulation
         wait;
     end process stimulus_proc;
