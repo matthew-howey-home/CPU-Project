@@ -1,5 +1,5 @@
 
--- Test of CPU Instruction 00010001 - LDA # 53, Load the accumulator with absolute value 53.
+-- Test of CPU Instruction 00010001 - LDA # 53, Load the accumulator with Immediate value 53.
 
 library ieee;
 use ieee.std_logic_1164.all;
@@ -116,25 +116,25 @@ begin
 		Clock_Test	<= '0';
 		wait for 10 ns;
 
-		report "Instruction is 0001xxxx Branch to Load Absolute Value to Register - FSM 00000111";
+		report "Instruction is 0001xxxx Branch to Load Immediate Value to Register - FSM 00000111";
 		Clock_Test	<= '1';
 		wait for 10 ns;
 		Clock_Test	<= '0';
 		wait for 10 ns;
 		
-		report "Step One of Load Absolute Value to Register - Load MAR (low)";
+		report "Step One of Load Immediate Value to Register - Load MAR (low)";
 		Clock_Test	<= '1';
 		wait for 10 ns;
 		Clock_Test	<= '0';
 		wait for 10 ns;
 
-		report "Step Two of Load Absolute Value to Register - Load MAR (high)";
+		report "Step Two of Load Immediate Value to Register - Load MAR (high)";
 		Clock_Test	<= '1';
 		wait for 10 ns;
 		Clock_Test	<= '0';
 		wait for 10 ns;
 
-		report "Step Three of Load Absolute Value to Register - Fetch Value from Memory";
+		report "Step Three of Load Immediate Value to Register - Fetch Value from Memory";
 		Clock_Test	<= '1';
 		wait for 10 ns;
 
@@ -146,7 +146,7 @@ begin
 		Clock_Test	<= '0';
 		wait for 10 ns;
 
-		report "Step Four of Load Absolute Value to Register - Load A Reg";
+		report "Step Four of Load Immediate Value to Register - Load A Reg";
 		Clock_Test	<= '1';
 		wait for 10 ns;
 		Clock_Test	<= '0';
