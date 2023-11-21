@@ -206,6 +206,17 @@ begin
 	assert PC_High_Output_Enable_Test = '1'			report "Load Register with Immediate Value Step Five: PC_High_Output_Enable_Test should equal 1" severity error;
 	assert FSM_Out_Test = "00000001"			report "Load Register with Immediate Value Step Five: FSM_Out_Test should equal Increment_PC_Test" severity error;
 
+	-- ************ Tests for Load Register with Absolute Value Subroutine, FSM 00001100 to TBC ************
+
+	report "Running Tests for Load Register with Absolute Value Step One: Load MAR (Low)";
+	FSM_In_Test	<= "00001100";
+        wait for 10 ns;
+	
+	assert PC_Low_Output_Enable_Test = '1'	report "Load Register with Absolute Value Step One: PC_Low_Output_Enable_Test should equal 1" severity error;
+	assert MAR_Low_Input_Enable_Test = '1'	report "Load Register with Absolute Value Step One: MAR_Low_Input_Enable_Test should equal 1" severity error;
+	assert FSM_Out_Test = "00001101"	report "Load Register with Absolute Value Step One: FSM_Out_Test should equal 00001101" severity error;
+
+
         -- End the simulation
         wait;
     end process stimulus_proc;
