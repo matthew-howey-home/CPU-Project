@@ -227,7 +227,17 @@ begin
 	
 	assert PC_Low_Output_Enable_Test = '1'	report "Load Register with Absolute Value Step One: PC_Low_Output_Enable_Test should equal 1" severity error;
 	assert MAR_Low_Input_Enable_Test = '1'	report "Load Register with Absolute Value Step One: MAR_Low_Input_Enable_Test should equal 1" severity error;
+	
 	assert FSM_Out_Test = "00001101"	report "Load Register with Absolute Value Step One: FSM_Out_Test should equal 00001101" severity error;
+
+	report "Running Tests for Load Register with Absolute Value Step Two: Load MAR (High)";
+	FSM_In_Test	<= "00001101";
+        wait for 10 ns;
+	
+	assert PC_High_Output_Enable_Test = '1'	report "Load Register with Absolute Value Step Two: PC_High_Output_Enable_Test should equal 1" severity error;
+	assert MAR_High_Input_Enable_Test = '1'	report "Load Register with Absolute Value Step Two: MAR_High_Input_Enable_Test should equal 1" severity error;
+	
+	assert FSM_Out_Test = "00001110"	report "Load Register with Absolute Value Step Two: FSM_Out_Test should equal 00001110" severity error;
 
 
         -- End the simulation

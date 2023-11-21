@@ -46,6 +46,7 @@ signal Internal_LD_Reg_Immediate_Step_4_LDY	: std_logic;
 signal Internal_LD_Reg_Immediate_Step_5		: std_logic;
 signal Internal_Branch_LD_Reg_Absolute		: std_logic;
 signal Internal_LD_Reg_Absolute_Step_1		: std_logic;
+signal Internal_LD_Reg_Absolute_Step_2		: std_logic;
 
 begin
 	--************ Setting signal to represent current step based on current FSM Value **********-------
@@ -135,6 +136,11 @@ begin
 		not FSM_In(7) and	not FSM_In(6) and	not FSM_In(5) and	not FSM_In(4) and
 		FSM_In(3) and 		FSM_In(2) and		not FSM_In(1) and	not FSM_In(0);
 
+	-- if FSM_In = "00001101" set Step Two of Load Absolute Value to Register - Load MAR (high)
+	Internal_LD_Reg_Absolute_Step_2 <=
+		not FSM_In(7) and	not FSM_In(6) and	not FSM_In(5) and	not FSM_In(4) and
+		FSM_In(3) and 		FSM_In(2) and		not FSM_In(1) and	FSM_In(0);
+
 
  	--************** Set next value of FSM based on Current Step **************--
 
@@ -154,6 +160,7 @@ begin
 	-- if Internal_LD_Reg_Immediate_Step_5		set FSM_Out = "00000001" (Back to Step 1)
 	-- if Internal_Branch_LD_Reg_Absolute 		set FSM_Out = "00001100" (Branch to Ld Reg Absolute Step 1)
 	-- if Internal_LD_Reg_Absolute_Step_1 		set FSM_Out = "00001101" (Branch to Ld Reg Absolute Step 2)
+	-- if Internal_LD_Reg_Absolute_Step_2 		set FSM_Out = "00001110" (Branch to Ld Reg Absolute Step 2)
 
 	FSM_Out(7) <= '0';
  	FSM_Out(6) <= '0';
@@ -167,14 +174,16 @@ begin
 		Internal_LD_Reg_Immediate_Step_4_LDX or
 		Internal_LD_Reg_Immediate_Step_4_LDY or
 		Internal_Branch_LD_Reg_Absolute or
-		Internal_LD_Reg_Absolute_Step_1;
+		Internal_LD_Reg_Absolute_Step_1 or
+		Internal_LD_Reg_Absolute_Step_2;
 	FSM_Out(2) <=
 		Internal_Step_3_Fetch_Instruction or
 		Internal_Step_4_Load_Instruction or
 		Internal_Step_5_Increment_PC or
 		Internal_Branch_LD_Reg_Immediate or
 		Internal_Branch_LD_Reg_Absolute or
-		Internal_LD_Reg_Absolute_Step_1;
+		Internal_LD_Reg_Absolute_Step_1 or
+		Internal_LD_Reg_Absolute_Step_2;
 	FSM_Out(1) <=
 		Internal_Step_1_Load_MAR_Low or
 		Internal_Step_2_Load_MAR_High or
@@ -183,7 +192,8 @@ begin
 		Internal_LD_Reg_Immediate_Step_3 or
 		Internal_LD_Reg_Immediate_Step_4_LDA or
 		Internal_LD_Reg_Immediate_Step_4_LDX or
-		Internal_LD_Reg_Immediate_Step_4_LDY;
+		Internal_LD_Reg_Immediate_Step_4_LDY or
+		Internal_LD_Reg_Absolute_Step_2;
 	FSM_Out(0) <=
 		Internal_Step_0_Initial_State or
 		Internal_Step_2_Load_MAR_High or
@@ -211,10 +221,12 @@ begin
 		Internal_Step_2_Load_MAR_High or
 		Internal_LD_Reg_Immediate_Step_2 or
 		Internal_Step_5_Increment_PC or
-		Internal_LD_Reg_Immediate_Step_5;
+		Internal_LD_Reg_Immediate_Step_5 or
+		Internal_LD_Reg_Absolute_Step_2;
 	MAR_High_Input_Enable	<=
 		Internal_Step_2_Load_MAR_High or
-		Internal_LD_Reg_Immediate_Step_2;
+		Internal_LD_Reg_Immediate_Step_2 or
+		Internal_LD_Reg_Absolute_Step_2;
 
 	PC_Low_Input_Enable  <= '0';
 	PC_High_Input_Enable <= '0';
