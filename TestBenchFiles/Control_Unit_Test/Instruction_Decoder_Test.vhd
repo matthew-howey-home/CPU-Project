@@ -116,16 +116,17 @@ begin
 	assert Increment_PC_Test = '1'			report "Step 2: Increment_PC_Test should equal 1" severity error;
 	assert PC_Low_Output_Enable_Test = '1'		report "Step 2: PC_Low_Output_Enable_Test should equal 1" severity error;
 	assert PC_High_Output_Enable_Test = '1'		report "Step 2: PC_High_Output_Enable_Test should equal 1" severity error;
-	assert FSM_Out_Test = "00000110"		report "Step 1: FSM_Out_Test should equal 00000110" severity error;
+
+	assert FSM_Out_Test = "00000011"		report "Step 1: FSM_Out_Test should equal 00000011" severity error;
 
 	report "************** TESTS FOR BRANCHING TO INSTRUCTION SUBROUTINES ***************";
 
 	report "Running Tests for Branch to Load Register with Immediate Value";
-	FSM_In_Test	<= "00000110";
+	FSM_In_Test	<= "00000011";
 	Instruction_Test <= "00010101"; -- instruction needs to be 0001xxxx
         wait for 10 ns;
 
-	assert FSM_Out_Test = "00000111"		report "Branch to Load Register with Immediate Value: FSM_Out_Test should equal 00000111" severity error;
+	assert FSM_Out_Test = "00000100"		report "Branch to Load Register with Immediate Value: FSM_Out_Test should equal 00000100" severity error;
 
 	report "Running Tests for Branch to Load from Absolute Memory Address to Register";
 	FSM_In_Test	<= "00000110";
@@ -134,7 +135,7 @@ begin
 
 	assert FSM_Out_Test = "00001100"		report "Branch to Load from Absolute Memory Address to Register: FSM_Out_Test should equal 00001100" severity error;
 
-	report "************ TESTS FOR SUBROUTINE: Load Register with Immediate Value, FSM 00000111 to 00001011 ************";
+	report "************ TESTS FOR SUBROUTINE: Load Register with Immediate Value, FSM 00000011 to TBC ************";
 	
 	report "Running Tests for Load Register with Immediate Value Step One: Load MAR (Low)";
 	FSM_In_Test	<= "00000111";

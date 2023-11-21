@@ -71,11 +71,10 @@ begin
 		not FSM_In(7) and	not FSM_In(6) and	not FSM_In(5) and	not FSM_In(4) and
 		not FSM_In(3) and 	not FSM_In(2) and	FSM_In(1) and 		not FSM_In(0);
 
-	-- if FSM_In = "00000110" and Instruction is 0001xxxx Branch to Load Immediate Value to Register (111)
+	-- if FSM_In = "00000011" and Instruction is 0001xxxx Branch to Load Immediate Value to Register (100)
 	Internal_Branch_LD_Reg_Immediate <=
-
 		not FSM_In(7) and	not FSM_In(6) and	not FSM_In(5) and	not FSM_In(4) and
-		not FSM_In(3) and 	FSM_In(2) and		FSM_In(1) and		not FSM_In(0) and
+		not FSM_In(3) and 	not FSM_In(2) and	FSM_In(1) and		FSM_In(0) and
 		not Instruction(7) and	not Instruction(6) and	not Instruction(5) and 	Instruction(4);
 
 	-- if FSM_In = "00000111" Step One of Load Immediate Value to Register - Load MAR (low)
@@ -162,8 +161,8 @@ begin
 
 	-- If Internal_Step_0_Initial_State		set FSM_Out = "00000001" (Step 1)	
 	-- if Internal_Step_1_Fetch_Instruction		set FSM_Out = "00000010" (Step 2)
-	-- if Internal_Step_2_Increment_PC 		set FSM_Out = "00000110" (Step 3)
-	-- if Internal_Branch_LD_Reg_Immediate 		set FSM_Out = "00000111" (Branch to Ld Imm to Reg Step 1)
+	-- if Internal_Step_2_Increment_PC 		set FSM_Out = "00000011" (Step 3 - Branch to Instruction Subroutines 100) 
+	-- if Internal_Branch_LD_Reg_Immediate 		set FSM_Out = "00000100" (Branch to Ld Imm to Reg Step 1)
 	-- if Internal_LD_Reg_Immediate_Step_1		set FSM_Out = "00001000" (Ld Abs to Reg Step 2)
 	-- if Internal_LD_Reg_Immediate_Step_2		set FSM_Out = "00001001" (Ld Abs to Reg Step 3)
 	-- if Internal_LD_Reg_Immediate_Step_3		set FSM_Out = "00001010" (Ld Abs to Reg Step 4)
@@ -200,7 +199,6 @@ begin
 		Internal_LD_Reg_Absolute_Step_2 or
 		Internal_LD_Reg_Absolute_Step_3;
 	FSM_Out(2) <=
-		Internal_Step_2_Increment_PC or
 		Internal_Branch_LD_Reg_Immediate or
 		Internal_Branch_LD_Reg_Absolute or
 		Internal_LD_Reg_Absolute_Step_1 or
@@ -209,7 +207,6 @@ begin
 	FSM_Out(1) <=
 		Internal_Step_2_Increment_PC or
 		Internal_Step_1_Fetch_Instruction or
-		Internal_Branch_LD_Reg_Immediate or
 		Internal_LD_Reg_Immediate_Step_3 or
 		Internal_LD_Reg_Immediate_Step_4_LDA or
 		Internal_LD_Reg_Immediate_Step_4_LDX or
@@ -220,7 +217,7 @@ begin
 		Internal_LD_Reg_Absolute_Step_7;
 	FSM_Out(0) <=
 		Internal_Step_0_Initial_State or
-		Internal_Branch_LD_Reg_Immediate or
+		Internal_Step_2_Increment_PC or
 		Internal_LD_Reg_Immediate_Step_2 or
 		Internal_LD_Reg_Immediate_Step_4_LDA or
 		Internal_LD_Reg_Immediate_Step_4_LDX or
