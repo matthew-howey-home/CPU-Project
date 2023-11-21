@@ -8,11 +8,11 @@ use ieee.std_logic_textio.all;
 use std.textio.all;
 
 
-entity CPU_Test_LDY_Abs is
-end entity CPU_Test_LDY_Abs;
+entity CPU_Test_LDY_Imm is
+end entity CPU_Test_LDY_Imm;
 
 
-architecture Behavioral of CPU_Test_LDY_Abs is
+architecture Behavioral of CPU_Test_LDY_Imm is
     -- Component declaration for the CPU module
     component CPU
         port (
