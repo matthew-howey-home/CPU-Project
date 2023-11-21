@@ -275,7 +275,14 @@ begin
 	
 	assert FSM_Out_Test = "00010001"	report "Load Register with Absolute Value Step Five: FSM_Out_Test should equal 00010001" severity error;
 
-
+	report "Running Tests for Load Register with Absolute Value Step Six: Load MAR (High)";
+	FSM_In_Test	<= "00010001";
+        wait for 10 ns;
+	
+	assert PC_High_Output_Enable_Test = '1'	report "Load Register with Absolute Value Step Six: PC_High_Output_Enable_Test should equal 1" severity error;
+	assert MAR_High_Input_Enable_Test = '1'	report "Load Register with Absolute Value Step Six: MAR_High_Input_Enable_Test should equal 1" severity error;
+	
+	assert FSM_Out_Test = "00010010"	report "Load Register with Absolute Value Step Six: FSM_Out_Test should equal 00010010" severity error;
 
         -- End the simulation
         wait;
