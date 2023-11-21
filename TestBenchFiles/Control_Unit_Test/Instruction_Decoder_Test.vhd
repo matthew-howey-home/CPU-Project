@@ -135,12 +135,12 @@ begin
 
 	assert FSM_Out_Test = "00000111"		report "Branch to Load Register with Immediate Value: FSM_Out_Test should equal 00000111" severity error;
 
-	report "Running Tests for Branch to Load from Memory to Register";
+	report "Running Tests for Branch to Load from Absolute Memory Address to Register";
 	FSM_In_Test	<= "00000110";
 	Instruction_Test <= "00100101"; -- instruction needs to be 0010xxxx
         wait for 10 ns;
 
-	assert FSM_Out_Test = "00001100"		report "Branch to Load from Memory to Register: FSM_Out_Test should equal 00001100" severity error;
+	assert FSM_Out_Test = "00001100"		report "Branch to Load from Absolute Memory Address to Register: FSM_Out_Test should equal 00001100" severity error;
 
 	-- ************ Tests for Load Register with Immediate Value Subroutine, FSM 00000111 to 00001011 ************
 	

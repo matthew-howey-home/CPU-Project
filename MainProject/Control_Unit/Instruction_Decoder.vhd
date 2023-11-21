@@ -44,7 +44,7 @@ signal Internal_LD_Reg_Immediate_Step_4_LDA	: std_logic;
 signal Internal_LD_Reg_Immediate_Step_4_LDX	: std_logic;
 signal Internal_LD_Reg_Immediate_Step_4_LDY	: std_logic;
 signal Internal_LD_Reg_Immediate_Step_5		: std_logic;
-signal Internal_Branch_LD_Memory_to_Reg		: std_logic;
+signal Internal_Branch_LD_Reg_Absolute		: std_logic;
 
 begin
 	-- if FSM_In = "00000000" set Step 0 Initial State (No Action)
@@ -121,8 +121,8 @@ begin
 		not FSM_In(7) and	not FSM_In(6) and	not FSM_In(5) and	not FSM_In(4) and
 		FSM_In(3) and 		not FSM_In(2) and	FSM_In(1) and		FSM_In(0);
 
-	-- if FSM_In = "00000110" and Instruction is 0010xxxx Branch to Load Value from Memory to Register 
-	Internal_Branch_LD_Memory_to_Reg <=
+	-- if FSM_In = "00000110" and Instruction is 0010xxxx Branch to Load Value from Absolute Memory Address to Register 
+	Internal_Branch_LD_Reg_Absolute <=
 		not FSM_In(7) and	not FSM_In(6) and	not FSM_In(5) and	not FSM_In(4) and
 		not FSM_In(3) and 	FSM_In(2) and		FSM_In(1) and		not FSM_In(0) and
 		not Instruction(7) and	not Instruction(6) and	Instruction(5) and 	not Instruction(4);
@@ -133,7 +133,7 @@ begin
 	-- if Internal_Step_3_Fetch_Instruction 	set FSM_Out = "00000100" (Step 4)
 	-- if Internal_Step_4_Load_Instruction 		set FSM_Out = "00000101" (Step 5)
 	-- if Internal_Step_5_Increment_PC 		set FSM_Out = "00000110" (Step 6)
-	-- if Internal_Branch_LD_Reg_Immediate 		set FSM_Out = "00000111" (Branch to Ld Abs to Reg Step 1)
+	-- if Internal_Branch_LD_Reg_Immediate 		set FSM_Out = "00000111" (Branch to Ld Imm to Reg Step 1)
 	-- if Internal_LD_Reg_Immediate_Step_1		set FSM_Out = "00001000" (Ld Abs to Reg Step 2)
 	-- if Internal_LD_Reg_Immediate_Step_2		set FSM_Out = "00001001" (Ld Abs to Reg Step 3)
 	-- if Internal_LD_Reg_Immediate_Step_3		set FSM_Out = "00001010" (Ld Abs to Reg Step 4)
@@ -141,7 +141,7 @@ begin
 	-- if Internal_LD_Reg_Immediate_Step_4_LDX	set FSM_Out = "00001011" (Ld Abs to Reg Step 5)
 	-- if Internal_LD_Reg_Immediate_Step_4_LDY	set FSM_Out = "00001011" (Ld Abs to Reg Step 5)
 	-- if Internal_LD_Reg_Immediate_Step_5		set FSM_Out = "00000001" (Back to Step 1)
-	-- if Internal_Branch_LD_Memory_to_Reg 		set FSM_Out = "00001100" (Branch to Ld from Memory To Reg Step 1)
+	-- if Internal_Branch_LD_Reg_Absolute 		set FSM_Out = "00001100" (Branch to Ld Reg Absolute Step 1)
 
 	FSM_Out(7) <= '0';
  	FSM_Out(6) <= '0';
@@ -154,13 +154,13 @@ begin
 		Internal_LD_Reg_Immediate_Step_4_LDA or
 		Internal_LD_Reg_Immediate_Step_4_LDX or
 		Internal_LD_Reg_Immediate_Step_4_LDY or
-		Internal_Branch_LD_Memory_to_Reg;
+		Internal_Branch_LD_Reg_Absolute;
 	FSM_Out(2) <=
 		Internal_Step_3_Fetch_Instruction or
 		Internal_Step_4_Load_Instruction or
 		Internal_Step_5_Increment_PC or
 		Internal_Branch_LD_Reg_Immediate or
-		Internal_Branch_LD_Memory_to_Reg;
+		Internal_Branch_LD_Reg_Absolute;
 	FSM_Out(1) <=
 		Internal_Step_1_Load_MAR_Low or
 		Internal_Step_2_Load_MAR_High or
