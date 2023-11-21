@@ -254,7 +254,17 @@ begin
 	assert Memory_Read_Enable_Test = '1'			report "Load Register with Absolute Value Step Three: Memory_Read_Enable_Test should equal 1" severity error;
 	assert Temp_Memory_Address_High_Input_Enable_Test = '1'	report "Load Register with Absolute Value Step Three: Temp_Memory_Address_High_Input_Enable_Test should equal 1" severity error;
 	
-	assert FSM_Out_Test = "00001111"	report "Load Register with Absolute Value Step Two: FSM_Out_Test should equal 00001111" severity error;
+	assert FSM_Out_Test = "00001111"	report "Load Register with Absolute Value Step Three: FSM_Out_Test should equal 00001111" severity error;
+
+	report "Running Tests for Load Register with Absolute Value Step Four: Increment PC";
+	FSM_In_Test	<= "00001111";
+        wait for 10 ns;
+	
+	assert Increment_PC_Test = '1'				report "Load Register with Absolute Value Step Four: Increment_PC_Test should equal 1" severity error;
+	assert PC_Low_Output_Enable_Test = '1'			report "Load Register with Absolute Value Step Four: PC_Low_Output_Enable_Test should equal 1" severity error;
+	assert PC_High_Output_Enable_Test = '1'			report "Load Register with Absolute Value Step Four: PC_High_Output_Enable_Test should equal 1" severity error;
+	
+	assert FSM_Out_Test = "00010000"	report "Load Register with Absolute Value Step Four: FSM_Out_Test should equal 00010000" severity error;
 
         -- End the simulation
         wait;
