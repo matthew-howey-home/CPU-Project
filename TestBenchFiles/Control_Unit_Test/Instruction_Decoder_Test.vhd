@@ -266,6 +266,17 @@ begin
 	
 	assert FSM_Out_Test = "00010000"	report "Load Register with Absolute Value Step Four: FSM_Out_Test should equal 00010000" severity error;
 
+	report "Running Tests for Load Register with Absolute Value Step Five: Load MAR (Low)";
+	FSM_In_Test	<= "00010000";
+        wait for 10 ns;
+	
+	assert PC_Low_Output_Enable_Test = '1'	report "Load Register with Absolute Value Step Five: PC_Low_Output_Enable_Test should equal 1" severity error;
+	assert MAR_Low_Input_Enable_Test = '1'	report "Load Register with Absolute Value Step Five: MAR_Low_Input_Enable_Test should equal 1" severity error;
+	
+	assert FSM_Out_Test = "00010001"	report "Load Register with Absolute Value Step Five: FSM_Out_Test should equal 00010001" severity error;
+
+
+
         -- End the simulation
         wait;
     end process stimulus_proc;
