@@ -81,6 +81,8 @@ begin
 
     begin
 
+	report "************** TESTS FOR INITIAL FETCH AND LOAD INSTRUCTION ***************";
+
 	report "Running Tests for '00000000' set Step 0 Initial State (No Action)";
 
         FSM_In_Test	<= "00000000";
@@ -118,6 +120,15 @@ begin
 
 	assert FSM_Out_Test = "00000100"			report "Step 3: FSM_Out_Test should equal 00000100" severity error;
 
+	report "Running Tests for '00000100' set Step 4 Load Instruction";
+        FSM_In_Test	<= "00000100";
+        wait for 10 ns;
+
+	assert MDR_Output_Enable_Test = '1'		report "Step 4: MDR_Output_Enable_Test should equal 1" severity error;
+	assert IR_Input_Enable_Test = '1'		report "Step 4: IR_Input_Enable_Test should equal 1" severity error;
+
+	assert FSM_Out_Test = "00000101"			report "Step 4: FSM_Out_Test should equal 00000101" severity error;
+
 	report "Running Tests for '00000101' set Step 5 Increment PC";
 	FSM_In_Test	<= "00000101";
         wait for 10 ns;
@@ -127,6 +138,8 @@ begin
 	assert PC_High_Output_Enable_Test = '1'		report "Step 5: PC_High_Output_Enable_Test should equal 1" severity error;
 	
 	assert FSM_Out_Test = "00000110"		report "Step 5: FSM_Out_Test should equal 00000110" severity error;
+
+	report "************** TESTS FOR BRANCHING TO INSTRUCTION SUBROUTINES ***************";
 
 	report "Running Tests for Branch to Load Register with Immediate Value";
 	FSM_In_Test	<= "00000110";
@@ -142,7 +155,7 @@ begin
 
 	assert FSM_Out_Test = "00001100"		report "Branch to Load from Absolute Memory Address to Register: FSM_Out_Test should equal 00001100" severity error;
 
-	-- ************ Tests for Load Register with Immediate Value Subroutine, FSM 00000111 to 00001011 ************
+	report "************ TESTS FOR SUBROUTINE: Load Register with Immediate Value, FSM 00000111 to 00001011 ************";
 	
 	report "Running Tests for Load Register with Immediate Value Step One: Load MAR (Low)";
 	FSM_In_Test	<= "00000111";
@@ -206,7 +219,7 @@ begin
 	assert PC_High_Output_Enable_Test = '1'			report "Load Register with Immediate Value Step Five: PC_High_Output_Enable_Test should equal 1" severity error;
 	assert FSM_Out_Test = "00000001"			report "Load Register with Immediate Value Step Five: FSM_Out_Test should equal Increment_PC_Test" severity error;
 
-	-- ************ Tests for Load Register with Absolute Value Subroutine, FSM 00001100 to TBC ************
+	report "************ TESTS FOR SUBROUTINE: Load Register with Absolute Value Subroutine, FSM 00001100 to TBC ************";
 
 	report "Running Tests for Load Register with Absolute Value Step One: Load MAR (Low)";
 	FSM_In_Test	<= "00001100";
