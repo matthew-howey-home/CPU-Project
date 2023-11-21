@@ -96,54 +96,27 @@ begin
 
 	assert FSM_Out_Test = "00000001"	report "Step 0: FSM_Out_Test should equal 00000001" severity error;
 
-	report "Running Tests for '00000001' set Step 1 Load MAR (low)";
+	report "Running Tests for '00000001' set Step 1 Fetch Instruction";
 
         FSM_In_Test	<= "00000001";
         wait for 10 ns;
 
 	assert PC_Low_Output_Enable_Test = '1'	report "Step 1: PC_Low_Output_Enable_Test should equal 1" severity error;
-	assert MAR_Low_Input_Enable_Test = '1'	report "Step 1: MAR_Low_Input_Enable_Test should equal 1" severity error;
+	assert PC_High_Output_Enable_Test = '1'	report "Step 1: PC_High_Output_Enable_Test should equal 1" severity error;
+	assert Memory_Read_Enable_Test = '1'	report "Step 1: Memory_Read_Enable_Test should equal 1" severity error;
+	assert IR_Input_Enable_Test = '1'	report "Step 1: IR_Input_Enable_Test should equal 1" severity error;
 	assert FSM_Out_Test = "00000010"	report "Step 1: FSM_Out_Test should equal 00000010" severity error;
 
-	report "Running Tests for '00000010' set Step 2 Load MAR (high)";
+
+	report "Running Tests for '00000010' set Step 2 Increment PC";
 
         FSM_In_Test	<= "00000010";
         wait for 10 ns;
 
-	assert PC_High_Output_Enable_Test = '1'	report "Step 2: PC_High_Output_Enable_Test should equal 1" severity error;
-	assert MAR_High_Input_Enable_Test = '1'	report "Step 2: MAR_High_Input_Enable_Test should equal 1" severity error;
-	assert FSM_Out_Test = "00000011"	report "Step 2: FSM_Out_Test should equal 00000011" severity error;
-
-	report "Running Tests for '00000011' set Step 3 Fetch Instruction";
-
-        FSM_In_Test	<= "00000011";
-        wait for 10 ns;
-
-	assert MAR_Low_Output_To_Memory_Enable_Test = '1'	report "Step 3: MAR_Low_Output_To_Memory_Enable_Test should equal 1" severity error;
-	assert MAR_High_Output_To_Memory_Enable_Test = '1'	report "Step 3: MAR_High_Output_To_Memory_Enable_Test should equal 1" severity error;
-	assert Memory_Read_Enable_Test = '1'			report "Step 3: Memory_Read_Enable_Test should equal 1" severity error;
-	assert MDR_Input_Enable_Test = '1'			report "Step 3: MDR_Input_Enable_Test should equal 1" severity error;
-
-	assert FSM_Out_Test = "00000100"			report "Step 3: FSM_Out_Test should equal 00000100" severity error;
-
-	report "Running Tests for '00000100' set Step 4 Load Instruction";
-        FSM_In_Test	<= "00000100";
-        wait for 10 ns;
-
-	assert MDR_Output_Enable_Test = '1'		report "Step 4: MDR_Output_Enable_Test should equal 1" severity error;
-	assert IR_Input_Enable_Test = '1'		report "Step 4: IR_Input_Enable_Test should equal 1" severity error;
-
-	assert FSM_Out_Test = "00000101"			report "Step 4: FSM_Out_Test should equal 00000101" severity error;
-
-	report "Running Tests for '00000101' set Step 5 Increment PC";
-	FSM_In_Test	<= "00000101";
-        wait for 10 ns;
-
-	assert Increment_PC_Test = '1'			report "Step 5: Increment_PC_Test should equal 1" severity error;
-	assert PC_Low_Output_Enable_Test = '1'		report "Step 5: PC_Low_Output_Enable_Test should equal 1" severity error;
-	assert PC_High_Output_Enable_Test = '1'		report "Step 5: PC_High_Output_Enable_Test should equal 1" severity error;
-	
-	assert FSM_Out_Test = "00000110"		report "Step 5: FSM_Out_Test should equal 00000110" severity error;
+	assert Increment_PC_Test = '1'			report "Step 2: Increment_PC_Test should equal 1" severity error;
+	assert PC_Low_Output_Enable_Test = '1'		report "Step 2: PC_Low_Output_Enable_Test should equal 1" severity error;
+	assert PC_High_Output_Enable_Test = '1'		report "Step 2: PC_High_Output_Enable_Test should equal 1" severity error;
+	assert FSM_Out_Test = "00000110"		report "Step 1: FSM_Out_Test should equal 00000110" severity error;
 
 	report "************** TESTS FOR BRANCHING TO INSTRUCTION SUBROUTINES ***************";
 
