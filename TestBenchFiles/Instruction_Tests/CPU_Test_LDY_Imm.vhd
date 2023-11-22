@@ -36,8 +36,7 @@ architecture Behavioral of CPU_Test_LDY_Imm is
 	signal Memory_Out_High_Test		: std_logic_vector(7 downto 0);
 	signal Memory_Read_Enable_Test		: std_logic;
 	signal Y_Reg_External_Output_Test	: std_logic_vector(7 downto 0);
-
-
+	
 begin
    -- Instantiate the three_bit_decoder module
     UUT: CPU
@@ -81,22 +80,10 @@ begin
 		wait for 10 ns;
 		-- continue through CPU cycles
 
-		report "Step 1: Load MAR low from PC low";
+		report "Step 1: Fetch Instruction";
 		Clock_Test	<= '1';
-		wait for 10 ns;
-		Clock_Test	<= '0';
 		wait for 10 ns;
 		
-		report "Step 2: Load MAR High from PC High";
-		Clock_Test	<= '1';
-		wait for 10 ns;
-		Clock_Test	<= '0';
-		wait for 10 ns;
-
-		report "Step 3:  Load MAR into Memory Out and Set Memory Read Enable";		
-		Clock_Test	<= '1';
-		wait for 10 ns;
-
 		report "Running tests for CPU reading Memory location 0000000000000000";
 		assert Memory_Out_Low_Test = "00000000"	report "Test 1: Memory_Out_Low_Test should equal 00000000" severity error;
 		assert Memory_Out_High_Test = "00000000" report "Test 2: Memory_Out_High_Test should equal 00000000" severity error;
@@ -104,38 +91,14 @@ begin
 
 		Clock_Test	<= '0';
 		wait for 10 ns;
-	
-		report "Step 4:  Load Instruction from MDR";		
-		Clock_Test	<= '1';
-		wait for 10 ns;
-		Clock_Test	<= '0';
-		wait for 10 ns;
-
-		report "Step 5:  Increment PC";		
-		Clock_Test	<= '1';
-		wait for 10 ns;
-		Clock_Test	<= '0';
-		wait for 10 ns;
-
-		report "Instruction is 0001xxxx Branch to Load Immediate Value to Register - FSM 00000111";
-		Clock_Test	<= '1';
-		wait for 10 ns;
-		Clock_Test	<= '0';
-		wait for 10 ns;
 		
-		report "Step One of Load Immediate Value to Register - Load MAR (low)";
+		report "Step 2: Increment PC";
 		Clock_Test	<= '1';
 		wait for 10 ns;
 		Clock_Test	<= '0';
 		wait for 10 ns;
 
-		report "Step Two of Load Immediate Value to Register - Load MAR (high)";
-		Clock_Test	<= '1';
-		wait for 10 ns;
-		Clock_Test	<= '0';
-		wait for 10 ns;
-
-		report "Step Three of Load Immediate Value to Register - Fetch Value from Memory";
+		report "Instruction is 00010011 Step One of Load Immediate to Register, Load Y Register with Value";
 		Clock_Test	<= '1';
 		wait for 10 ns;
 
@@ -143,24 +106,20 @@ begin
 		assert Memory_Out_Low_Test = "00000001"	report "Test 1: Memory_Out_Low_Test should equal 00000001" severity error;
 		assert Memory_Out_High_Test = "00000000" report "Test 2: Memory_Out_High_Test should equal 00000000" severity error;
 		assert Memory_Read_Enable_Test = '1' report "Test 3: Memory_Read_Enable_Test should equal 1" severity error;
-
+		
 		Clock_Test	<= '0';
 		wait for 10 ns;
 
-		report "Step Four of Load Immediate Value to Register - Load Y Reg";
-		Clock_Test	<= '1';
-		wait for 10 ns;
-		Clock_Test	<= '0';
-		wait for 10 ns;
-
+		report "Instruction is 00010011 Step Two of Load Immediate to Register, Increment Programme Counter";
 		Clock_Test	<= '1';
 		wait for 10 ns;
 
-		report "Running tests for Loading Y Register with value 11111011  (#251)";
+		report "Running tests for Loading Y Register with value 11111011 (#251)";
 		assert Y_Reg_External_Output_Test = "11111011"	report "Test: Y_Reg_External_Output_Test should equal 11111011" severity error;
 
 		wait;
 	end process stimulus_proc;
+
 
 	-- Simulate memory response
     	process
