@@ -121,13 +121,6 @@ begin
 
 	report "************** TESTS FOR BRANCHING TO INSTRUCTION SUBROUTINES ***************";
 
-	report "Running Tests for Branch to Load Register with Immediate Value";
-	FSM_In_Test	<= "00000011";
-	Instruction_Test <= "00010101"; -- instruction needs to be 0001xxxx
-        wait for 10 ns;
-
-	assert FSM_Out_Test = "00000100"		report "Branch to Load Register with Immediate Value: FSM_Out_Test should equal 00000100" severity error;
-
 	report "Running Tests for Branch to Load from Absolute Memory Address to Register";
 	FSM_In_Test	<= "00000110";
 	Instruction_Test <= "00100101"; -- instruction needs to be 0010xxxx
@@ -137,67 +130,47 @@ begin
 
 	report "************ TESTS FOR SUBROUTINE: Load Register with Immediate Value, FSM 00000011 to TBC ************";
 	
-	report "Running Tests for Load Register with Immediate Value Step One: Load MAR (Low)";
-	FSM_In_Test	<= "00000111";
+	report "Running Tests for Load Register with Immediate Value Step One: Load A Register with value from memory";
+	FSM_In_Test	<= "00000011";
+	Instruction_Test <= "00010001";
         wait for 10 ns;
 	
-	assert PC_Low_Output_Enable_Test = '1'	report "Load Register with Immediate Value Step One: PC_Low_Output_Enable_Test should equal 1" severity error;
-	assert MAR_Low_Input_Enable_Test = '1'	report "Load Register with Immediate Value Step One: MAR_Low_Input_Enable_Test should equal 1" severity error;
-	assert FSM_Out_Test = "00001000"	report "Load Register with Immediate Value Step One: FSM_Out_Test should equal 00001000" severity error;
+	assert PC_Low_Output_Enable_Test = '1'	report "Load Register with Immediate Value Step One A Reg: PC_Low_Output_Enable_Test should equal 1" severity error;
+	assert PC_High_Output_Enable_Test = '1'	report "Load Register with Immediate Value Step One A Reg: PC_High_Output_Enable_Test should equal 1" severity error;
+	assert Memory_Read_Enable_Test = '1'	report "Load Register with Immediate Value Step One A Reg: Memory_Read_Enable_Test should equal 1" severity error;
+	assert A_Reg_Input_Enable_Test = '1'	report "Load Register with Immediate Value Step One A Reg: A_Reg_Input_Enable should equal 1" severity error;
+	assert FSM_Out_Test = "00000100"	report "Load Register with Immediate Value Step One A Reg: FSM_Out_Test should equal 00000100" severity error;
 
-	report "Running Tests for Load Register with Immediate Value Step Two: Load MAR (High)";
-	FSM_In_Test	<= "00001000";
+	report "Running Tests for Load Register with Immediate Value Step One: Load X Register with value from memory";
+	FSM_In_Test	<= "00000011";
+	Instruction_Test <= "00010010";
         wait for 10 ns;
 	
-	assert PC_High_Output_Enable_Test = '1'	report "Load Register with Immediate Value Step Two: PC_High_Output_Enable_Test should equal 1" severity error;
-	assert MAR_High_Input_Enable_Test = '1'	report "Load Register with Immediate Value Step Two: MAR_High_Input_Enable_Test should equal 1" severity error;
-	assert FSM_Out_Test = "00001001"	report "Load Register with Immediate Value Step Two: FSM_Out_Test should equal 00001001" severity error;
+	assert PC_Low_Output_Enable_Test = '1'	report "Load Register with Immediate Value Step One X Reg: PC_Low_Output_Enable_Test should equal 1" severity error;
+	assert PC_High_Output_Enable_Test = '1'	report "Load Register with Immediate Value Step One X Reg: PC_High_Output_Enable_Test should equal 1" severity error;
+	assert Memory_Read_Enable_Test = '1'	report "Load Register with Immediate Value Step One X Reg: Memory_Read_Enable_Test should equal 1" severity error;
+	assert X_Reg_Input_Enable_Test = '1'	report "Load Register with Immediate Value Step One X Reg: X_Reg_Input_Enable should equal 1" severity error;
+	assert FSM_Out_Test = "00000100"	report "Load Register with Immediate Value Step One X Reg: FSM_Out_Test should equal 00000100" severity error;
 
-	report "Running Tests for Load Register with Immediate Value Step Three: Fetch Value from Memory";
-	FSM_In_Test	<= "00001001";
+	report "Running Tests for Load Register with Immediate Value Step One: Load Y Register with value from memory";
+	FSM_In_Test	<= "00000011";
+	Instruction_Test <= "00010011";
         wait for 10 ns;
 	
-	assert MAR_Low_Output_To_Memory_Enable_Test = '1'	report "Load Register with Immediate Value Step Three: MAR_Low_Output_To_Memory_Enable_Test should equal 1" severity error;
-	assert MAR_High_Output_To_Memory_Enable_Test = '1'	report "Load Register with Immediate Value Step Three: MAR_High_Output_To_Memory_Enable_Test should equal 1" severity error;
-	assert Memory_Read_Enable_Test = '1'			report "Load Register with Immediate Value Step Three: Memory_Read_Enable_Test should equal 1" severity error;
-	assert MDR_Input_Enable_Test = '1'			report "Load Register with Immediate Value Step Three: MDR_Input_Enable_Test should equal 1" severity error;
-	assert FSM_Out_Test = "00001010"			report "Load Register with Immediate Value Step Three: FSM_Out_Test should equal 00001010" severity error;
+	assert PC_Low_Output_Enable_Test = '1'	report "Load Register with Immediate Value Step One Y Reg: PC_Low_Output_Enable_Test should equal 1" severity error;
+	assert PC_High_Output_Enable_Test = '1'	report "Load Register with Immediate Value Step One Y Reg: PC_High_Output_Enable_Test should equal 1" severity error;
+	assert Memory_Read_Enable_Test = '1'	report "Load Register with Immediate Value Step One Y Reg: Memory_Read_Enable_Test should equal 1" severity error;
+	assert Y_Reg_Input_Enable_Test = '1'		report "Load Register with Immediate Value Step One Y Reg: Y_Reg_Input_Enable should equal 1" severity error;
+	assert FSM_Out_Test = "00000100"	report "Load Register with Immediate Value Step One Y Reg: FSM_Out_Test should equal 00000100" severity error;
 
-	report "Running Tests for Load Register with Immediate Value Step Four: Load Value into A Register";
-	FSM_In_Test	<= "00001010";
-	Instruction_Test <= "00010001"; -- instruction needs to be xxxx0001 indicates A Reg is target
+	report "Running Tests for Load Register with Immediate Value Step Two: Increment Programme Counter";
+	FSM_In_Test	<= "00000100";
         wait for 10 ns;
 	
-	assert MDR_Output_Enable_Test = '1'			report "Load Register with Immediate Value Step Four (LDA): MDR_Output_Enable_Test should equal 1" severity error;
-	assert A_Reg_Input_Enable_Test = '1'			report "Load Register with Immediate Value Step Four (LDA): A_Reg_Input_Enable_Test should equal 1" severity error;
-	assert FSM_Out_Test = "00001011"			report "Load Register with Immediate Value Step Four (LDA): FSM_Out_Test should equal 00001011" severity error;
-
-	report "Running Tests for Load Register with Immediate Value Step Four: Load Value into X Register";
-	FSM_In_Test	<= "00001010";
-	Instruction_Test <= "00010010"; -- instruction needs to be xxxx0010 indicates X Reg is target
-        wait for 10 ns;
-	
-	assert MDR_Output_Enable_Test = '1'			report "Load Register with Immediate Value Step Four (LDX): MDR_Output_Enable_Test should equal 1" severity error;
-	assert X_Reg_Input_Enable_Test = '1'			report "Load Register with Immediate Value Step Four (LDX): X_Reg_Input_Enable_Test should equal 1" severity error;
-	assert FSM_Out_Test = "00001011"			report "Load Register with Immediate Value Step Four (LDX): FSM_Out_Test should equal 00001011" severity error;
-
-	report "Running Tests for Load Register with Immediate Value Step Four: Load Value into Y Register";
-	FSM_In_Test	<= "00001010";
-	Instruction_Test <= "00010011"; -- instruction needs to be xxxx0011 indicates Y Reg is target
-        wait for 10 ns;
-	
-	assert MDR_Output_Enable_Test = '1'			report "Load Register with Immediate Value Step Four (LDY): MDR_Output_Enable_Test should equal 1" severity error;
-	assert Y_Reg_Input_Enable_Test = '1'			report "Load Register with Immediate Value Step Four (LDY): Y_Reg_Input_Enable_Test should equal 1" severity error;
-	assert FSM_Out_Test = "00001011"			report "Load Register with Immediate Value Step Four (LDY): FSM_Out_Test should equal 00001011" severity error;
-
-	report "Running Tests for Load Register with Immediate Value Step Five: Increment Programme Counter";
-	FSM_In_Test	<= "00001011";
-        wait for 10 ns;
-	
-	assert Increment_PC_Test = '1'				report "Load Register with Immediate Value Step Five: Increment_PC_Test should equal 1" severity error;
-	assert PC_Low_Output_Enable_Test = '1'			report "Load Register with Immediate Value Step Five: PC_Low_Output_Enable_Test should equal 1" severity error;
-	assert PC_High_Output_Enable_Test = '1'			report "Load Register with Immediate Value Step Five: PC_High_Output_Enable_Test should equal 1" severity error;
-	assert FSM_Out_Test = "00000001"			report "Load Register with Immediate Value Step Five: FSM_Out_Test should equal Increment_PC_Test" severity error;
+	assert Increment_PC_Test = '1'				report "Load Register with Immediate Value Step Two: Increment_PC_Test should equal 1" severity error;
+	assert PC_Low_Output_Enable_Test = '1'			report "Load Register with Immediate Value Step Two: PC_Low_Output_Enable_Test should equal 1" severity error;
+	assert PC_High_Output_Enable_Test = '1'			report "Load Register with Immediate Value Step Two: PC_High_Output_Enable_Test should equal 1" severity error;
+	assert FSM_Out_Test = "00000001"			report "Load Register with Immediate Value Step Two: FSM_Out_Test should equal 00000001" severity error;
 
 	report "************ TESTS FOR SUBROUTINE: Load Register with Absolute Value Subroutine, FSM 00001100 to TBC ************";
 

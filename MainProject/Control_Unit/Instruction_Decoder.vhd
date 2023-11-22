@@ -186,6 +186,7 @@ begin
 	FSM_Out(0) <=
 		Internal_Step_0_Initial_State or
 		Internal_Step_2_Increment_PC or
+		Internal_LD_Reg_Immediate_Step_2 or
 		Internal_LD_Reg_Absolute_Step_1 or
 		Internal_LD_Reg_Absolute_Step_3 or
 		Internal_LD_Reg_Absolute_Step_5 or
