@@ -35,14 +35,10 @@ architecture Behavioral of Instruction_Decoder is
 signal Internal_Step_0_Initial_State 		: std_logic;
 signal Internal_Step_1_Fetch_Instruction 	: std_logic;
 signal Internal_Step_2_Increment_PC 		: std_logic;
-signal Internal_Branch_LD_Reg_Immediate		: std_logic;
-signal Internal_LD_Reg_Immediate_Step_1		: std_logic;
+signal Internal_LD_Reg_Immediate_Step_1_LDA	: std_logic;
+signal Internal_LD_Reg_Immediate_Step_1_LDX	: std_logic;
+signal Internal_LD_Reg_Immediate_Step_1_LDY	: std_logic;
 signal Internal_LD_Reg_Immediate_Step_2		: std_logic;
-signal Internal_LD_Reg_Immediate_Step_3		: std_logic;
-signal Internal_LD_Reg_Immediate_Step_4_LDA	: std_logic;
-signal Internal_LD_Reg_Immediate_Step_4_LDX	: std_logic;
-signal Internal_LD_Reg_Immediate_Step_4_LDY	: std_logic;
-signal Internal_LD_Reg_Immediate_Step_5		: std_logic;
 signal Internal_Branch_LD_Reg_Absolute		: std_logic;
 signal Internal_LD_Reg_Absolute_Step_1		: std_logic;
 signal Internal_LD_Reg_Absolute_Step_2		: std_logic;
@@ -71,49 +67,31 @@ begin
 		not FSM_In(7) and	not FSM_In(6) and	not FSM_In(5) and	not FSM_In(4) and
 		not FSM_In(3) and 	not FSM_In(2) and	FSM_In(1) and 		not FSM_In(0);
 
-	-- if FSM_In = "00000011" and Instruction is 0001xxxx Branch to Load Immediate Value to Register (100)
-	Internal_Branch_LD_Reg_Immediate <=
+	-- if FSM_In = "00000011" and Instruction is 00010001 Step One of Load Immediate Value to Register - Load A Reg with value from Memory
+	Internal_LD_Reg_Immediate_Step_1_LDA <=
 		not FSM_In(7) and	not FSM_In(6) and	not FSM_In(5) and	not FSM_In(4) and
 		not FSM_In(3) and 	not FSM_In(2) and	FSM_In(1) and		FSM_In(0) and
-		not Instruction(7) and	not Instruction(6) and	not Instruction(5) and 	Instruction(4);
-
-	-- if FSM_In = "00000111" Step One of Load Immediate Value to Register - Load MAR (low)
-	Internal_LD_Reg_Immediate_Step_1 <=
-		not FSM_In(7) and	not FSM_In(6) and	not FSM_In(5) and	not FSM_In(4) and
-		not FSM_In(3) and 	FSM_In(2) and		FSM_In(1) and		FSM_In(0);
-
-	-- if FSM_In = "00001000" Step Two of Load Immediate Value to Register - Load MAR (high)
-	Internal_LD_Reg_Immediate_Step_2 <=
-		not FSM_In(7) and	not FSM_In(6) and	not FSM_In(5) and	not FSM_In(4) and
-		FSM_In(3) and 		not FSM_In(2) and	not FSM_In(1) and	not FSM_In(0);
-
-	-- if FSM_In = "00001001" Step Three of Load Immediate Value to Register - Fetch Value from Memory
-	Internal_LD_Reg_Immediate_Step_3 <=
-		not FSM_In(7) and	not FSM_In(6) and	not FSM_In(5) and	not FSM_In(4) and
-		FSM_In(3) and 		not FSM_In(2) and	not FSM_In(1) and	FSM_In(0);
-
-	-- if FSM_In = "00001010" and Instruction is xxxx0001 Step Four of Load Immediate Value to Register - Load A Reg
-	Internal_LD_Reg_Immediate_Step_4_LDA <=
-		not FSM_In(7) and	not FSM_In(6) and	not FSM_In(5) and	not FSM_In(4) and
-		FSM_In(3) and 		not FSM_In(2) and	FSM_In(1) and		not FSM_In(0) and
+		not Instruction(7) and	not Instruction(6) and	not Instruction(5) and 	Instruction(4) and
 		not Instruction(3) and	not Instruction(2) and	not Instruction(1) and 	Instruction(0);
 
-	-- if FSM_In = "00001010" and Instruction is xxxx0010 Step Four of Load Immediate Value to Register - Load X Reg
-	Internal_LD_Reg_Immediate_Step_4_LDX <=
+	-- if FSM_In = "00000011" and Instruction is 00010010 Step One of Load Immediate Value to Register - Load X Reg with value from Memory
+	Internal_LD_Reg_Immediate_Step_1_LDX <=
 		not FSM_In(7) and	not FSM_In(6) and	not FSM_In(5) and	not FSM_In(4) and
-		FSM_In(3) and 		not FSM_In(2) and	FSM_In(1) and		not FSM_In(0) and
+		not FSM_In(3) and 	not FSM_In(2) and	FSM_In(1) and		FSM_In(0) and
+		not Instruction(7) and	not Instruction(6) and	not Instruction(5) and 	Instruction(4) and
 		not Instruction(3) and	not Instruction(2) and	Instruction(1) and 	not Instruction(0);
 
-	-- if FSM_In = "00001010" and Instruction is xxxx0011 Step Four of Load Immediate Value to Register - Load Y Reg
-	Internal_LD_Reg_Immediate_Step_4_LDY <=
+	-- if FSM_In = "00000011" and Instruction is 00010011 Step One of Load Immediate Value to Register - Load Y Reg with value from Memory
+	Internal_LD_Reg_Immediate_Step_1_LDY <=
 		not FSM_In(7) and	not FSM_In(6) and	not FSM_In(5) and	not FSM_In(4) and
-		FSM_In(3) and 		not FSM_In(2) and	FSM_In(1) and		not FSM_In(0) and
+		not FSM_In(3) and 	not FSM_In(2) and	FSM_In(1) and		FSM_In(0) and
+		not Instruction(7) and	not Instruction(6) and	not Instruction(5) and 	Instruction(4) and
 		not Instruction(3) and	not Instruction(2) and	Instruction(1) and 	Instruction(0);
 
-	-- if FSM_In = "00001011" set Step Five of Load Immediate Value to Register - Increment Programme Counter
-	Internal_LD_Reg_Immediate_Step_5 <=
+	-- if FSM_In = "00000100" set Step Two of Load Immediate Value to Register - Increment Programme Counter
+	Internal_LD_Reg_Immediate_Step_2 <=
 		not FSM_In(7) and	not FSM_In(6) and	not FSM_In(5) and	not FSM_In(4) and
-		FSM_In(3) and 		not FSM_In(2) and	FSM_In(1) and		FSM_In(0);
+		not FSM_In(3) and 	FSM_In(2) and		not FSM_In(1) and	not FSM_In(0);
 
 	-- if FSM_In = "00000110" and Instruction is 0010xxxx Branch to Load Value from Absolute Memory Address to Register 
 	Internal_Branch_LD_Reg_Absolute <=
@@ -161,15 +139,13 @@ begin
 
 	-- If Internal_Step_0_Initial_State		set FSM_Out = "00000001" (Step 1)	
 	-- if Internal_Step_1_Fetch_Instruction		set FSM_Out = "00000010" (Step 2)
-	-- if Internal_Step_2_Increment_PC 		set FSM_Out = "00000011" (Step 3 - Branch to Instruction Subroutines 100) 
-	-- if Internal_Branch_LD_Reg_Immediate 		set FSM_Out = "00000100" (Branch to Ld Imm to Reg Step 1)
-	-- if Internal_LD_Reg_Immediate_Step_1		set FSM_Out = "00001000" (Ld Abs to Reg Step 2)
-	-- if Internal_LD_Reg_Immediate_Step_2		set FSM_Out = "00001001" (Ld Abs to Reg Step 3)
-	-- if Internal_LD_Reg_Immediate_Step_3		set FSM_Out = "00001010" (Ld Abs to Reg Step 4)
-	-- if Internal_LD_Reg_Immediate_Step_4_LDA	set FSM_Out = "00001011" (Ld Abs to Reg Step 5)
-	-- if Internal_LD_Reg_Immediate_Step_4_LDX	set FSM_Out = "00001011" (Ld Abs to Reg Step 5)
-	-- if Internal_LD_Reg_Immediate_Step_4_LDY	set FSM_Out = "00001011" (Ld Abs to Reg Step 5)
-	-- if Internal_LD_Reg_Immediate_Step_5		set FSM_Out = "00000001" (Back to Step 1)
+	-- if Internal_Step_2_Increment_PC 		set FSM_Out = "00000011" (Step 3 - Start Instruction Subroutines) 
+
+	-- if Internal_LD_Reg_Immediate_Step_1_LDA	set FSM_Out = "00000100" (Ld Imm to Reg Step 2)
+	-- if Internal_LD_Reg_Immediate_Step_1_LDX	set FSM_Out = "00000100" (Ld Imm to Reg Step 2)
+	-- if Internal_LD_Reg_Immediate_Step_1_LDY	set FSM_Out = "00000100" (Ld Imm to Reg Step 2)
+	-- if Internal_LD_Reg_Immediate_Step_2		set FSM_Out = "00000001" (Back to Step 1 Fetch Instruction)
+
 	-- if Internal_Branch_LD_Reg_Absolute 		set FSM_Out = "00001100" (Branch to Ld Reg Absolute Step 1)
 	-- if Internal_LD_Reg_Absolute_Step_1 		set FSM_Out = "00001101" (Branch to Ld Reg Absolute Step 2)
 	-- if Internal_LD_Reg_Absolute_Step_2 		set FSM_Out = "00001110" (Branch to Ld Reg Absolute Step 3)
@@ -188,18 +164,14 @@ begin
 		Internal_LD_Reg_Absolute_Step_6 or
 		Internal_LD_Reg_Absolute_Step_7;
 	FSM_Out(3) <=
-		Internal_LD_Reg_Immediate_Step_1 or
-		Internal_LD_Reg_Immediate_Step_2 or
-		Internal_LD_Reg_Immediate_Step_3 or
-		Internal_LD_Reg_Immediate_Step_4_LDA or
-		Internal_LD_Reg_Immediate_Step_4_LDX or
-		Internal_LD_Reg_Immediate_Step_4_LDY or
 		Internal_Branch_LD_Reg_Absolute or
 		Internal_LD_Reg_Absolute_Step_1 or
 		Internal_LD_Reg_Absolute_Step_2 or
 		Internal_LD_Reg_Absolute_Step_3;
 	FSM_Out(2) <=
-		Internal_Branch_LD_Reg_Immediate or
+		Internal_LD_Reg_Immediate_Step_1_LDA or
+		Internal_LD_Reg_Immediate_Step_1_LDX or
+		Internal_LD_Reg_Immediate_Step_1_LDY or
 		Internal_Branch_LD_Reg_Absolute or
 		Internal_LD_Reg_Absolute_Step_1 or
 		Internal_LD_Reg_Absolute_Step_2 or
@@ -207,10 +179,6 @@ begin
 	FSM_Out(1) <=
 		Internal_Step_2_Increment_PC or
 		Internal_Step_1_Fetch_Instruction or
-		Internal_LD_Reg_Immediate_Step_3 or
-		Internal_LD_Reg_Immediate_Step_4_LDA or
-		Internal_LD_Reg_Immediate_Step_4_LDX or
-		Internal_LD_Reg_Immediate_Step_4_LDY or
 		Internal_LD_Reg_Absolute_Step_2 or
 		Internal_LD_Reg_Absolute_Step_3 or
 		Internal_LD_Reg_Absolute_Step_6 or
@@ -218,11 +186,6 @@ begin
 	FSM_Out(0) <=
 		Internal_Step_0_Initial_State or
 		Internal_Step_2_Increment_PC or
-		Internal_LD_Reg_Immediate_Step_2 or
-		Internal_LD_Reg_Immediate_Step_4_LDA or
-		Internal_LD_Reg_Immediate_Step_4_LDX or
-		Internal_LD_Reg_Immediate_Step_4_LDY or
-		Internal_LD_Reg_Immediate_Step_5 or
 		Internal_LD_Reg_Absolute_Step_1 or
 		Internal_LD_Reg_Absolute_Step_3 or
 		Internal_LD_Reg_Absolute_Step_5 or
@@ -231,26 +194,28 @@ begin
 	PC_Low_Output_Enable	<=
 		Internal_Step_1_Fetch_Instruction or
 		Internal_Step_2_Increment_PC or
-		Internal_LD_Reg_Immediate_Step_1 or
-		Internal_LD_Reg_Immediate_Step_5 or
+		Internal_LD_Reg_Immediate_Step_1_LDA or
+		Internal_LD_Reg_Immediate_Step_1_LDX or
+		Internal_LD_Reg_Immediate_Step_1_LDY or
+		Internal_LD_Reg_Immediate_Step_2 or
 		Internal_LD_Reg_Absolute_Step_1 or
 		Internal_LD_Reg_Absolute_Step_4 or
 		Internal_LD_Reg_Absolute_Step_5;
 	MAR_Low_Input_Enable	<=
-		Internal_LD_Reg_Immediate_Step_1 or
 		Internal_LD_Reg_Absolute_Step_1 or
 		Internal_LD_Reg_Absolute_Step_5;
 
 	PC_High_Output_Enable	<=
 		Internal_Step_1_Fetch_Instruction or
 		Internal_Step_2_Increment_PC or
+		Internal_LD_Reg_Immediate_Step_1_LDA or
+		Internal_LD_Reg_Immediate_Step_1_LDX or
+		Internal_LD_Reg_Immediate_Step_1_LDY or
 		Internal_LD_Reg_Immediate_Step_2 or
-		Internal_LD_Reg_Immediate_Step_5 or
 		Internal_LD_Reg_Absolute_Step_2 or
 		Internal_LD_Reg_Absolute_Step_4 or
 		Internal_LD_Reg_Absolute_Step_6;
 	MAR_High_Input_Enable	<=
-		Internal_LD_Reg_Immediate_Step_2 or
 		Internal_LD_Reg_Absolute_Step_2 or
 		Internal_LD_Reg_Absolute_Step_6;
 
@@ -258,28 +223,24 @@ begin
 	PC_High_Input_Enable <= '0';
 	
 	MAR_Low_Output_To_Memory_Enable		<=
-		Internal_LD_Reg_Immediate_Step_3 or
 		Internal_LD_Reg_Absolute_Step_3 or
 		Internal_LD_Reg_Absolute_Step_7;
 
 	MAR_High_Output_To_Memory_Enable	<=
-		Internal_LD_Reg_Immediate_Step_3 or
 		Internal_LD_Reg_Absolute_Step_3 or
 		Internal_LD_Reg_Absolute_Step_7;
 
 	Memory_Read_Enable			<=
 		Internal_Step_1_Fetch_Instruction or
-		Internal_LD_Reg_Immediate_Step_3 or
+		Internal_LD_Reg_Immediate_Step_1_LDA or
+		Internal_LD_Reg_Immediate_Step_1_LDX or
+		Internal_LD_Reg_Immediate_Step_1_LDY or
 		Internal_LD_Reg_Absolute_Step_3 or
 		Internal_LD_Reg_Absolute_Step_7;
 
-	MDR_Input_Enable			<=
-		Internal_LD_Reg_Immediate_Step_3;
+	MDR_Input_Enable			<= '0';
 
-	MDR_Output_Enable			<=
-		Internal_LD_Reg_Immediate_Step_4_LDA or
-		Internal_LD_Reg_Immediate_Step_4_LDX or
-		Internal_LD_Reg_Immediate_Step_4_LDY;
+	MDR_Output_Enable			<= '0';
 
 	Temp_Memory_Address_High_Input_Enable <= Internal_LD_Reg_Absolute_Step_3;
 
@@ -287,14 +248,14 @@ begin
 
 	IR_Input_Enable				<= Internal_Step_1_Fetch_Instruction;
 
-	A_Reg_Input_Enable			<= Internal_LD_Reg_Immediate_Step_4_LDA;
-	X_Reg_Input_Enable			<= Internal_LD_Reg_Immediate_Step_4_LDX;
-	Y_Reg_Input_Enable			<= Internal_LD_Reg_Immediate_Step_4_LDY;
+	A_Reg_Input_Enable			<= Internal_LD_Reg_Immediate_Step_1_LDA;
+	X_Reg_Input_Enable			<= Internal_LD_Reg_Immediate_Step_1_LDX;
+	Y_Reg_Input_Enable			<= Internal_LD_Reg_Immediate_Step_1_LDY;
 
 	-- To increment PC you must also assert PC Output Enable control signals
 	Increment_PC
 		<= Internal_Step_2_Increment_PC or
-		Internal_LD_Reg_Immediate_Step_5 or
+		Internal_LD_Reg_Immediate_Step_2 or
 		Internal_LD_Reg_Absolute_Step_4;
 
 end architecture Behavioral;
