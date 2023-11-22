@@ -98,25 +98,7 @@ begin
 		Clock_Test	<= '0';
 		wait for 10 ns;
 
-		report "Instruction is 0001xxxx Branch to Load Immediate Value to Register - FSM 00000111";
-		Clock_Test	<= '1';
-		wait for 10 ns;
-		Clock_Test	<= '0';
-		wait for 10 ns;
-		
-		report "Step One of Load Immediate Value to Register - Load MAR (low)";
-		Clock_Test	<= '1';
-		wait for 10 ns;
-		Clock_Test	<= '0';
-		wait for 10 ns;
-
-		report "Step Two of Load Immediate Value to Register - Load MAR (high)";
-		Clock_Test	<= '1';
-		wait for 10 ns;
-		Clock_Test	<= '0';
-		wait for 10 ns;
-
-		report "Step Three of Load Immediate Value to Register - Fetch Value from Memory";
+		report "Instruction is 00010001 Step One of Load Immediate to Register, Load A Register with Value";
 		Clock_Test	<= '1';
 		wait for 10 ns;
 
@@ -124,16 +106,11 @@ begin
 		assert Memory_Out_Low_Test = "00000001"	report "Test 1: Memory_Out_Low_Test should equal 00000001" severity error;
 		assert Memory_Out_High_Test = "00000000" report "Test 2: Memory_Out_High_Test should equal 00000000" severity error;
 		assert Memory_Read_Enable_Test = '1' report "Test 3: Memory_Read_Enable_Test should equal 1" severity error;
-
+		
 		Clock_Test	<= '0';
 		wait for 10 ns;
 
-		report "Step Four of Load Immediate Value to Register - Load A Reg";
-		Clock_Test	<= '1';
-		wait for 10 ns;
-		Clock_Test	<= '0';
-		wait for 10 ns;
-
+		report "Instruction is 00010001 Step Two of Load Immediate to Register, Increment Programme Counter";
 		Clock_Test	<= '1';
 		wait for 10 ns;
 
