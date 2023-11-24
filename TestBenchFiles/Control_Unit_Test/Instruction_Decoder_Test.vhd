@@ -165,6 +165,16 @@ begin
 	
 	assert FSM_Out_Test = "00000101"	report "Load Register with Absolute Value Step One: FSM_Out_Test should equal 00000101" severity error;
 
+	report "Running Tests for Load Register with Absolute Value Step Two: Increment PC";
+	FSM_In_Test	<= "00000101";
+        wait for 10 ns;
+	
+	assert PC_High_Output_Enable_Test = '1'	report "Load Register with Absolute Value Step Two: PC_High_Output_Enable_Test should equal 1" severity error;
+	assert PC_Low_Output_Enable_Test = '1'	report "Load Register with Absolute Value Step Two: PC_Low_Output_Enable_Test should equal 1" severity error;
+	assert Increment_PC_Test = '1'		report "Load Register with Absolute Value Step One: Increment_PC_Test should equal 1" severity error;
+	
+	assert FSM_Out_Test = "00000111"	report "Load Register with Absolute Value Step Two: FSM_Out_Test should equal 00000111" severity error;
+
         -- End the simulation
         wait;
     end process stimulus_proc;
