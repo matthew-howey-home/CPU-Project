@@ -22,10 +22,6 @@ architecture Behavioral of Instruction_Decoder_Test is
 		MAR_Low_Output_To_Memory_Enable		: out std_logic;
 		MAR_High_Output_To_Memory_Enable	: out std_logic;
 		Memory_Read_Enable			: out std_logic;
-		MDR_Input_Enable			: out std_logic;
-		MDR_Output_Enable			: out std_logic;
-		Temp_Memory_Address_Low_Input_Enable	: out std_logic;
-		Temp_Memory_Address_High_Input_Enable	: out std_logic;
 		IR_Input_Enable				: out std_logic;
 		Increment_PC				: out std_logic;
 		A_Reg_Input_Enable			: out std_logic;
@@ -46,10 +42,6 @@ architecture Behavioral of Instruction_Decoder_Test is
 	signal MAR_Low_Output_To_Memory_Enable_Test		: std_logic;
 	signal MAR_High_Output_To_Memory_Enable_Test		: std_logic;
 	signal Memory_Read_Enable_Test				: std_logic;
-	signal MDR_Input_Enable_Test				: std_logic;
-	signal MDR_Output_Enable_Test				: std_logic;
-	signal Temp_Memory_Address_Low_Input_Enable_Test	: std_logic;
-	signal Temp_Memory_Address_High_Input_Enable_Test	: std_logic;
 	signal IR_Input_Enable_Test				: std_logic;
 	signal Increment_PC_Test				: std_logic;
 	signal A_Reg_Input_Enable_Test				: std_logic;
@@ -71,10 +63,6 @@ begin
 		MAR_Low_Output_To_Memory_Enable			=> MAR_Low_Output_To_Memory_Enable_Test,
 		MAR_High_Output_To_Memory_Enable		=> MAR_High_Output_To_Memory_Enable_Test,
 		Memory_Read_Enable				=> Memory_Read_Enable_Test,
-		MDR_Input_Enable				=> MDR_Input_Enable_Test,
-		MDR_Output_Enable				=> MDR_Output_Enable_Test,
-		Temp_Memory_Address_Low_Input_Enable		=> Temp_Memory_Address_Low_Input_Enable_Test,
-		Temp_Memory_Address_High_Input_Enable		=> Temp_Memory_Address_High_Input_Enable_Test,
 		IR_Input_Enable					=> IR_Input_Enable_Test,
 		Increment_PC					=> Increment_PC_Test,
 		A_Reg_Input_Enable				=> A_Reg_Input_Enable_Test,
@@ -172,77 +160,19 @@ begin
 	assert PC_High_Output_Enable_Test = '1'			report "Load Register with Immediate Value Step Two: PC_High_Output_Enable_Test should equal 1" severity error;
 	assert FSM_Out_Test = "00000001"			report "Load Register with Immediate Value Step Two: FSM_Out_Test should equal 00000001" severity error;
 
-	report "************ TESTS FOR SUBROUTINE: Load Register with Absolute Value Subroutine, FSM 00001100 to TBC ************";
+	report "************ TESTS FOR SUBROUTINE: Load Register with Absolute Value Subroutine, FSM 00000011, 00000101 to TBC ************";
 
-	report "Running Tests for Load Register with Absolute Value Step One: Load MAR (Low)";
-	FSM_In_Test	<= "00001100";
+	report "Running Tests for Load Register with Absolute Value Step One: Load MAR (High)";
+	FSM_In_Test	<= "00000011";
+	Instruction_Test <= "00100001";
         wait for 10 ns;
 	
+	assert PC_High_Output_Enable_Test = '1'	report "Load Register with Absolute Value Step One: PC_High_Output_Enable_Test should equal 1" severity error;
 	assert PC_Low_Output_Enable_Test = '1'	report "Load Register with Absolute Value Step One: PC_Low_Output_Enable_Test should equal 1" severity error;
-	assert MAR_Low_Input_Enable_Test = '1'	report "Load Register with Absolute Value Step One: MAR_Low_Input_Enable_Test should equal 1" severity error;
+	assert Memory_Read_Enable_Test = '1'	report "Load Register with Absolute Value Step One: Memory_Read_Enable_Test should equal 1" severity error;
+	assert MAR_High_Input_Enable_Test = '1'	report "Load Register with Absolute Value Step One: MAR_High_Input_Enable_Test should equal 1" severity error;
 	
-	assert FSM_Out_Test = "00001101"	report "Load Register with Absolute Value Step One: FSM_Out_Test should equal 00001101" severity error;
-
-	report "Running Tests for Load Register with Absolute Value Step Two: Load MAR (High)";
-	FSM_In_Test	<= "00001101";
-        wait for 10 ns;
-	
-	assert PC_High_Output_Enable_Test = '1'	report "Load Register with Absolute Value Step Two: PC_High_Output_Enable_Test should equal 1" severity error;
-	assert MAR_High_Input_Enable_Test = '1'	report "Load Register with Absolute Value Step Two: MAR_High_Input_Enable_Test should equal 1" severity error;
-	
-	assert FSM_Out_Test = "00001110"	report "Load Register with Absolute Value Step Two: FSM_Out_Test should equal 00001110" severity error;
-
-	report "Running Tests for Load Register with Absolute Value Step Three: Load High Byte into Temp Memory Address Reg";
-	FSM_In_Test	<= "00001110";
-        wait for 10 ns;
-	
-	assert MAR_Low_Output_To_Memory_Enable_Test = '1'	report "Load Register with Absolute Value Step Three: MAR_Low_Output_To_Memory_Enable_Test should equal 1" severity error;
-	assert MAR_High_Output_To_Memory_Enable_Test = '1'	report "Load Register with Absolute Value Step Three: MAR_High_Output_To_Memory_Enable_Test should equal 1" severity error;
-	assert Memory_Read_Enable_Test = '1'			report "Load Register with Absolute Value Step Three: Memory_Read_Enable_Test should equal 1" severity error;
-	assert Temp_Memory_Address_High_Input_Enable_Test = '1'	report "Load Register with Absolute Value Step Three: Temp_Memory_Address_High_Input_Enable_Test should equal 1" severity error;
-	
-	assert FSM_Out_Test = "00001111"	report "Load Register with Absolute Value Step Three: FSM_Out_Test should equal 00001111" severity error;
-
-	report "Running Tests for Load Register with Absolute Value Step Four: Increment PC";
-	FSM_In_Test	<= "00001111";
-        wait for 10 ns;
-	
-	assert Increment_PC_Test = '1'				report "Load Register with Absolute Value Step Four: Increment_PC_Test should equal 1" severity error;
-	assert PC_Low_Output_Enable_Test = '1'			report "Load Register with Absolute Value Step Four: PC_Low_Output_Enable_Test should equal 1" severity error;
-	assert PC_High_Output_Enable_Test = '1'			report "Load Register with Absolute Value Step Four: PC_High_Output_Enable_Test should equal 1" severity error;
-	
-	assert FSM_Out_Test = "00010000"	report "Load Register with Absolute Value Step Four: FSM_Out_Test should equal 00010000" severity error;
-
-	report "Running Tests for Load Register with Absolute Value Step Five: Load MAR (Low)";
-	FSM_In_Test	<= "00010000";
-        wait for 10 ns;
-	
-	assert PC_Low_Output_Enable_Test = '1'	report "Load Register with Absolute Value Step Five: PC_Low_Output_Enable_Test should equal 1" severity error;
-	assert MAR_Low_Input_Enable_Test = '1'	report "Load Register with Absolute Value Step Five: MAR_Low_Input_Enable_Test should equal 1" severity error;
-	
-	assert FSM_Out_Test = "00010001"	report "Load Register with Absolute Value Step Five: FSM_Out_Test should equal 00010001" severity error;
-
-	report "Running Tests for Load Register with Absolute Value Step Six: Load MAR (High)";
-	FSM_In_Test	<= "00010001";
-        wait for 10 ns;
-	
-	assert PC_High_Output_Enable_Test = '1'	report "Load Register with Absolute Value Step Six: PC_High_Output_Enable_Test should equal 1" severity error;
-	assert MAR_High_Input_Enable_Test = '1'	report "Load Register with Absolute Value Step Six: MAR_High_Input_Enable_Test should equal 1" severity error;
-	
-	assert FSM_Out_Test = "00010010"	report "Load Register with Absolute Value Step Six: FSM_Out_Test should equal 00010010" severity error;
-
-	report "Running Tests for Load Register with Absolute Value Step Seven: Load Low Byte into Temp Memory Address Reg";
-	FSM_In_Test	<= "00010010";
-        wait for 10 ns;
-	
-	assert MAR_Low_Output_To_Memory_Enable_Test = '1'	report "Load Register with Absolute Value Step Seven: MAR_Low_Output_To_Memory_Enable_Test should equal 1" severity error;
-	assert MAR_High_Output_To_Memory_Enable_Test = '1'	report "Load Register with Absolute Value Step Seven: MAR_High_Output_To_Memory_Enable_Test should equal 1" severity error;
-	assert Memory_Read_Enable_Test = '1'			report "Load Register with Absolute Value Step Seven: Memory_Read_Enable_Test should equal 1" severity error;
-	assert Temp_Memory_Address_Low_Input_Enable_Test = '1'	report "Load Register with Absolute Value Step Seven: Temp_Memory_Address_Low_Input_Enable_Test should equal 1" severity error;
-	
-	assert FSM_Out_Test = "00010011"	report "Load Register with Absolute Value Step Seven: FSM_Out_Test should equal 00010011" severity error;
-
-
+	assert FSM_Out_Test = "00000101"	report "Load Register with Absolute Value Step One: FSM_Out_Test should equal 00000101" severity error;
 
         -- End the simulation
         wait;
