@@ -94,7 +94,6 @@ begin
 
 	PC_Low_Mux_Selector(0) <= Control_Bus(10); -- Increment PC
 	PC_Low_Mux_Selector(1) <= Reset;
-	PC_Low_Incremented <= "00000001";
 
 	PC_Low_Input_Mux: entity work.Four_to_One_Byte_Mux
 		port map (
@@ -124,7 +123,6 @@ begin
 	-- RESET PC High Mux, directs Reset and Increment input
 	PC_High_Mux_Selector(0) <= Control_Bus(10); -- Increment PC
 	PC_High_Mux_Selector(1) <= Reset;
-	PC_High_Incremented <= "00000000";
 
 	PC_High_Input_Mux: entity work.Four_to_One_Byte_Mux
 		port map (
