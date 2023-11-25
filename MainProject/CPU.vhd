@@ -67,18 +67,16 @@ begin
 			MAR_Low_Output_To_Memory_Enable		=> Control_Bus(1),
 			MAR_High_Input_Enable			=> Control_Bus(2),
 			MAR_High_Output_To_Memory_Enable	=> Control_Bus(3),
-			MDR_Input_Enable			=> Control_Bus(4), 	
-			MDR_Output_Enable			=> Control_Bus(5), 	
-			Memory_Read_Enable			=> Control_Bus(6), 
-			PC_Low_Input_Enable			=> Control_Bus(7), 	
-			PC_Low_Output_Enable			=> Control_Bus(8),
-			PC_High_Input_Enable			=> Control_Bus(9),	 	
-			PC_High_Output_Enable			=> Control_Bus(10),			
-			IR_Input_Enable				=> Control_Bus(11), 	
-			Increment_PC				=> Control_Bus(12), 	
-			A_Reg_Input_Enable			=> Control_Bus(13), 	
-			X_Reg_Input_Enable			=> Control_Bus(14), 	
-			Y_Reg_Input_Enable			=> Control_Bus(15) 	
+			Memory_Read_Enable			=> Control_Bus(4), 
+			PC_Low_Input_Enable			=> Control_Bus(5), 	
+			PC_Low_Output_Enable			=> Control_Bus(6),
+			PC_High_Input_Enable			=> Control_Bus(7),	 	
+			PC_High_Output_Enable			=> Control_Bus(8),			
+			IR_Input_Enable				=> Control_Bus(9), 	
+			Increment_PC				=> Control_Bus(10), 	
+			A_Reg_Input_Enable			=> Control_Bus(11), 	
+			X_Reg_Input_Enable			=> Control_Bus(12), 	
+			Y_Reg_Input_Enable			=> Control_Bus(13) 	
         	);
 
 
@@ -94,7 +92,7 @@ begin
 
 	-- RESET PC Low Mux, directs Reset and Increment input
 
-	PC_Low_Mux_Selector(0) <= Control_Bus(12); -- Increment PC
+	PC_Low_Mux_Selector(0) <= Control_Bus(10); -- Increment PC
 	PC_Low_Mux_Selector(1) <= Reset;
 	PC_Low_Incremented <= "00000001";
 
@@ -112,7 +110,7 @@ begin
 
 	PC_Low_Input_Enable_Mux: entity work.Four_to_One_Bit_Mux
 		port map (	    		
-			input_0 	=> Control_Bus(9), -- default input to PC High Input Enable
+			input_0 	=> Control_Bus(5), -- default input to PC Low Input Enable
             		input_1 	=> '1', -- assert input enable if Increment signal is asserted
 			input_2 	=> '1', -- assert input enable if Reset signal is asserted
 			input_3 	=> '1', -- assert input enable if both signals asserted
@@ -124,7 +122,7 @@ begin
 
 	
 	-- RESET PC High Mux, directs Reset and Increment input
-	PC_High_Mux_Selector(0) <= Control_Bus(12); -- Increment PC
+	PC_High_Mux_Selector(0) <= Control_Bus(10); -- Increment PC
 	PC_High_Mux_Selector(1) <= Reset;
 	PC_High_Incremented <= "00000000";
 
@@ -142,7 +140,7 @@ begin
 
 	PC_High_Input_Enable_Mux: entity work.Four_to_One_Bit_Mux
 		port map (	    		
-			input_0 	=> Control_Bus(9), -- default input to PC High Input Enable
+			input_0 	=> Control_Bus(7), -- default input to PC High Input Enable
             		input_1 	=> '1', -- assert input enable if Increment signal is asserted
 			input_2 	=> '1', -- assert input enable if Reset signal is asserted
 			input_3 	=> '1', -- assert input enable if both signals asserted
@@ -184,23 +182,12 @@ begin
 			Output_Enable 	=> Control_Bus(3),
 			Output 		=> Memory_Out_High
         	);
-
-
-	MDR: entity work.Eight_Bit_Register
-		port map (
-	    		Data_Input 	=> Memory_In,
-            		Input_Enable 	=> Control_Bus(4),
-            		Clock 		=> Clock,
-			Output_Enable 	=> Control_Bus(5),
-
-            		Output 		=> Data_Bus
-        	);
 	
 	-- connects byte fetched from memory to Data Bus if Memory Read Enable is set
 	Memory_In_Tristate_Buffer: entity work.Eight_Bit_Tristate_Buffer
 		port map (
 			input		=> Memory_In,
-			enable		=> Control_Bus(6), -- Memory Read Enable
+			enable		=> Control_Bus(4), -- Memory Read Enable
 			output		=> Data_Bus
 		);
 
@@ -209,7 +196,7 @@ begin
 	    		Data_Input 	=> PC_Low_In,
             		Input_Enable 	=> PC_Low_Input_Enable,
             		Clock 		=> Clock,
-			Output_Enable 	=> Control_Bus(8),
+			Output_Enable 	=> Control_Bus(6),
 
             		Output 		=> PC_Low_Out
         	);
@@ -217,7 +204,7 @@ begin
 	PC_Low_Out_Demux: entity work.One_to_Two_Byte_Demux
 		port map (
 	    		input		=> PC_Low_Out,
-            		selector 	=> Control_Bus(12), -- Increment PC
+            		selector 	=> Control_Bus(10), -- Increment PC
             		
 			output_0	=> Memory_Out_Low, -- default if increment PC not asserted
             		output_1 	=> Increment_PC_Low_In
@@ -228,7 +215,7 @@ begin
 	    		Data_Input 	=> PC_High_In,
             		Input_Enable 	=> PC_High_Input_Enable,
             		Clock 		=> Clock,
-			Output_Enable 	=> Control_Bus(10),
+			Output_Enable 	=> Control_Bus(8),
 
             		Output 		=> PC_High_Out
         	);
@@ -236,7 +223,7 @@ begin
 	PC_High_Out_Demux: entity work.One_to_Two_Byte_Demux
 		port map (
 	    		input		=> PC_High_Out,
-            		selector 	=> Control_Bus(12), -- Increment PC
+            		selector 	=> Control_Bus(10), -- Increment PC
             		
 			output_0	=> Memory_Out_High, -- default if increment PC not asserted
             		output_1 	=> Increment_PC_High_In
@@ -265,7 +252,7 @@ begin
 	IR: entity work.Eight_Bit_Register
 		port map (
 	    		Data_Input 	=> Data_Bus,
-            		Input_Enable 	=> Control_Bus(11),
+            		Input_Enable 	=> Control_Bus(9),
             		Clock 		=> Clock,
 			Output_Enable 	=> '1', -- always outputting to Instruction Decoder
 
@@ -277,7 +264,7 @@ begin
 	A_Register: entity work.Eight_Bit_Register
 		port map (
 	    		Data_Input 	=> Data_Bus,
-            		Input_Enable 	=> Control_Bus(13),
+            		Input_Enable 	=> Control_Bus(11),
             		Clock 		=> Clock,
 			Output_Enable 	=> '1', -- always outputting to expose for external monitoring
 
@@ -288,7 +275,7 @@ begin
 	X_Register: entity work.Eight_Bit_Register
 		port map (
 	    		Data_Input 	=> Data_Bus,
-            		Input_Enable 	=> Control_Bus(14),
+            		Input_Enable 	=> Control_Bus(12),
             		Clock 		=> Clock,
 			Output_Enable 	=> '1', -- always outputting to expose for external monitoring
 
@@ -298,14 +285,14 @@ begin
 	Y_Register: entity work.Eight_Bit_Register
 		port map (
 	    		Data_Input 	=> Data_Bus,
-            		Input_Enable 	=> Control_Bus(15),
+            		Input_Enable 	=> Control_Bus(13),
             		Clock 		=> Clock,
 			Output_Enable 	=> '1', -- always outputting to expose for external monitoring
 
             		Output 		=> Y_Reg_Output
         	);
 	
-	Memory_Read_Enable <= Control_Bus(6);
+	Memory_Read_Enable <= Control_Bus(4);
 	A_Reg_External_Output <= A_Reg_Output;
 	X_Reg_External_Output <= X_Reg_Output;
 	Y_Reg_External_Output <= Y_Reg_Output;
