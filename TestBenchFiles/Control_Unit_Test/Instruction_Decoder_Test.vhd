@@ -84,7 +84,7 @@ begin
 
 	assert FSM_Out_Test = "00000001"	report "Step 0: FSM_Out_Test should equal 00000001" severity error;
 
-	report "Running Tests for '00000001' set Step 1 Fetch Instruction";
+	report "Running Tests for '00000001' set Step 1 Fetch Instruction and Increment PC";
 
         FSM_In_Test	<= "00000001";
         wait for 10 ns;
@@ -92,20 +92,9 @@ begin
 	assert PC_Low_Output_Enable_Test = '1'	report "Step 1: PC_Low_Output_Enable_Test should equal 1" severity error;
 	assert PC_High_Output_Enable_Test = '1'	report "Step 1: PC_High_Output_Enable_Test should equal 1" severity error;
 	assert Memory_Read_Enable_Test = '1'	report "Step 1: Memory_Read_Enable_Test should equal 1" severity error;
+	assert Increment_PC_Test = '1'		report "Step 1: Increment_PC_Test should equal 1" severity error;
 	assert IR_Input_Enable_Test = '1'	report "Step 1: IR_Input_Enable_Test should equal 1" severity error;
-	assert FSM_Out_Test = "00000010"	report "Step 1: FSM_Out_Test should equal 00000010" severity error;
-
-
-	report "Running Tests for '00000010' set Step 2 Increment PC";
-
-        FSM_In_Test	<= "00000010";
-        wait for 10 ns;
-
-	assert Increment_PC_Test = '1'			report "Step 2: Increment_PC_Test should equal 1" severity error;
-	assert PC_Low_Output_Enable_Test = '1'		report "Step 2: PC_Low_Output_Enable_Test should equal 1" severity error;
-	assert PC_High_Output_Enable_Test = '1'		report "Step 2: PC_High_Output_Enable_Test should equal 1" severity error;
-
-	assert FSM_Out_Test = "00000011"		report "Step 1: FSM_Out_Test should equal 00000011" severity error;
+	assert FSM_Out_Test = "00000011"	report "Step 1: FSM_Out_Test should equal 00000010" severity error;
 
 	report "************ TESTS FOR SUBROUTINE: Load Register with Immediate Value, FSM 00000011 to TBC ************";
 	

@@ -92,12 +92,6 @@ begin
 		Clock_Test	<= '0';
 		wait for 10 ns;
 		
-		report "Step 2: Increment PC";
-		Clock_Test	<= '1';
-		wait for 10 ns;
-		Clock_Test	<= '0';
-		wait for 10 ns;
-
 		report "Instruction is 00010001 Step One of Load Immediate to Register, Load A Register with Value";
 		Clock_Test	<= '1';
 		wait for 10 ns;

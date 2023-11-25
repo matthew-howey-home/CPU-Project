@@ -30,7 +30,6 @@ architecture Behavioral of Instruction_Decoder is
 
 signal Internal_Step_0_Initial_State 		: std_logic;
 signal Internal_Step_1_Fetch_Instruction 	: std_logic;
-signal Internal_Step_2_Increment_PC 		: std_logic;
 signal Internal_LD_Reg_Immediate_Step_1_LDA	: std_logic;
 signal Internal_LD_Reg_Immediate_Step_1_LDX	: std_logic;
 signal Internal_LD_Reg_Immediate_Step_1_LDY	: std_logic;
@@ -53,15 +52,10 @@ begin
 		not FSM_In(7) and	not FSM_In(6) and	not FSM_In(5) and	not FSM_In(4) and
 		not FSM_In(3) and 	not FSM_In(2) and	not FSM_In(1) and 	not FSM_In(0);
 
-	-- if FSM_In = "00000001" set Step 1 Fetch Instruction
+	-- if FSM_In = "00000001" set Step 1 Fetch Instruction and Increment PC
 	Internal_Step_1_Fetch_Instruction <=
 		not FSM_In(7) and	not FSM_In(6) and	not FSM_In(5) and	not FSM_In(4) and
 		not FSM_In(3) and 	not FSM_In(2) and	not FSM_In(1) and 	FSM_In(0);
-
-	-- if FSM_In = "00000010" set Step 2 Increment PC
-	Internal_Step_2_Increment_PC <=
-		not FSM_In(7) and	not FSM_In(6) and	not FSM_In(5) and	not FSM_In(4) and
-		not FSM_In(3) and 	not FSM_In(2) and	FSM_In(1) and 		not FSM_In(0);
 
 	-- if FSM_In = "00000011" and Instruction is 00010001 Step One of Load Immediate Value to Register - Load A Reg with value from Memory
 	Internal_LD_Reg_Immediate_Step_1_LDA <=
@@ -103,8 +97,7 @@ begin
  	--************** Set next value of FSM based on Current Step **************--
 
 	-- If Internal_Step_0_Initial_State		set FSM_Out = "00000001" (Step 1)	
-	-- if Internal_Step_1_Fetch_Instruction		set FSM_Out = "00000010" (Step 2)
-	-- if Internal_Step_2_Increment_PC 		set FSM_Out = "00000011" (Step 3 - Start Instruction Subroutines) 
+	-- if Internal_Step_1_Fetch_Instruction		set FSM_Out = "00000011" (Step 3 - Start Instruction Subroutines)
 
 	-- if Internal_LD_Reg_Immediate_Step_1_LDA	set FSM_Out = "00000100" (Ld Imm to Reg Step 2)
 	-- if Internal_LD_Reg_Immediate_Step_1_LDX	set FSM_Out = "00000100" (Ld Imm to Reg Step 2)
@@ -126,19 +119,17 @@ begin
 		Internal_LD_Reg_Absolute_Step_1 or
 		Internal_LD_Reg_Absolute_Step_2;
 	FSM_Out(1) <=
-		Internal_Step_2_Increment_PC or
 		Internal_Step_1_Fetch_Instruction or
 		Internal_LD_Reg_Absolute_Step_2;
 	FSM_Out(0) <=
+		Internal_Step_1_Fetch_Instruction or
 		Internal_Step_0_Initial_State or
-		Internal_Step_2_Increment_PC or
 		Internal_LD_Reg_Immediate_Step_2 or
 		Internal_LD_Reg_Absolute_Step_1 or
 		Internal_LD_Reg_Absolute_Step_2;
 	
 	PC_Low_Output_Enable	<=
 		Internal_Step_1_Fetch_Instruction or
-		Internal_Step_2_Increment_PC or
 		Internal_LD_Reg_Immediate_Step_1_LDA or
 		Internal_LD_Reg_Immediate_Step_1_LDX or
 		Internal_LD_Reg_Immediate_Step_1_LDY or
@@ -150,7 +141,6 @@ begin
 
 	PC_High_Output_Enable	<=
 		Internal_Step_1_Fetch_Instruction or
-		Internal_Step_2_Increment_PC or
 		Internal_LD_Reg_Immediate_Step_1_LDA or
 		Internal_LD_Reg_Immediate_Step_1_LDX or
 		Internal_LD_Reg_Immediate_Step_1_LDY or
@@ -180,8 +170,8 @@ begin
 	Y_Reg_Input_Enable			<= Internal_LD_Reg_Immediate_Step_1_LDY;
 
 	-- To increment PC you must also assert PC Output Enable control signals
-	Increment_PC
-		<= Internal_Step_2_Increment_PC or
+	Increment_PC <=
+		Internal_Step_1_Fetch_Instruction or
 		Internal_LD_Reg_Immediate_Step_2 or
 		Internal_LD_Reg_Absolute_Step_2;
 

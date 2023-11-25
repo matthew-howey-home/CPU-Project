@@ -198,15 +198,9 @@ begin
 
             		Output 		=> PC_Low_Out
         	);
-
-	PC_Low_Out_Demux: entity work.One_to_Two_Byte_Demux
-		port map (
-	    		input		=> PC_Low_Out,
-            		selector 	=> Control_Bus(10), -- Increment PC
-            		
-			output_0	=> Memory_Out_Low, -- default if increment PC not asserted
-            		output_1 	=> Increment_PC_Low_In
-        	);
+	
+	Increment_PC_Low_In 	<= PC_Low_Out;
+	Memory_Out_Low 		<= PC_Low_Out;
 
 	PC_High: entity work.Eight_Bit_Register
 		port map (
@@ -218,14 +212,8 @@ begin
             		Output 		=> PC_High_Out
         	);
 
-	PC_High_Out_Demux: entity work.One_to_Two_Byte_Demux
-		port map (
-	    		input		=> PC_High_Out,
-            		selector 	=> Control_Bus(10), -- Increment PC
-            		
-			output_0	=> Memory_Out_High, -- default if increment PC not asserted
-            		output_1 	=> Increment_PC_High_In
-        	);
+	Increment_PC_High_In 	<= PC_High_Out;
+	Memory_Out_High 	<= PC_High_Out;
 
 	Increment_PC_Low: entity work.ADD_Component
 		port map (
