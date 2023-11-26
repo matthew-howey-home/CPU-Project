@@ -105,7 +105,7 @@ begin
 		Clock_Test	<= '0';
 		wait for 10 ns;
 
-		report "Instruction is 00010001 Step Two of Load Immediate to Register, Increment Programme Counter";
+		report "Instruction is 00010010 Step Two of Load Immediate to Register, Increment Programme Counter";
 		Clock_Test	<= '1';
 		wait for 10 ns;
 
