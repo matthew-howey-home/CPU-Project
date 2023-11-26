@@ -53,7 +53,7 @@ begin
         );
 
 
-    -- Stimulus process to apply test vectors
+  -- Stimulus process to apply test vectors
     stimulus_proc: process
 	begin
 	-- if clock is low and reset test is asserted, FSM is set to initial state
@@ -92,12 +92,6 @@ begin
 		Clock_Test	<= '0';
 		wait for 10 ns;
 		
-		report "Step 2: Increment PC";
-		Clock_Test	<= '1';
-		wait for 10 ns;
-		Clock_Test	<= '0';
-		wait for 10 ns;
-
 		report "Instruction is 00010011 Step One of Load Immediate to Register, Load Y Register with Value";
 		Clock_Test	<= '1';
 		wait for 10 ns;
@@ -114,8 +108,13 @@ begin
 		Clock_Test	<= '1';
 		wait for 10 ns;
 
-		report "Running tests for Loading Y Register with value 11111011 (#251)";
+		report "Running tests for Loading Y Register with value 00110101 (#53)";
 		assert Y_Reg_External_Output_Test = "11111011"	report "Test: Y_Reg_External_Output_Test should equal 11111011" severity error;
+
+		-- One more clock cycle to make PC increment visible  
+		Clock_Test	<= '0';
+		wait for 10 ns;
+		Clock_Test	<= '1';
 
 		wait;
 	end process stimulus_proc;
