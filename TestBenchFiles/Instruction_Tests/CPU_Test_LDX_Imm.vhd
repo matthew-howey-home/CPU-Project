@@ -54,7 +54,7 @@ begin
         );
 
 
-    -- Stimulus process to apply test vectors
+  -- Stimulus process to apply test vectors
     stimulus_proc: process
 	begin
 	-- if clock is low and reset test is asserted, FSM is set to initial state
@@ -93,12 +93,6 @@ begin
 		Clock_Test	<= '0';
 		wait for 10 ns;
 		
-		report "Step 2: Increment PC";
-		Clock_Test	<= '1';
-		wait for 10 ns;
-		Clock_Test	<= '0';
-		wait for 10 ns;
-
 		report "Instruction is 00010010 Step One of Load Immediate to Register, Load X Register with Value";
 		Clock_Test	<= '1';
 		wait for 10 ns;
@@ -111,15 +105,21 @@ begin
 		Clock_Test	<= '0';
 		wait for 10 ns;
 
-		report "Instruction is 00010010 Step Two of Load Immediate to Register, Increment Programme Counter";
+		report "Instruction is 00010001 Step Two of Load Immediate to Register, Increment Programme Counter";
 		Clock_Test	<= '1';
 		wait for 10 ns;
 
-		report "Running tests for Loading X Register with value 01111100 (#124)";
-		assert X_Reg_External_Output_Test = "01111100"	report "Test: A_Reg_External_Output_Test should equal 01111100" severity error;
+		report "Running tests for Loading X Register with value 00110101 (#53)";
+		assert X_Reg_External_Output_Test = "01111100"	report "Test: X_Reg_External_Output_Test should equal 01111100" severity error;
+
+		-- One more clock cycle to make PC increment visible  
+		Clock_Test	<= '0';
+		wait for 10 ns;
+		Clock_Test	<= '1';
 
 		wait;
 	end process stimulus_proc;
+
 
 	-- Simulate memory response
     	process
