@@ -93,7 +93,7 @@ begin
 		Clock_Test	<= '0';
 		wait for 10 ns;
 		
-		report "Instruction is 00010010 Step One of Load Immediate to Register, Load X Register with Value";
+		report "Instruction is 00010010 Step One of Load Immediate to Register, Load X Register with Value, and Increment PC";
 		Clock_Test	<= '1';
 		wait for 10 ns;
 
@@ -102,20 +102,14 @@ begin
 		assert Memory_Out_High_Test = "00000000" report "Test 2: Memory_Out_High_Test should equal 00000000" severity error;
 		assert Memory_Read_Enable_Test = '1' report "Test 3: Memory_Read_Enable_Test should equal 1" severity error;
 		
+		-- One more clock cycle to make PC increment visible  
 		Clock_Test	<= '0';
 		wait for 10 ns;
-
-		report "Instruction is 00010010 Step Two of Load Immediate to Register, Increment Programme Counter";
 		Clock_Test	<= '1';
 		wait for 10 ns;
 
 		report "Running tests for Loading X Register with value 00110101 (#53)";
 		assert X_Reg_External_Output_Test = "01111100"	report "Test: X_Reg_External_Output_Test should equal 01111100" severity error;
-
-		-- One more clock cycle to make PC increment visible  
-		Clock_Test	<= '0';
-		wait for 10 ns;
-		Clock_Test	<= '1';
 
 		wait;
 	end process stimulus_proc;
