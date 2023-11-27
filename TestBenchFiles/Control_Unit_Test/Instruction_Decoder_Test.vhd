@@ -161,6 +161,46 @@ begin
 	
 	assert FSM_Out_Test = "00000100"	report "Load Register with Absolute Value Step Two: FSM_Out_Test should equal 00000100" severity error;
 
+	report "Running Tests for Load Register with Absolute Value Step Three: Load A Reg from Memory";
+	FSM_In_Test	<= "00000100";
+	Instruction_Test <= "00100001";
+	
+        wait for 10 ns;
+	
+	assert MAR_Low_Output_To_Memory_Enable_Test = '1'	report "Load Register with Absolute Value Step Three LDA: MAR_Low_Output_To_Memory_Enable should equal 1" severity error;
+	assert MAR_High_Output_To_Memory_Enable_Test = '1'	report "Load Register with Absolute Value Step Three LDA: MAR_High_Output_To_Memory_Enable should equal 1" severity error;
+	assert Memory_Read_Enable_Test = '1'			report "Load Register with Absolute Value Step Three LDA: Memory_Read_Enable_Test should equal 1" severity error;
+	assert A_Reg_Input_Enable_Test = '1'			report "Load Register with Absolute Value Step Three LDA: A_Reg_Input_Enable should equal 1" severity error;
+	
+	assert FSM_Out_Test = "00000001"			report "Load Register with Absolute Value Step Three LDA: FSM_Out_Test should equal 00000001" severity error;
+
+	report "Running Tests for Load Register with Absolute Value Step Three: Load X Reg from Memory";
+	FSM_In_Test	<= "00000100";
+	Instruction_Test <= "00100010";
+	
+        wait for 10 ns;
+	
+	assert MAR_Low_Output_To_Memory_Enable_Test = '1'	report "Load Register with Absolute Value Step Three LDX: MAR_Low_Output_To_Memory_Enable should equal 1" severity error;
+	assert MAR_High_Output_To_Memory_Enable_Test = '1'	report "Load Register with Absolute Value Step Three LDX: MAR_High_Output_To_Memory_Enable should equal 1" severity error;
+	assert Memory_Read_Enable_Test = '1'			report "Load Register with Absolute Value Step Three LDX: Memory_Read_Enable_Test should equal 1" severity error;
+	assert X_Reg_Input_Enable_Test = '1'			report "Load Register with Absolute Value Step Three LDX: X_Reg_Input_Enable should equal 1" severity error;
+	
+	assert FSM_Out_Test = "00000001"			report "Load Register with Absolute Value Step Three LDX: FSM_Out_Test should equal 00000001" severity error;
+
+	report "Running Tests for Load Register with Absolute Value Step Three: Load Y Reg from Memory";
+	FSM_In_Test	<= "00000100";
+	Instruction_Test <= "00100011";
+	
+        wait for 10 ns;
+	
+	assert MAR_Low_Output_To_Memory_Enable_Test = '1'	report "Load Register with Absolute Value Step Three LDY: MAR_Low_Output_To_Memory_Enable should equal 1" severity error;
+	assert MAR_High_Output_To_Memory_Enable_Test = '1'	report "Load Register with Absolute Value Step Three LDY: MAR_High_Output_To_Memory_Enable should equal 1" severity error;
+	assert Memory_Read_Enable_Test = '1'			report "Load Register with Absolute Value Step Three LDY: Memory_Read_Enable_Test should equal 1" severity error;
+	assert Y_Reg_Input_Enable_Test = '1'			report "Load Register with Absolute Value Step Three LDY: Y_Reg_Input_Enable should equal 1" severity error;
+	
+	assert FSM_Out_Test = "00000001"			report "Load Register with Absolute Value Step Three LDY: FSM_Out_Test should equal 00000001" severity error;
+
+
         -- End the simulation
         wait;
     end process stimulus_proc;
