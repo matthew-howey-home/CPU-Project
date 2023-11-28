@@ -174,7 +174,7 @@ begin
 
 	MAR_High: entity work.Eight_Bit_Register
 		port map (
-	    		Data_Input 	=> PC_High_In,
+	    		Data_Input 	=> Data_Bus,
             		Input_Enable 	=> Control_Bus(2),
             		Clock 		=> Clock,
 			Output_Enable 	=> Control_Bus(3),
