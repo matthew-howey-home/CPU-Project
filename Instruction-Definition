@@ -1,0 +1,37 @@
+Instructions:
+
+00010001 LDA # - Load Immediate Value into A Register. 2 bytes
+FSM states:
+00000010
+
+00010010 LDX # - Load Immediate Value into X Register. 2 bytes
+FSM states:
+00000010
+
+00010010 LDY # - Load Immediate Value into Y Register. 2 bytes
+FSM states:
+00000010
+
+00100001 LDA & - Load Absolute Value into A Register. 3 bytes
+FSM states:
+00000010
+00000011
+00000100
+
+00100010 LDX & - Load Absolute Value into X Register. 3 bytes
+FSM states:
+00000010
+00000011
+00000100
+
+00100011 LDY & - Load Absolute Value into Y Register. 3 bytes
+FSM states:
+00000010
+00000011
+00000100
+
+01000001 STA & - Load A Register to Absolute Address. 3 bytes
+FSM states:
+00000010
+00000101
+00000110
