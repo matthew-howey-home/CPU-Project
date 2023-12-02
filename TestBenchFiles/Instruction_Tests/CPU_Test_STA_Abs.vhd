@@ -1,7 +1,7 @@
 
 
 
--- Test of CPU Instruction 01000001 - LDA &0100, Load the accumulator with Absolute Value from Memory location &0100 - value 54.
+-- Test of CPU Instruction 01000001 - STA &2836, Load the Memory Address 0x2836 with value 98 from accumulator 
 
 library ieee;
 use ieee.std_logic_1164.all;
@@ -9,11 +9,11 @@ use ieee.std_logic_textio.all;
 use std.textio.all;
 
 
-entity CPU_Test_LDA_Abs is
-end entity CPU_Test_LDA_Abs;
+entity CPU_Test_STA_Abs is
+end entity CPU_Test_STA_Abs;
 
 
-architecture Behavioral of CPU_Test_LDA_Abs is
+architecture Behavioral of CPU_Test_STA_Abs is
     -- Component declaration for the CPU module
     component CPU
         port (
@@ -24,6 +24,7 @@ architecture Behavioral of CPU_Test_LDA_Abs is
 		Memory_Out_Low		: out std_logic_vector(7 downto 0);
 		Memory_Out_High		: out std_logic_vector(7 downto 0);
 		Memory_Read_Enable	: out std_logic;
+		Memory_Write_Enable	: out std_logic;
 
 		A_Reg_External_Output	: out std_logic_vector(7 downto 0)		
         );
@@ -36,6 +37,7 @@ architecture Behavioral of CPU_Test_LDA_Abs is
 	signal Memory_Out_Low_Test		: std_logic_vector(7 downto 0);
 	signal Memory_Out_High_Test		: std_logic_vector(7 downto 0);
 	signal Memory_Read_Enable_Test		: std_logic;
+	signal Memory_Write_Enable_Test		: std_logic;
 	signal A_Reg_External_Output_Test	: std_logic_vector(7 downto 0);
 
 
@@ -50,6 +52,7 @@ begin
 		Memory_Out_Low		=> Memory_Out_Low_Test,
 		Memory_Out_High		=> Memory_Out_High_Test,
 		Memory_Read_Enable 	=> Memory_Read_Enable_Test,
+		Memory_Write_Enable	=> Memory_Write_Enable_Test,
 
 		A_Reg_External_Output => A_Reg_External_Output_Test
         );
@@ -72,9 +75,6 @@ begin
 		wait for 10 ns;
 		Clock_Test	<= '0';
 		wait for 10 ns;
-		Clock_Test	<= '1';
-		wait for 10 ns;
-		Clock_Test	<= '0';
 
 		report "Switching off Reset";
 		-- switch off reset to release FSM and allow cycles to start
@@ -82,70 +82,56 @@ begin
 		wait for 10 ns;
 		-- continue through CPU cycles
 
-		report "Step 1: Fetch Instruction";
+		-- Initiate Accumulator by running instruction #98
+		report "Step 1: Fetch Instruction - LDA #98";
 		Clock_Test	<= '1';
 		wait for 10 ns;
-		
-		report "Running tests for CPU reading Memory location 0000000000000000";
-		assert Memory_Out_Low_Test = "00000000"	report "Test 1: Memory_Out_Low_Test should equal 00000000" severity error;
-		assert Memory_Out_High_Test = "00000000" report "Test 2: Memory_Out_High_Test should equal 00000000" severity error;
-		assert Memory_Read_Enable_Test = '1' report "Test 3: Memory_Read_Enable_Test should equal 1" severity error;
-
 		Clock_Test	<= '0';
 		wait for 10 ns;
 		
-		report "Instruction is 00100001 Load Register with Absolute Value Step One: Load MAR (High) and Increment PC";
+		report "Step One of Load Immediate to Register, Load A Register with Value, and Increment PC";
 		Clock_Test	<= '1';
 		wait for 10 ns;
-
-		report "Running tests for CPU reading Memory location &01 0000000000000001";
-		assert Memory_Out_Low_Test = "00000001"	report "Test 1: Memory_Out_Low_Test should equal 00000001" severity error;
-		assert Memory_Out_High_Test = "00000000" report "Test 2: Memory_Out_High_Test should equal 00000000" severity error;
-		assert Memory_Read_Enable_Test = '1' report "Test 3: Memory_Read_Enable_Test should equal 1" severity error;
-		
 		Clock_Test	<= '0';
 		wait for 10 ns;
 
-		report "Instruction is 00100001 Load Register with Absolute Value Step Two: Load MAR (Low) and Increment PC";
+		-- Now fetch and run STA &2836, which is the instruction under test
+		report "Step 1: Fetch Instruction 01000001 - STA &2836";
 		Clock_Test	<= '1';
 		wait for 10 ns;
-
-		report "Running tests for CPU reading Memory location &02 0000000000000010";
-		assert Memory_Out_Low_Test = "00000010"	report "Test 1: Memory_Out_Low_Test should equal 00000010" severity error;
-		assert Memory_Out_High_Test = "00000000" report "Test 2: Memory_Out_High_Test should equal 00000000" severity error;
-		assert Memory_Read_Enable_Test = '1' report "Test 3: Memory_Read_Enable_Test should equal 1" severity error;
-		
 		Clock_Test	<= '0';
 		wait for 10 ns;
 
-		report "Instruction is 00100001 Load Register with Absolute Value Step Three: Load A Reg from Memory location &0100";
+		report "STA Absolute Step One - Load MAR (High) with hex 28";
 		Clock_Test	<= '1';
 		wait for 10 ns;
-
-		report "Running tests for CPU reading Memory locationm &0100 0000000100000000";
-		assert Memory_Out_Low_Test = "00000000"	report "Test 1: Memory_Out_Low_Test should equal 00000000" severity error;
-		assert Memory_Out_High_Test = "00000001" report "Test 2: Memory_Out_High_Test should equal 00000001" severity error;
-		assert Memory_Read_Enable_Test = '1' report "Test 3: Memory_Read_Enable_Test should equal 1" severity error;
-		
-		-- One more clock cycle to make value of A Register visible  
 		Clock_Test	<= '0';
 		wait for 10 ns;
+
+		report "STA Absolute Step Two - Load MAR (Low) with hex 36";
 		Clock_Test	<= '1';
 		wait for 10 ns;
-	
-		report "Running tests for Loading A Register with value 00110110 (#54)";
+		Clock_Test	<= '0';
+		wait for 10 ns;
+
+		report "STA Absolute Step Three - Load A Reg to Memory Address &2836";
+		Clock_Test	<= '1';
+		wait for 10 ns;
+		report "Running tests for Load A Reg #98 to Memory Address &2836";
 		assert A_Reg_External_Output_Test = "00110110"	report "Test: A_Reg_External_Output_Test should equal 00110110" severity error;
 
 		wait;
 	end process stimulus_proc;
 
+
+	-- **************TODO - add the correct memory responses to the following:
 	-- Simulate memory response
     	process
     	begin
         	wait for 1 ns;  -- Wait for a small time to simulate memory access time
         
         	if Memory_Read_Enable_Test = '1' and Memory_Out_Low_Test = "00000000" and Memory_Out_High_Test = "00000000" then
-            		Memory_In_Test <= "00100001"; -- LDA &
+            		Memory_In_Test <= "01000001"; -- STA &
 		-- When reading memory location where value is stored - &0100 or "00000001-00000000"
 		elsif Memory_Read_Enable_Test = '1' and Memory_Out_High_Test = "00000000"  and Memory_Out_Low_Test = "00000001" then
 			Memory_In_Test <= "00000001"; -- High byte of Hex Value &0100
