@@ -7,10 +7,13 @@ entity CPU is
 	Reset			: in std_logic;
 
 	Memory_In		: in std_logic_vector(7 downto 0);
+	
 
 	Memory_Out_Low		: out std_logic_vector(7 downto 0);
 	Memory_Out_High		: out std_logic_vector(7 downto 0);
 	Memory_Read_Enable	: out std_logic;
+	Memory_Write_Enable	: out std_logic;
+	Memory_Data_Out		: out std_logic_vector(7 downto 0);
 
 	A_Reg_External_Output	: out std_logic_vector(7 downto 0);
 	X_Reg_External_Output	: out std_logic_vector(7 downto 0);
@@ -68,15 +71,17 @@ begin
 			MAR_High_Input_Enable			=> Control_Bus(2),
 			MAR_High_Output_To_Memory_Enable	=> Control_Bus(3),
 			Memory_Read_Enable			=> Control_Bus(4), 
-			PC_Low_Input_Enable			=> Control_Bus(5), 	
-			PC_Low_Output_Enable			=> Control_Bus(6),
-			PC_High_Input_Enable			=> Control_Bus(7),	 	
-			PC_High_Output_Enable			=> Control_Bus(8),			
-			IR_Input_Enable				=> Control_Bus(9), 	
-			Increment_PC				=> Control_Bus(10), 	
-			A_Reg_Input_Enable			=> Control_Bus(11), 	
-			X_Reg_Input_Enable			=> Control_Bus(12), 	
-			Y_Reg_Input_Enable			=> Control_Bus(13) 	
+			Memory_Write_Enable			=> Control_Bus(5),
+			PC_Low_Input_Enable			=> Control_Bus(6), 	
+			PC_Low_Output_Enable			=> Control_Bus(7),
+			PC_High_Input_Enable			=> Control_Bus(8),	 	
+			PC_High_Output_Enable			=> Control_Bus(9),			
+			IR_Input_Enable				=> Control_Bus(10), 	
+			Increment_PC				=> Control_Bus(11), 	
+			A_Reg_Input_Enable			=> Control_Bus(12), 	
+			X_Reg_Input_Enable			=> Control_Bus(13), 	
+			Y_Reg_Input_Enable			=> Control_Bus(14),
+			A_Reg_Output_Enable			=> Control_Bus(15)	
         	);
 
 
@@ -92,7 +97,7 @@ begin
 
 	-- RESET PC Low Mux, directs Reset and Increment input
 
-	PC_Low_Mux_Selector(0) <= Control_Bus(10); -- Increment PC
+	PC_Low_Mux_Selector(0) <= Control_Bus(11); -- Increment PC
 	PC_Low_Mux_Selector(1) <= Reset;
 
 	PC_Low_Input_Mux: entity work.Four_to_One_Byte_Mux
@@ -109,7 +114,7 @@ begin
 
 	PC_Low_Input_Enable_Mux: entity work.Four_to_One_Bit_Mux
 		port map (	    		
-			input_0 	=> Control_Bus(5), -- default input to PC Low Input Enable
+			input_0 	=> Control_Bus(6), -- default input to PC Low Input Enable
             		input_1 	=> '1', -- assert input enable if Increment signal is asserted
 			input_2 	=> '1', -- assert input enable if Reset signal is asserted
 			input_3 	=> '1', -- assert input enable if both signals asserted
@@ -121,7 +126,7 @@ begin
 
 	
 	-- RESET PC High Mux, directs Reset and Increment input
-	PC_High_Mux_Selector(0) <= Control_Bus(10); -- Increment PC
+	PC_High_Mux_Selector(0) <= Control_Bus(11); -- Increment PC
 	PC_High_Mux_Selector(1) <= Reset;
 
 	PC_High_Input_Mux: entity work.Four_to_One_Byte_Mux
@@ -138,7 +143,7 @@ begin
 
 	PC_High_Input_Enable_Mux: entity work.Four_to_One_Bit_Mux
 		port map (	    		
-			input_0 	=> Control_Bus(7), -- default input to PC High Input Enable
+			input_0 	=> Control_Bus(8), -- default input to PC High Input Enable
             		input_1 	=> '1', -- assert input enable if Increment signal is asserted
 			input_2 	=> '1', -- assert input enable if Reset signal is asserted
 			input_3 	=> '1', -- assert input enable if both signals asserted
@@ -194,7 +199,7 @@ begin
 	    		Data_Input 	=> PC_Low_In,
             		Input_Enable 	=> PC_Low_Input_Enable,
             		Clock 		=> Clock,
-			Output_Enable 	=> Control_Bus(6),
+			Output_Enable 	=> Control_Bus(7),
 
             		Output 		=> PC_Low_Out
         	);
@@ -207,7 +212,7 @@ begin
 	    		Data_Input 	=> PC_High_In,
             		Input_Enable 	=> PC_High_Input_Enable,
             		Clock 		=> Clock,
-			Output_Enable 	=> Control_Bus(8),
+			Output_Enable 	=> Control_Bus(9),
 
             		Output 		=> PC_High_Out
         	);
@@ -238,7 +243,7 @@ begin
 	IR: entity work.Eight_Bit_Register
 		port map (
 	    		Data_Input 	=> Data_Bus,
-            		Input_Enable 	=> Control_Bus(9),
+            		Input_Enable 	=> Control_Bus(10),
             		Clock 		=> Clock,
 			Output_Enable 	=> '1', -- always outputting to Instruction Decoder
 
@@ -250,18 +255,25 @@ begin
 	A_Register: entity work.Eight_Bit_Register
 		port map (
 	    		Data_Input 	=> Data_Bus,
-            		Input_Enable 	=> Control_Bus(11),
+            		Input_Enable 	=> Control_Bus(12),
             		Clock 		=> Clock,
 			Output_Enable 	=> '1', -- always outputting to expose for external monitoring
 
             		Output 		=> A_Reg_Output
+        	);
+	
+	A_Register_Out_Mux: entity work.Eight_Bit_Tristate_Buffer
+		port map (
+	    		input	=> A_Reg_Output,
+           		enable	=> Control_Bus(15), -- A_Reg_Output_Enable,
+           		output	=> Data_Bus
         	);
 
 	-- General Purpose registers
 	X_Register: entity work.Eight_Bit_Register
 		port map (
 	    		Data_Input 	=> Data_Bus,
-            		Input_Enable 	=> Control_Bus(12),
+            		Input_Enable 	=> Control_Bus(13),
             		Clock 		=> Clock,
 			Output_Enable 	=> '1', -- always outputting to expose for external monitoring
 
@@ -271,7 +283,7 @@ begin
 	Y_Register: entity work.Eight_Bit_Register
 		port map (
 	    		Data_Input 	=> Data_Bus,
-            		Input_Enable 	=> Control_Bus(13),
+            		Input_Enable 	=> Control_Bus(14),
             		Clock 		=> Clock,
 			Output_Enable 	=> '1', -- always outputting to expose for external monitoring
 
@@ -279,6 +291,8 @@ begin
         	);
 	
 	Memory_Read_Enable <= Control_Bus(4);
+	Memory_Write_Enable <= Control_Bus(5);
+	Memory_Data_Out <= Data_Bus;
 	A_Reg_External_Output <= A_Reg_Output;
 	X_Reg_External_Output <= X_Reg_Output;
 	Y_Reg_External_Output <= Y_Reg_Output;
