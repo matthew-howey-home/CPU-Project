@@ -47,7 +47,7 @@ architecture Behavioral of CPU is
 	signal Decoder_FSM_Out			: std_logic_vector(7 downto 0);
 
 	signal Instruction			: std_logic_vector(7 downto 0);
-	signal Control_Bus			: std_logic_vector(15 downto 0);
+	signal Control_Bus			: std_logic_vector(17 downto 0);
 	signal Data_Bus				: std_logic_vector(7 downto 0);
 
 	signal A_Reg_Output			: std_logic_vector(7 downto 0);
@@ -81,7 +81,9 @@ begin
 			A_Reg_Input_Enable			=> Control_Bus(12), 	
 			X_Reg_Input_Enable			=> Control_Bus(13), 	
 			Y_Reg_Input_Enable			=> Control_Bus(14),
-			A_Reg_Output_Enable			=> Control_Bus(15)	
+			A_Reg_Output_Enable			=> Control_Bus(15),
+			X_Reg_Output_Enable			=> Control_Bus(16),
+			Y_Reg_Output_Enable			=> Control_Bus(17)
         	);
 
 
@@ -280,6 +282,13 @@ begin
             		Output 		=> X_Reg_Output
         	);
 
+	X_Register_Out_Mux: entity work.Eight_Bit_Tristate_Buffer
+		port map (
+	    		input	=> X_Reg_Output,
+           		enable	=> Control_Bus(16), -- X_Reg_Output_Enable,
+           		output	=> Data_Bus
+        	);
+
 	Y_Register: entity work.Eight_Bit_Register
 		port map (
 	    		Data_Input 	=> Data_Bus,
@@ -288,6 +297,13 @@ begin
 			Output_Enable 	=> '1', -- always outputting to expose for external monitoring
 
             		Output 		=> Y_Reg_Output
+        	);
+
+	Y_Register_Out_Mux: entity work.Eight_Bit_Tristate_Buffer
+		port map (
+	    		input	=> Y_Reg_Output,
+           		enable	=> Control_Bus(17), -- Y_Reg_Output_Enable,
+           		output	=> Data_Bus
         	);
 	
 	Memory_Read_Enable <= Control_Bus(4);
