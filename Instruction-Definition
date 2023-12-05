@@ -35,3 +35,15 @@ FSM states:
 00000010
 00000101
 00000110
+
+01000010 STX & - Load X Register to Absolute Address. 3 bytes
+FSM states:
+00000010
+00000101
+00000110
+
+01000011 STY & - Load Y Register to Absolute Address. 3 bytes
+FSM states:
+00000010
+00000101
+00000110
