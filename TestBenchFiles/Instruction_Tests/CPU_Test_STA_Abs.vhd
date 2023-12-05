@@ -105,7 +105,7 @@ begin
 		-- Now fetch and run STA &2836, which is the instruction under test
 		report "Step 1: Fetch Instruction 01000001 - STA &2836";
 		Clock_Test	<= '1';
-		wait for 10ns;
+		wait for 10 ns;
 		assert A_Reg_External_Output_Test = "01100010" report "Test from previous step: A_Reg_External_Output_Test should equal 01100010 (#98)" severity error;
 		Clock_Test	<= '0';
 		wait for 10 ns;
