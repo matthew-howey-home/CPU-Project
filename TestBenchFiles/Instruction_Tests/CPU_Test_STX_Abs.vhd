@@ -1,7 +1,6 @@
 
 
-
--- Test of CPU Instruction 01000001 - STA &2836, Load the Memory Address 0x2836 with value 98 from accumulator 
+-- Test of CPU Instruction 01000010 - STX &581A, Load the Memory Address 0x581A with value 207 from accumulator 
 
 library ieee;
 use ieee.std_logic_1164.all;
@@ -9,11 +8,11 @@ use ieee.std_logic_textio.all;
 use std.textio.all;
 
 
-entity CPU_Test_STA_Abs is
-end entity CPU_Test_STA_Abs;
+entity CPU_Test_STX_Abs is
+end entity CPU_Test_STX_Abs;
 
 
-architecture Behavioral of CPU_Test_STA_Abs is
+architecture Behavioral of CPU_Test_STX_Abs is
     -- Component declaration for the CPU module
     component CPU
         port (
@@ -27,7 +26,7 @@ architecture Behavioral of CPU_Test_STA_Abs is
 		Memory_Write_Enable	: out std_logic;
 		Memory_Data_Out		: out std_logic_vector(7 downto 0);
 
-		A_Reg_External_Output	: out std_logic_vector(7 downto 0)		
+		X_Reg_External_Output	: out std_logic_vector(7 downto 0)		
         );
     end component CPU;
 
@@ -40,7 +39,7 @@ architecture Behavioral of CPU_Test_STA_Abs is
 	signal Memory_Read_Enable_Test		: std_logic;
 	signal Memory_Write_Enable_Test		: std_logic;
 	signal Memory_Data_Out_Test		: std_logic_vector(7 downto 0);
-	signal A_Reg_External_Output_Test	: std_logic_vector(7 downto 0);
+	signal X_Reg_External_Output_Test	: std_logic_vector(7 downto 0);
 
 
 begin
@@ -56,7 +55,7 @@ begin
 		Memory_Read_Enable 	=> Memory_Read_Enable_Test,
 		Memory_Write_Enable	=> Memory_Write_Enable_Test,
 		Memory_Data_Out		=> Memory_Data_Out_Test,
-		A_Reg_External_Output => A_Reg_External_Output_Test
+		X_Reg_External_Output 	=> X_Reg_External_Output_Test
         );
 
 
@@ -87,51 +86,51 @@ begin
 		wait for 10 ns;
 		-- continue through CPU cycles
 
-		-- Initiate Accumulator by running instruction #98
-		report "Step 1: Fetch Instruction - LDA #98";
+		-- Initiate Accumulator by running instruction #207
+		report "Step 1: Fetch Instruction - LDX #207";
 		Clock_Test	<= '1';
 		wait for 10 ns;
-		assert Memory_In_Test = "00010001" report "Memory_In_Test should equal 01000001 (LDA #)" severity error;
+		assert Memory_In_Test = "00010010" report "Memory_In_Test should equal 01000010 (LDX #)" severity error;
 		Clock_Test	<= '0';
 		wait for 10 ns;
 		
-		report "Step One of Load Immediate to Register, Load A Register with Value, and Increment PC";
+		report "Step One of Load Immediate to Register, Load X Register with Value, and Increment PC";
 		Clock_Test	<= '1';
 		wait for 10 ns;
-		assert Memory_In_Test = "01100010" report "Memory_In_Test should equal 01100010 (#98)" severity error;
+		assert Memory_In_Test = "11001111" report "Memory_In_Test should equal 11001111 (#207)" severity error;
 		Clock_Test	<= '0';
 		wait for 10 ns;
 
-		-- Now fetch and run STA &2836, which is the instruction under test
-		report "Step 1: Fetch Instruction 01000001 - STA &2836";
+		-- Now fetch and run STX &2836, which is the instruction under test
+		report "Step 1: Fetch Instruction 01000010 - STX &581A";
 		Clock_Test	<= '1';
 		wait for 10 ns;
-		assert A_Reg_External_Output_Test = "01100010" report "Test from previous step: A_Reg_External_Output_Test should equal 01100010 (#98)" severity error;
+		assert X_Reg_External_Output_Test = "11001111" report "Test from previous step: X_Reg_External_Output_Test should equal 11001111 (#207)" severity error;
 		Clock_Test	<= '0';
 		wait for 10 ns;
 
-		report "STA Absolute Step One - Load MAR (High) with hex 28";
+		report "STX Absolute Step One - Load MAR (High) with hex 58";
 		Clock_Test	<= '1';
 		wait for 10 ns;
-		assert Memory_In_Test = "00101000" report "Memory_In_Test should equal 00101000 (hex 28)" severity error;
+		assert Memory_In_Test = "01011000" report "Memory_In_Test should equal 01011000 (hex 58)" severity error;
 		Clock_Test	<= '0';
 		wait for 10 ns;
 
-		report "STA Absolute Step Two - Load MAR (Low) with hex 36";
+		report "STX Absolute Step Two - Load MAR (Low) with hex 1A";
 		Clock_Test	<= '1';
 		wait for 10 ns;
-		assert Memory_In_Test = "00110110" report "Memory_In_Test should equal 00110110 (hex 36)" severity error;
+		assert Memory_In_Test = "00011010" report "Memory_In_Test should equal 00011010 (hex 1A)" severity error;
 		Clock_Test	<= '0';
 		wait for 10 ns;
 
-		report "STA Absolute Step Three - Load A Reg to Memory Address &2836";
+		report "STX Absolute Step Three - Load Y Reg to Memory Address &581A";
 		Clock_Test	<= '1';
 		wait for 10 ns;
-		report "Running tests for Load A Reg #98 to Memory Address &2836";
-		assert Memory_Data_Out_Test = "01100010" report "Test: Memory_Data_Out_Test should equal 01100010 (#98)" severity error;
+		report "Running tests for Load A Reg #207 to Memory Address &581A";
+		assert Memory_Data_Out_Test = "11001111" report "Test: Memory_Data_Out_Test should equal 11001111 (#207)" severity error;
 		assert Memory_Write_Enable_Test = '1' report "Test: Memory_Write_Enable_Test should equal 1" severity error;
-		assert Memory_Out_High_Test = "00101000" report "Test: Memory_Out_High_Test should equal 00101000 (hex 28)" severity error;
-		assert Memory_Out_Low_Test = "00110110" report "Test: Memory_Out_Low_Test should equal 00110110 (hex 36)" severity error;
+		assert Memory_Out_High_Test = "01011000" report "Test: Memory_Out_High_Test should equal 00101000 (hex 58)" severity error;
+		assert Memory_Out_Low_Test = "00011010" report "Test: Memory_Out_Low_Test should equal 00110110 (hex 1A)" severity error;
 
 		wait;
 	end process stimulus_proc;
@@ -144,16 +143,16 @@ begin
         	
 		-- Memory Responses for LDA #98
         	if Memory_Read_Enable_Test = '1' and Memory_Out_Low_Test = "00000000" and Memory_Out_High_Test = "00000000" then
-            		Memory_In_Test <= "00010001"; -- LDA #
+            		Memory_In_Test <= "00010010"; -- LDX #
 		elsif Memory_Read_Enable_Test = '1' and Memory_Out_High_Test = "00000000"  and Memory_Out_Low_Test = "00000001" then
-			Memory_In_Test <= "01100010"; -- #98
-		-- Memory Responses for STA &2836
+			Memory_In_Test <= "11001111"; -- #207
+		-- Memory Responses for STX &581A
 		elsif Memory_Read_Enable_Test = '1' and Memory_Out_High_Test = "00000000" and Memory_Out_Low_Test = "00000010" then
-			Memory_In_Test <= "01000001"; -- STA &
+			Memory_In_Test <= "01000010"; -- STX &
 		elsif Memory_Read_Enable_Test = '1' and Memory_Out_High_Test = "00000000" and Memory_Out_Low_Test = "00000011" then
-			Memory_In_Test <= "00101000"; -- hex 28
+			Memory_In_Test <= "01011000"; -- hex 58
 		elsif Memory_Read_Enable_Test = '1' and Memory_Out_High_Test = "00000000" and Memory_Out_Low_Test = "00000100" then
-			Memory_In_Test <= "00110110"; -- hex 36
+			Memory_In_Test <= "00011010"; -- hex 1A
 		-- When no memory response required / matched
         	else
             		Memory_In_Test <= "ZZZZZZZZ";  -- Default data value when the condition is not met
