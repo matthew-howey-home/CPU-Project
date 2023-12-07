@@ -48,6 +48,7 @@ signal Internal_ST_Reg_Absolute_Step_2		: std_logic;
 signal Internal_ST_Reg_Absolute_Step_3_STA	: std_logic;
 signal Internal_ST_Reg_Absolute_Step_3_STX	: std_logic;
 signal Internal_ST_Reg_Absolute_Step_3_STY	: std_logic;
+signal Internal_JMP_Step_1			: std_logic;
 
 begin
 	--************ Setting signal to represent current step based on current FSM Value **********-------
@@ -141,6 +142,14 @@ begin
 		not FSM_In(3) and 	FSM_In(2) and		FSM_In(1) and		not FSM_In(0) and
 		not Instruction(3) and	not Instruction(2) and	Instruction(1) and 	Instruction(0);
 
+	-- if FSM_In = "00000010" and Instruction is 01100000 set Step One of JMP - Unconditional Jump to Absolute Address - Load MAR (High), and Inc PC
+	Internal_JMP_Step_1 <=
+		not FSM_In(7) and	not FSM_In(6) and	not FSM_In(5) and	not FSM_In(4) and
+		not FSM_In(3) and 	not FSM_In(2) and	FSM_In(1) and		not FSM_In(0) and
+		not Instruction(7) and	Instruction(6) and	Instruction(5) and 	not Instruction(4) and
+		not Instruction(3) and	not Instruction(2) and	not Instruction(1) and 	not Instruction(0);
+		
+
  	--************** Set next value of FSM based on Current Step **************--
 
 	-- If Internal_Step_0_Initial_State		set FSM_Out = "00000001" (Step 1)	
@@ -162,6 +171,8 @@ begin
 	-- if Internal_ST_Reg_Absolute_Step_3_STX	set FSM_Out = "00000001" (Back to Step 1 Fetch Instruction)
 	-- if Internal_ST_Reg_Absolute_Step_3_STY	set FSM_Out = "00000001" (Back to Step 1 Fetch Instruction)
 
+	-- if Internal_JMP_Step_1			set FSM_Out = "00000111" (JMP Step 2)
+
 	FSM_Out(7) <= '0';
  	FSM_Out(6) <= '0';
 	FSM_Out(5) <= '0';
@@ -170,11 +181,13 @@ begin
 	FSM_Out(2) <=
 		Internal_LD_Reg_Absolute_Step_2 or
 		Internal_ST_Reg_Absolute_Step_1 or
-		Internal_ST_Reg_Absolute_Step_2;
+		Internal_ST_Reg_Absolute_Step_2 or
+		Internal_JMP_Step_1;
 	FSM_Out(1) <=
 		Internal_Step_1_Fetch_Instruction or
 		Internal_LD_Reg_Absolute_Step_1 or
-		Internal_ST_Reg_Absolute_Step_2;
+		Internal_ST_Reg_Absolute_Step_2 or
+		Internal_JMP_Step_1;
 	FSM_Out(0) <=		
 		Internal_Step_0_Initial_State or
 		Internal_LD_Reg_Immediate_Step_1_LDA or
@@ -187,7 +200,8 @@ begin
 		Internal_ST_Reg_Absolute_Step_1 or
 		Internal_ST_Reg_Absolute_Step_3_STA or
 		Internal_ST_Reg_Absolute_Step_3_STX or
-		Internal_ST_Reg_Absolute_Step_3_STY;
+		Internal_ST_Reg_Absolute_Step_3_STY or
+		Internal_JMP_Step_1;
 
 	PC_Low_Output_Enable	<=
 		Internal_Step_1_Fetch_Instruction or
@@ -197,7 +211,8 @@ begin
 		Internal_LD_Reg_Absolute_Step_1 or
 		Internal_LD_Reg_Absolute_Step_2 or
 		Internal_ST_Reg_Absolute_Step_1 or
-		Internal_ST_Reg_Absolute_Step_2;
+		Internal_ST_Reg_Absolute_Step_2 or
+		Internal_JMP_Step_1;
 
 	MAR_Low_Input_Enable	<=
 		Internal_LD_Reg_Absolute_Step_2 or
@@ -211,11 +226,13 @@ begin
 		Internal_LD_Reg_Absolute_Step_1 or
 		Internal_LD_Reg_Absolute_Step_2 or
 		Internal_ST_Reg_Absolute_Step_1 or
-		Internal_ST_Reg_Absolute_Step_2;
+		Internal_ST_Reg_Absolute_Step_2 or
+		Internal_JMP_Step_1;
 
 	MAR_High_Input_Enable	<=
 		Internal_LD_Reg_Absolute_Step_1 or
-		Internal_ST_Reg_Absolute_Step_1;
+		Internal_ST_Reg_Absolute_Step_1 or
+		Internal_JMP_Step_1;
 
 	PC_Low_Input_Enable  <= '0';
 	PC_High_Input_Enable <= '0';
@@ -246,7 +263,8 @@ begin
 		Internal_LD_Reg_Absolute_Step_3_LDX or
 		Internal_LD_Reg_Absolute_Step_3_LDY or
 		Internal_ST_Reg_Absolute_Step_1 or
-		Internal_ST_Reg_Absolute_Step_2;
+		Internal_ST_Reg_Absolute_Step_2 or
+		Internal_JMP_Step_1;
 
 	Memory_Write_Enable <=
 		Internal_ST_Reg_Absolute_Step_3_STA or
@@ -281,6 +299,7 @@ begin
 		Internal_LD_Reg_Absolute_Step_1 or
 		Internal_LD_Reg_Absolute_Step_2 or
 		Internal_ST_Reg_Absolute_Step_1 or
-		Internal_ST_Reg_Absolute_Step_2;
+		Internal_ST_Reg_Absolute_Step_2 or
+		Internal_JMP_Step_1;
 
 end architecture Behavioral;

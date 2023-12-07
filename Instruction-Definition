@@ -47,3 +47,9 @@ FSM states:
 00000010
 00000101
 00000110
+
+01100000 JMP & - Unconditional Jump to Absolute Address. 3 bytes
+FSM States
+00000010
+00000111
+00001000

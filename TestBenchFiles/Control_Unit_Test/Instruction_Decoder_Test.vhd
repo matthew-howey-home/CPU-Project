@@ -278,6 +278,20 @@ begin
 	
 	assert FSM_Out_Test = "00000001"			report "Load Register to Absolute Memory Addres Step Three STY: FSM_Out_Test should equal 00000001" severity error;
 
+	report "************ TESTS FOR SUBROUTINE: Unconditional Jump to Absolute Address, FSM 00000010, 00000111 - 00001000 ************";
+
+	report "Running Tests for Unconditional Jump to Absolute Address Step One: Load MAR (High) and Increment PC";
+	FSM_In_Test	<= "00000010";
+	Instruction_Test <= "01100000";
+        wait for 10 ns;
+	
+	assert PC_High_Output_Enable_Test = '1'	report "Unconditional Jump to Absolute Address Step One: PC_High_Output_Enable_Test should equal 1" severity error;
+	assert PC_Low_Output_Enable_Test = '1'	report "Unconditional Jump to Absolute Address Step One: PC_Low_Output_Enable_Test should equal 1" severity error;
+	assert Memory_Read_Enable_Test = '1'	report "Unconditional Jump to Absolute Address Step One: Memory_Read_Enable_Test should equal 1" severity error;
+	assert Increment_PC_Test = '1'		report "Unconditional Jump to Absolute Address Step One: Increment_PC_Test should equal 1" severity error;
+	assert MAR_High_Input_Enable_Test = '1'	report "Unconditional Jump to Absolute Address Step One: MAR_High_Input_Enable_Test should equal 1" severity error;
+	
+	assert FSM_Out_Test = "00000111"	report "Unconditional Jump to Absolute Address Step One: FSM_Out_Test should equal 00000111" severity error;
 
         -- End the simulation
         wait;
