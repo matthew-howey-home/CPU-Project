@@ -43,6 +43,9 @@ architecture Behavioral of CPU is
 	signal PC_High_Incremented		: std_logic_vector(7 downto 0);
 	signal Increment_PC_High_Carry_Out	: std_logic;
 
+	signal MAR_Out_Low			: std_logic_vector(7 downto 0);
+	signal MAR_Out_High			: std_logic_vector(7 downto 0);
+
 	signal Decoder_FSM_In			: std_logic_vector(7 downto 0);
 	signal Decoder_FSM_Out			: std_logic_vector(7 downto 0);
 
@@ -104,7 +107,7 @@ begin
 
 	PC_Low_Input_Mux: entity work.Four_to_One_Byte_Mux
 		port map (
-	    		input_0 	=> Data_Bus, -- default input to PC High, neither reset nor increment asserted
+	    		input_0 	=> MAR_Out_Low, -- default input to PC Low (for jumps), neither reset nor increment asserted
             		input_1 	=> PC_Low_Incremented, -- Increment asserted, set to incremented value
 			input_2 	=> PC_Low_Initial_State, -- Reset asserted, set to initial value
 			input_3 	=> PC_Low_Initial_State, -- Both asserted, prioritise reset
@@ -133,7 +136,7 @@ begin
 
 	PC_High_Input_Mux: entity work.Four_to_One_Byte_Mux
 		port map (
-	    		input_0 	=> Data_Bus, -- default input to PC High, neither reset nor increment asserted
+	    		input_0 	=> MAR_Out_High, -- default input to PC High (for jumps), neither reset nor increment asserted
             		input_1 	=> PC_High_Incremented, -- Increment asserted, set to incremented value
 			input_2 	=> PC_High_Initial_State, -- Reset asserted, set to initial value
 			input_3 	=> PC_High_Initial_State, -- Both asserted, prioritise reset
@@ -176,7 +179,7 @@ begin
             		Clock 		=> Clock,
 			Output_Enable 	=> Control_Bus(1),
 
-            		Output 		=> Memory_Out_Low
+            		Output 		=> MAR_Out_Low
         	);
 
 	MAR_High: entity work.Eight_Bit_Register
@@ -185,7 +188,7 @@ begin
             		Input_Enable 	=> Control_Bus(2),
             		Clock 		=> Clock,
 			Output_Enable 	=> Control_Bus(3),
-			Output 		=> Memory_Out_High
+			Output 		=> MAR_Out_High
         	);
 	
 	-- connects byte fetched from memory to Data Bus if Memory Read Enable is set
@@ -308,6 +311,8 @@ begin
 	
 	Memory_Read_Enable <= Control_Bus(4);
 	Memory_Write_Enable <= Control_Bus(5);
+	Memory_Out_Low <= MAR_Out_Low;
+	Memory_Out_High <= MAR_Out_High;
 	Memory_Data_Out <= Data_Bus;
 	A_Reg_External_Output <= A_Reg_Output;
 	X_Reg_External_Output <= X_Reg_Output;
