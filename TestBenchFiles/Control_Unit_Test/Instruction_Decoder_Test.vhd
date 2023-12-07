@@ -293,6 +293,18 @@ begin
 	
 	assert FSM_Out_Test = "00000111"	report "Unconditional Jump to Absolute Address Step One: FSM_Out_Test should equal 00000111" severity error;
 
+	report "Running Tests for Unconditional Jump to Absolute Address Step Two: Load MAR (Low)";
+	FSM_In_Test	<= "00000111";
+        wait for 10 ns;
+	
+	assert PC_High_Output_Enable_Test = '1'	report "Unconditional Jump to Absolute Address Step Two: PC_High_Output_Enable_Test should equal 1" severity error;
+	assert PC_Low_Output_Enable_Test = '1'	report "Unconditional Jump to Absolute Address Step Two: PC_Low_Output_Enable_Test should equal 1" severity error;
+	assert Memory_Read_Enable_Test = '1'	report "Unconditional Jump to Absolute Address Step Two: Memory_Read_Enable_Test should equal 1" severity error;
+	assert MAR_Low_Input_Enable_Test = '1'	report "Unconditional Jump to Absolute Address Step Two: MAR_High_Input_Enable_Test should equal 1" severity error;
+	
+	assert FSM_Out_Test = "00001000"	report "Unconditional Jump to Absolute Address Step Two: FSM_Out_Test should equal 00001000" severity error;
+
+
         -- End the simulation
         wait;
     end process stimulus_proc;
