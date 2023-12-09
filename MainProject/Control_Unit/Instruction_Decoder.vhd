@@ -1,5 +1,6 @@
 
 
+
 library  ieee;
 use ieee.std_logic_1164.all;
 
@@ -301,6 +302,8 @@ begin
 		Internal_ST_Reg_Absolute_Step_3_STX;
 	Y_Reg_Output_Enable			<=
 		Internal_ST_Reg_Absolute_Step_3_STY;
+
+	JMP_Enable <= '0';
 
 	-- To increment PC you must also assert PC Output Enable control signals
 	Increment_PC <=

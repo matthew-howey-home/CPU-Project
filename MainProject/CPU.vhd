@@ -103,13 +103,13 @@ begin
 
 	-- RESET PC Low Mux, directs Reset and Increment input
 
-	PC_Low_Mux_Selector(0) <= Control_Bus(11); -- Increment PC
+	PC_Low_Mux_Selector(0) <= Control_Bus(18); -- JMP Enable
 	PC_Low_Mux_Selector(1) <= Reset;
 
 	PC_Low_Input_Mux: entity work.Four_to_One_Byte_Mux
 		port map (
-	    		input_0 	=> MAR_Out_Low, -- default input to PC Low (for jumps), neither reset nor increment asserted
-            		input_1 	=> PC_Low_Incremented, -- Increment asserted, set to incremented value
+	    		input_0 	=> PC_Low_Incremented, -- default input to PC Low neither reset nor JMP enable asserted
+            		input_1 	=> MAR_Out_Low, -- JMP Enable asserted, set to MAR Out
 			input_2 	=> PC_Low_Initial_State, -- Reset asserted, set to initial value
 			input_3 	=> PC_Low_Initial_State, -- Both asserted, prioritise reset
 
@@ -117,28 +117,21 @@ begin
 	
             		Output 		=> PC_Low_In
         	);
-
-	PC_Low_Input_Enable_Mux: entity work.Four_to_One_Bit_Mux
-		port map (	    		
-			input_0 	=> Control_Bus(6), -- default input to PC Low Input Enable
-            		input_1 	=> '1', -- assert input enable if Increment signal is asserted
-			input_2 	=> '1', -- assert input enable if Reset signal is asserted
-			input_3 	=> '1', -- assert input enable if both signals asserted
-
-            		selector	=> PC_Low_Mux_Selector,
 	
-            		Output 		=> PC_Low_Input_Enable
-        	);
-
+	PC_Low_Input_Enable <=
+		Control_Bus(6) -- default input to PC Low Input Enable
+		or Reset -- enable input if Reset asserted
+		or Control_Bus(11) -- enable input if Increment PC asserted
+		or Control_Bus(18); -- enable input if JMP Enable Asserted
 	
 	-- RESET PC High Mux, directs Reset and Increment input
-	PC_High_Mux_Selector(0) <= Control_Bus(11); -- Increment PC
+	PC_High_Mux_Selector(0) <= Control_Bus(18); -- JMP Enable
 	PC_High_Mux_Selector(1) <= Reset;
 
 	PC_High_Input_Mux: entity work.Four_to_One_Byte_Mux
 		port map (
-	    		input_0 	=> MAR_Out_High, -- default input to PC High (for jumps), neither reset nor increment asserted
-            		input_1 	=> PC_High_Incremented, -- Increment asserted, set to incremented value
+	    		input_0 	=> PC_High_Incremented, -- default input to PC High neither reset nor JMP enable asserted
+            		input_1 	=> MAR_Out_High, -- JMP Enable asserted, set to MAR Out
 			input_2 	=> PC_High_Initial_State, -- Reset asserted, set to initial value
 			input_3 	=> PC_High_Initial_State, -- Both asserted, prioritise reset
 
@@ -147,17 +140,11 @@ begin
             		Output 		=> PC_High_In
         	);
 
-	PC_High_Input_Enable_Mux: entity work.Four_to_One_Bit_Mux
-		port map (	    		
-			input_0 	=> Control_Bus(8), -- default input to PC High Input Enable
-            		input_1 	=> '1', -- assert input enable if Increment signal is asserted
-			input_2 	=> '1', -- assert input enable if Reset signal is asserted
-			input_3 	=> '1', -- assert input enable if both signals asserted
-
-            		selector	=> PC_High_Mux_Selector,
-	
-            		Output 		=> PC_High_Input_Enable
-        	);
+	PC_High_Input_Enable <=
+		Control_Bus(7) -- default input to PC High Input Enable
+		or Reset -- enable input if Reset asserted
+		or Control_Bus(11) -- enable input if Increment PC asserted
+		or Control_Bus(18); -- enable input if JMP Enable Asserted
 
  
 	-- FINITE STATE MACHINE
