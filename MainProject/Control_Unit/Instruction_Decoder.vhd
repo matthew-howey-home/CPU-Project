@@ -26,7 +26,8 @@ entity Instruction_Decoder is
 	Y_Reg_Input_Enable			: out std_logic;
 	A_Reg_Output_Enable			: out std_logic;
 	X_Reg_Output_Enable			: out std_logic;
-	Y_Reg_Output_Enable			: out std_logic
+	Y_Reg_Output_Enable			: out std_logic;
+	JMP_Enable				: out std_logic
     );
 end entity Instruction_Decoder;
 

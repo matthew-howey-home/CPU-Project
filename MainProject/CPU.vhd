@@ -50,7 +50,7 @@ architecture Behavioral of CPU is
 	signal Decoder_FSM_Out			: std_logic_vector(7 downto 0);
 
 	signal Instruction			: std_logic_vector(7 downto 0);
-	signal Control_Bus			: std_logic_vector(17 downto 0);
+	signal Control_Bus			: std_logic_vector(18 downto 0);
 	signal Data_Bus				: std_logic_vector(7 downto 0);
 
 	signal A_Reg_Output			: std_logic_vector(7 downto 0);
@@ -86,7 +86,8 @@ begin
 			Y_Reg_Input_Enable			=> Control_Bus(14),
 			A_Reg_Output_Enable			=> Control_Bus(15),
 			X_Reg_Output_Enable			=> Control_Bus(16),
-			Y_Reg_Output_Enable			=> Control_Bus(17)
+			Y_Reg_Output_Enable			=> Control_Bus(17),
+			JMP_Enable				=> Control_Bus(18)
         	);
 
 
