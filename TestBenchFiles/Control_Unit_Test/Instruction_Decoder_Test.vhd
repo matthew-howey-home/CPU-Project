@@ -30,7 +30,8 @@ architecture Behavioral of Instruction_Decoder_Test is
 		Y_Reg_Input_Enable			: out std_logic;
 		A_Reg_Output_Enable			: out std_logic;
 		X_Reg_Output_Enable			: out std_logic;
-		Y_Reg_Output_Enable			: out std_logic
+		Y_Reg_Output_Enable			: out std_logic;
+		JMP_Enable				: out std_logic
         );
     end component Instruction_Decoder;
 
@@ -55,6 +56,7 @@ architecture Behavioral of Instruction_Decoder_Test is
 	signal A_Reg_Output_Enable_Test				: std_logic;
 	signal X_Reg_Output_Enable_Test				: std_logic;
 	signal Y_Reg_Output_Enable_Test				: std_logic;
+	signal JMP_Enable_Test					: std_logic;
 
 begin
     -- Instantiate the Instruction_Decoder module
@@ -79,7 +81,8 @@ begin
 		Y_Reg_Input_Enable				=> Y_Reg_Input_Enable_Test,
 		A_Reg_Output_Enable				=> A_Reg_Output_Enable_Test,
 		X_Reg_Output_Enable				=> X_Reg_Output_Enable_Test,
-		Y_Reg_Output_Enable				=> Y_Reg_Output_Enable_Test
+		Y_Reg_Output_Enable				=> Y_Reg_Output_Enable_Test,
+		JMP_Enable					=> JMP_Enable_Test
         );
 
     -- Stimulus process to apply test vectors
@@ -303,7 +306,16 @@ begin
 	assert MAR_Low_Input_Enable_Test = '1'	report "Unconditional Jump to Absolute Address Step Two: MAR_High_Input_Enable_Test should equal 1" severity error;
 	
 	assert FSM_Out_Test = "00001000"	report "Unconditional Jump to Absolute Address Step Two: FSM_Out_Test should equal 00001000" severity error;
-
+	
+	report "Running Tests for Unconditional Jump to Absolute Address Step Three: Load MAR to PC";
+	FSM_In_Test	<= "00001000";
+        wait for 10 ns;
+	
+	assert MAR_High_Output_To_Memory_Enable_Test = '1'	report "Unconditional Jump to Absolute Address Step Three: MAR_High_Output_To_Memory_Enable_Test should equal 1" severity error;
+	assert MAR_Low_Output_To_Memory_Enable_Test = '1'	report "Unconditional Jump to Absolute Address Step Three: MAR_Low_Output_To_Memory_Enable_Test should equal 1" severity error;
+	assert JMP_Enable_Test = '1'				report "Unconditional Jump to Absolute Address Step Three: JMP_Enable_Test should equal 1" severity error;
+		
+	assert FSM_Out_Test = "00000001"	report "Unconditional Jump to Absolute Address Step Two: FSM_Out_Test should equal 00000001" severity error;
 
         -- End the simulation
         wait;

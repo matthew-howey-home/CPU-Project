@@ -52,6 +52,7 @@ signal Internal_ST_Reg_Absolute_Step_3_STX	: std_logic;
 signal Internal_ST_Reg_Absolute_Step_3_STY	: std_logic;
 signal Internal_JMP_Step_1			: std_logic;
 signal Internal_JMP_Step_2			: std_logic;
+signal Internal_JMP_Step_3			: std_logic;
 
 begin
 	--************ Setting signal to represent current step based on current FSM Value **********-------
@@ -156,6 +157,11 @@ begin
 	Internal_JMP_Step_2 <=
 		not FSM_In(7) and	not FSM_In(6) and	not FSM_In(5) and	not FSM_In(4) and
 		not FSM_In(3) and 	FSM_In(2) and		FSM_In(1) and		FSM_In(0);
+
+	-- if FSM_In = "00001000" set Step Three of JMP - Unconditional Jump to Absolute Address - Load PC with MAR
+	Internal_JMP_Step_3 <=
+		not FSM_In(7) and	not FSM_In(6) and	not FSM_In(5) and	not FSM_In(4) and
+		FSM_In(3) and		not FSM_In(2) and	not FSM_In(1) and	not FSM_In(0);
 		
 
  	--************** Set next value of FSM based on Current Step **************--
@@ -181,6 +187,7 @@ begin
 
 	-- if Internal_JMP_Step_1			set FSM_Out = "00000111" (JMP Step 2)
 	-- if Internal_JMP_Step_2			set FSM_Out = "00001000" (JMP Step 3)
+	-- if Internal_JMP_Step_3			set FSM_Out = "00000001" (Back to Step 1 Fetch Instruction)
 
 	FSM_Out(7) <= '0';
  	FSM_Out(6) <= '0';
@@ -210,7 +217,8 @@ begin
 		Internal_ST_Reg_Absolute_Step_3_STA or
 		Internal_ST_Reg_Absolute_Step_3_STX or
 		Internal_ST_Reg_Absolute_Step_3_STY or
-		Internal_JMP_Step_1;
+		Internal_JMP_Step_1 or
+		Internal_JMP_Step_3;
 
 	PC_Low_Output_Enable	<=
 		Internal_Step_1_Fetch_Instruction or
@@ -255,14 +263,16 @@ begin
 		Internal_LD_Reg_Absolute_Step_3_LDY or
 		Internal_ST_Reg_Absolute_Step_3_STA or
 		Internal_ST_Reg_Absolute_Step_3_STX or
-		Internal_ST_Reg_Absolute_Step_3_STY;
+		Internal_ST_Reg_Absolute_Step_3_STY or
+		Internal_JMP_Step_3;
 	MAR_High_Output_To_Memory_Enable	<=
 		Internal_LD_Reg_Absolute_Step_3_LDA or
 		Internal_LD_Reg_Absolute_Step_3_LDX or
 		Internal_LD_Reg_Absolute_Step_3_LDY or
 		Internal_ST_Reg_Absolute_Step_3_STA or
 		Internal_ST_Reg_Absolute_Step_3_STX or
-		Internal_ST_Reg_Absolute_Step_3_STY;
+		Internal_ST_Reg_Absolute_Step_3_STY or
+		Internal_JMP_Step_3;
 
 	Memory_Read_Enable			<=
 		Internal_Step_1_Fetch_Instruction or
@@ -277,14 +287,16 @@ begin
 		Internal_ST_Reg_Absolute_Step_1 or
 		Internal_ST_Reg_Absolute_Step_2 or
 		Internal_JMP_Step_1 or
-		Internal_JMP_Step_2;
+		Internal_JMP_Step_2 or
+		Internal_JMP_Step_3;
 
 	Memory_Write_Enable <=
 		Internal_ST_Reg_Absolute_Step_3_STA or
 		Internal_ST_Reg_Absolute_Step_3_STX or
 		Internal_ST_Reg_Absolute_Step_3_STY;
 
-	IR_Input_Enable				<= Internal_Step_1_Fetch_Instruction;
+	IR_Input_Enable <=
+		Internal_Step_1_Fetch_Instruction;
 
 	A_Reg_Input_Enable			<=
 		Internal_LD_Reg_Immediate_Step_1_LDA or
@@ -303,7 +315,8 @@ begin
 	Y_Reg_Output_Enable			<=
 		Internal_ST_Reg_Absolute_Step_3_STY;
 
-	JMP_Enable <= '0';
+	JMP_Enable <=
+		Internal_JMP_Step_3;
 
 	-- To increment PC you must also assert PC Output Enable control signals
 	Increment_PC <=
