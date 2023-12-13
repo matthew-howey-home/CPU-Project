@@ -70,9 +70,9 @@ begin
 
 			FSM_Out					=> Decoder_FSM_Out,
 			MAR_Low_Input_Enable			=> Control_Bus(0),
-			MAR_Low_Output_To_Memory_Enable		=> Control_Bus(1),
+			MAR_Low_Output_Enable			=> Control_Bus(1),
 			MAR_High_Input_Enable			=> Control_Bus(2),
-			MAR_High_Output_To_Memory_Enable	=> Control_Bus(3),
+			MAR_High_Output_Enable			=> Control_Bus(3),
 			Memory_Read_Enable			=> Control_Bus(4), 
 			Memory_Write_Enable			=> Control_Bus(5),
 			PC_Low_Input_Enable			=> Control_Bus(6), 	

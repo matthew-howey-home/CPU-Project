@@ -16,8 +16,8 @@ entity Instruction_Decoder is
 	PC_High_Output_Enable			: out std_logic;
 	PC_Low_Input_Enable			: out std_logic;
 	PC_High_Input_Enable			: out std_logic;
-	MAR_Low_Output_To_Memory_Enable		: out std_logic;
-	MAR_High_Output_To_Memory_Enable	: out std_logic;
+	MAR_Low_Output_Enable			: out std_logic;
+	MAR_High_Output_Enable			: out std_logic;
 	Memory_Read_Enable			: out std_logic;
 	Memory_Write_Enable			: out std_logic;
 	IR_Input_Enable				: out std_logic;
@@ -257,7 +257,7 @@ begin
 	PC_Low_Input_Enable  <= '0';
 	PC_High_Input_Enable <= '0';
 	
-	MAR_Low_Output_To_Memory_Enable		<=
+	MAR_Low_Output_Enable		<=
 		Internal_LD_Reg_Absolute_Step_3_LDA or
 		Internal_LD_Reg_Absolute_Step_3_LDX or
 		Internal_LD_Reg_Absolute_Step_3_LDY or
@@ -265,7 +265,7 @@ begin
 		Internal_ST_Reg_Absolute_Step_3_STX or
 		Internal_ST_Reg_Absolute_Step_3_STY or
 		Internal_JMP_Step_3;
-	MAR_High_Output_To_Memory_Enable	<=
+	MAR_High_Output_Enable	<=
 		Internal_LD_Reg_Absolute_Step_3_LDA or
 		Internal_LD_Reg_Absolute_Step_3_LDX or
 		Internal_LD_Reg_Absolute_Step_3_LDY or

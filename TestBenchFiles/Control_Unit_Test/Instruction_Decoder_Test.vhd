@@ -19,8 +19,8 @@ architecture Behavioral of Instruction_Decoder_Test is
 		MAR_High_Input_Enable			: out std_logic;
 		PC_Low_Output_Enable			: out std_logic;
 		PC_High_Output_Enable			: out std_logic;
-		MAR_Low_Output_To_Memory_Enable		: out std_logic;
-		MAR_High_Output_To_Memory_Enable	: out std_logic;
+		MAR_Low_Output_Enable		: out std_logic;
+		MAR_High_Output_Enable	: out std_logic;
 		Memory_Read_Enable			: out std_logic;
 		Memory_Write_Enable			: out std_logic;
 		IR_Input_Enable				: out std_logic;
@@ -44,8 +44,8 @@ architecture Behavioral of Instruction_Decoder_Test is
 	signal MAR_High_Input_Enable_Test			: std_logic;
 	signal PC_Low_Output_Enable_Test			: std_logic;
 	signal PC_High_Output_Enable_Test			: std_logic;
-	signal MAR_Low_Output_To_Memory_Enable_Test		: std_logic;
-	signal MAR_High_Output_To_Memory_Enable_Test		: std_logic;
+	signal MAR_Low_Output_Enable_Test		: std_logic;
+	signal MAR_High_Output_Enable_Test		: std_logic;
 	signal Memory_Read_Enable_Test				: std_logic;
 	signal Memory_Write_Enable_Test				: std_logic;
 	signal IR_Input_Enable_Test				: std_logic;
@@ -70,8 +70,8 @@ begin
 		MAR_High_Input_Enable   	 		=> MAR_High_Input_Enable_Test,
 		PC_Low_Output_Enable				=> PC_Low_Output_Enable_Test,
 		PC_High_Output_Enable   	 		=> PC_High_Output_Enable_Test,
-		MAR_Low_Output_To_Memory_Enable			=> MAR_Low_Output_To_Memory_Enable_Test,
-		MAR_High_Output_To_Memory_Enable		=> MAR_High_Output_To_Memory_Enable_Test,
+		MAR_Low_Output_Enable			=> MAR_Low_Output_Enable_Test,
+		MAR_High_Output_Enable		=> MAR_High_Output_Enable_Test,
 		Memory_Read_Enable				=> Memory_Read_Enable_Test,
 		Memory_Write_Enable				=> Memory_Write_Enable_Test,
 		IR_Input_Enable					=> IR_Input_Enable_Test,
@@ -182,8 +182,8 @@ begin
 	
         wait for 10 ns;
 	
-	assert MAR_Low_Output_To_Memory_Enable_Test = '1'	report "Load Register with Absolute Value Step Three LDA: MAR_Low_Output_To_Memory_Enable should equal 1" severity error;
-	assert MAR_High_Output_To_Memory_Enable_Test = '1'	report "Load Register with Absolute Value Step Three LDA: MAR_High_Output_To_Memory_Enable should equal 1" severity error;
+	assert MAR_Low_Output_Enable_Test = '1'	report "Load Register with Absolute Value Step Three LDA: MAR_Low_Output_Enable should equal 1" severity error;
+	assert MAR_High_Output_Enable_Test = '1'	report "Load Register with Absolute Value Step Three LDA: MAR_High_Output_Enable should equal 1" severity error;
 	assert Memory_Read_Enable_Test = '1'			report "Load Register with Absolute Value Step Three LDA: Memory_Read_Enable_Test should equal 1" severity error;
 	assert A_Reg_Input_Enable_Test = '1'			report "Load Register with Absolute Value Step Three LDA: A_Reg_Input_Enable should equal 1" severity error;
 	
@@ -195,8 +195,8 @@ begin
 	
         wait for 10 ns;
 	
-	assert MAR_Low_Output_To_Memory_Enable_Test = '1'	report "Load Register with Absolute Value Step Three LDX: MAR_Low_Output_To_Memory_Enable should equal 1" severity error;
-	assert MAR_High_Output_To_Memory_Enable_Test = '1'	report "Load Register with Absolute Value Step Three LDX: MAR_High_Output_To_Memory_Enable should equal 1" severity error;
+	assert MAR_Low_Output_Enable_Test = '1'	report "Load Register with Absolute Value Step Three LDX: MAR_Low_Output_Enable should equal 1" severity error;
+	assert MAR_High_Output_Enable_Test = '1'	report "Load Register with Absolute Value Step Three LDX: MAR_High_Output_Enable should equal 1" severity error;
 	assert Memory_Read_Enable_Test = '1'			report "Load Register with Absolute Value Step Three LDX: Memory_Read_Enable_Test should equal 1" severity error;
 	assert X_Reg_Input_Enable_Test = '1'			report "Load Register with Absolute Value Step Three LDX: X_Reg_Input_Enable should equal 1" severity error;
 	
@@ -208,8 +208,8 @@ begin
 	
         wait for 10 ns;
 	
-	assert MAR_Low_Output_To_Memory_Enable_Test = '1'	report "Load Register with Absolute Value Step Three LDY: MAR_Low_Output_To_Memory_Enable should equal 1" severity error;
-	assert MAR_High_Output_To_Memory_Enable_Test = '1'	report "Load Register with Absolute Value Step Three LDY: MAR_High_Output_To_Memory_Enable should equal 1" severity error;
+	assert MAR_Low_Output_Enable_Test = '1'	report "Load Register with Absolute Value Step Three LDY: MAR_Low_Output_Enable should equal 1" severity error;
+	assert MAR_High_Output_Enable_Test = '1'	report "Load Register with Absolute Value Step Three LDY: MAR_High_Output_Enable should equal 1" severity error;
 	assert Memory_Read_Enable_Test = '1'			report "Load Register with Absolute Value Step Three LDY: Memory_Read_Enable_Test should equal 1" severity error;
 	assert Y_Reg_Input_Enable_Test = '1'			report "Load Register with Absolute Value Step Three LDY: Y_Reg_Input_Enable should equal 1" severity error;
 	
@@ -248,8 +248,8 @@ begin
 	
         wait for 10 ns;
 	
-	assert MAR_Low_Output_To_Memory_Enable_Test = '1'	report "Load Register to Absolute Memory Addres Step Three STA: MAR_Low_Output_To_Memory_Enable should equal 1" severity error;
-	assert MAR_High_Output_To_Memory_Enable_Test = '1'	report "Load Register to Absolute Memory Addres Step Three STA: MAR_High_Output_To_Memory_Enable should equal 1" severity error;
+	assert MAR_Low_Output_Enable_Test = '1'	report "Load Register to Absolute Memory Addres Step Three STA: MAR_Low_Output_Enable should equal 1" severity error;
+	assert MAR_High_Output_Enable_Test = '1'	report "Load Register to Absolute Memory Addres Step Three STA: MAR_High_Output_Enable should equal 1" severity error;
 	assert Memory_Write_Enable_Test = '1'			report "Load Register to Absolute Memory Addres Step Three STA: Memory_Write_Enable_Test should equal 1" severity error;
 	assert A_Reg_Output_Enable_Test = '1'			report "Load Register to Absolute Memory Addres Step Three STA: A_Reg_Output_Enable_Test should equal 1" severity error;
 	
@@ -261,8 +261,8 @@ begin
 	
         wait for 10 ns;
 	
-	assert MAR_Low_Output_To_Memory_Enable_Test = '1'	report "Load Register to Absolute Memory Addres Step Three STX: MAR_Low_Output_To_Memory_Enable should equal 1" severity error;
-	assert MAR_High_Output_To_Memory_Enable_Test = '1'	report "Load Register to Absolute Memory Addres Step Three STX: MAR_High_Output_To_Memory_Enable should equal 1" severity error;
+	assert MAR_Low_Output_Enable_Test = '1'	report "Load Register to Absolute Memory Addres Step Three STX: MAR_Low_Output_Enable should equal 1" severity error;
+	assert MAR_High_Output_Enable_Test = '1'	report "Load Register to Absolute Memory Addres Step Three STX: MAR_High_Output_Enable should equal 1" severity error;
 	assert Memory_Write_Enable_Test = '1'			report "Load Register to Absolute Memory Addres Step Three STX: Memory_Write_Enable_Test should equal 1" severity error;
 	assert X_Reg_Output_Enable_Test = '1'			report "Load Register to Absolute Memory Addres Step Three STX: X_Reg_Output_Enable_Test should equal 1" severity error;
 	
@@ -274,8 +274,8 @@ begin
 	
         wait for 10 ns;
 	
-	assert MAR_Low_Output_To_Memory_Enable_Test = '1'	report "Load Register to Absolute Memory Addres Step Three STY: MAR_Low_Output_To_Memory_Enable should equal 1" severity error;
-	assert MAR_High_Output_To_Memory_Enable_Test = '1'	report "Load Register to Absolute Memory Addres Step Three STY: MAR_High_Output_To_Memory_Enable should equal 1" severity error;
+	assert MAR_Low_Output_Enable_Test = '1'	report "Load Register to Absolute Memory Addres Step Three STY: MAR_Low_Output_Enable should equal 1" severity error;
+	assert MAR_High_Output_Enable_Test = '1'	report "Load Register to Absolute Memory Addres Step Three STY: MAR_High_Output_Enable should equal 1" severity error;
 	assert Memory_Write_Enable_Test = '1'			report "Load Register to Absolute Memory Addres Step Three STY: Memory_Write_Enable_Test should equal 1" severity error;
 	assert Y_Reg_Output_Enable_Test = '1'			report "Load Register to Absolute Memory Addres Step Three STY: Y_Reg_Output_Enable_Test should equal 1" severity error;
 	
@@ -311,8 +311,8 @@ begin
 	FSM_In_Test	<= "00001000";
         wait for 10 ns;
 	
-	assert MAR_High_Output_To_Memory_Enable_Test = '1'	report "Unconditional Jump to Absolute Address Step Three: MAR_High_Output_To_Memory_Enable_Test should equal 1" severity error;
-	assert MAR_Low_Output_To_Memory_Enable_Test = '1'	report "Unconditional Jump to Absolute Address Step Three: MAR_Low_Output_To_Memory_Enable_Test should equal 1" severity error;
+	assert MAR_High_Output_Enable_Test = '1'	report "Unconditional Jump to Absolute Address Step Three: MAR_High_Output_Enable_Test should equal 1" severity error;
+	assert MAR_Low_Output_Enable_Test = '1'	report "Unconditional Jump to Absolute Address Step Three: MAR_Low_Output_Enable_Test should equal 1" severity error;
 	assert JMP_Enable_Test = '1'				report "Unconditional Jump to Absolute Address Step Three: JMP_Enable_Test should equal 1" severity error;
 		
 	assert FSM_Out_Test = "00000001"	report "Unconditional Jump to Absolute Address Step Two: FSM_Out_Test should equal 00000001" severity error;
