@@ -121,6 +121,15 @@ begin
 		report "Instruction is 01100000 Jump to Absolute Location: Step Three: Load MAR into PC";
 		Clock_Test	<= '1';
 		wait for 10 ns;
+		
+		report "Running tests for CPU reading Memory location &0100 00000001-00000000";
+		assert Memory_Out_High_Test = "00000001" report "Memory_Out_High_Test should equal 00000001" severity error;
+		assert Memory_Out_Low_Test = "00000000"	report "Memory_Out_Low_Test should equal 00000000" severity error;
+		
+		assert Memory_Read_Enable_Test = '1' report "Test 3: Memory_Read_Enable_Test should equal 1" severity error;
+		
+		Clock_Test	<= '0';
+		wait for 10 ns;
 
 		-- another clock cycle to view value of PC
 		Clock_Test	<= '0';
@@ -144,6 +153,11 @@ begin
 			Memory_In_Test <= "00000001"; -- High byte of Hex Value &0100
 		elsif Memory_Read_Enable_Test = '1' and Memory_Out_High_Test = "00000000" and Memory_Out_Low_Test = "00000010" then
 			Memory_In_Test <= "00000000"; -- Low byte of Hex Value &0100
+		-- Use LDA # instruction to verify that PC has jumped to location &0100
+		elsif Memory_Read_Enable_Test = '1' and Memory_Out_High_Test = "00000001" and Memory_Out_Low_Test = "00000000" then
+			Memory_In_Test <= "00010001"; -- LDA #
+		elsif Memory_Read_Enable_Test = '1' and Memory_Out_High_Test = "00000001" and Memory_Out_Low_Test = "00000001" then
+			Memory_In_Test <= "00110101"; -- #53
         	else
             		Memory_In_Test <= "ZZZZZZZZ";  -- Default data value when the condition is not met
         	end if;
