@@ -94,7 +94,7 @@ begin
 
 	wait for 10 ns;
 
-	report "Running Test 2: Output should remain 0 as input enable is off";
+	report "Running Test 4: Output should remain 0 as input enable is off";
 	assert Output_Test = '0'	report "Error: Output_Test should be '0'." severity error;
 
         -- End simulation
