@@ -53,7 +53,7 @@ begin
 
 	-- Output should now be change to 1 on rising edge
 	Clock_Test		<= '1';
-	Output_Enable_Test	<= '0'; -- active low, this means enable output
+	Output_Enable_Test	<= '1'; -- this means enable output
 
 	wait for 10 ns;
 
@@ -104,7 +104,7 @@ begin
 	report "Running Test 4: Output should remain 01110010 as input enable is off";
 	assert Output_Test = "01110010"	report "Error: Output_Test should be '01110010'." severity error;
 	
-	Output_Enable_Test <= '1'; -- active low, this switches off output enable
+	Output_Enable_Test <= '0'; -- this switches off output enable
 
 	wait for 10 ns;
 
