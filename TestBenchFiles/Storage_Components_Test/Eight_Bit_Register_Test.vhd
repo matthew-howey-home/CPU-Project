@@ -10,7 +10,7 @@ end entity Eight_Bit_Register_Test;
 
 architecture behavior of Eight_Bit_Register_Test is
     -- Component declaration for the 8 bit D Latch
-    component Eight_Bit_Register is
+    component Eight_Bit_Register_RTL is
         port (
 	    -- inputs            
 	    Data_Input		: in std_logic_vector(7 downto 0);
@@ -21,7 +21,7 @@ architecture behavior of Eight_Bit_Register_Test is
             -- output
             Output		: out std_logic_vector(7 downto 0)
         );
-    end component Eight_Bit_Register;
+    end component Eight_Bit_Register_RTL;
 
     -- Signal declarations
     signal Data_Input_Test	: std_logic_vector(7 downto 0); 
@@ -31,8 +31,8 @@ architecture behavior of Eight_Bit_Register_Test is
     signal Output_Test		: std_logic_vector(7 downto 0); 
 
 begin
-    -- Instantiate the 8 bit D Latch
-    UUT: Eight_Bit_Register port map (
+    -- Instantiate the 8 bit Register
+    UUT: Eight_Bit_Register_RTL port map (
         Data_Input	=> Data_Input_Test,
         Input_Enable	=> Input_Enable_Test,
 	Clock		=> Clock_Test,
