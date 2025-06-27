@@ -148,7 +148,7 @@ begin
 
  
 	-- FINITE STATE MACHINE
-	FSM: entity work.Eight_Bit_Register
+	FSM: entity work.eight_bit_register_rtl
 		port map (
 	    		Data_Input 	=> FSM_Register_In,
             		Input_Enable 	=> '1',
@@ -160,7 +160,7 @@ begin
 
 	-- SPECIAL PURPOSE REGISTERS
 
-	MAR_Low: entity work.Eight_Bit_Register
+	MAR_Low: entity work.eight_bit_register_rtl
 		port map (
 	    		Data_Input 	=> Data_Bus,
             		Input_Enable 	=> Control_Bus(0),
@@ -170,7 +170,7 @@ begin
             		Output 		=> MAR_Out_Low
         	);
 
-	MAR_High: entity work.Eight_Bit_Register
+	MAR_High: entity work.eight_bit_register_rtl
 		port map (
 	    		Data_Input 	=> Data_Bus,
             		Input_Enable 	=> Control_Bus(2),
@@ -187,7 +187,7 @@ begin
 			output		=> Data_Bus
 		);
 
-	PC_Low: entity work.Eight_Bit_Register
+	PC_Low: entity work.eight_bit_register_rtl
 		port map (
 	    		Data_Input 	=> PC_Low_In,
             		Input_Enable 	=> PC_Low_Input_Enable,
@@ -200,7 +200,7 @@ begin
 	Increment_PC_Low_In 	<= PC_Low_Out;
 	Memory_Out_Low 		<= PC_Low_Out;
 
-	PC_High: entity work.Eight_Bit_Register
+	PC_High: entity work.eight_bit_register_rtl
 		port map (
 	    		Data_Input 	=> PC_High_In,
             		Input_Enable 	=> PC_High_Input_Enable,
@@ -233,7 +233,7 @@ begin
             		carry_out	=> Increment_PC_High_Carry_Out
         	);
 
-	IR: entity work.Eight_Bit_Register
+	IR: entity work.eight_bit_register_rtl
 		port map (
 	    		Data_Input 	=> Data_Bus,
             		Input_Enable 	=> Control_Bus(10),
@@ -245,7 +245,7 @@ begin
 
 	-- Accumulator
 	
-	A_Register: entity work.Eight_Bit_Register
+	A_Register: entity work.eight_bit_register_rtl
 		port map (
 	    		Data_Input 	=> Data_Bus,
             		Input_Enable 	=> Control_Bus(12),
@@ -263,7 +263,7 @@ begin
         	);
 
 	-- General Purpose registers
-	X_Register: entity work.Eight_Bit_Register
+	X_Register: entity work.eight_bit_register_rtl
 		port map (
 	    		Data_Input 	=> Data_Bus,
             		Input_Enable 	=> Control_Bus(13),
@@ -280,7 +280,7 @@ begin
            		output	=> Data_Bus
         	);
 
-	Y_Register: entity work.Eight_Bit_Register
+	Y_Register: entity work.eight_bit_register_rtl
 		port map (
 	    		Data_Input 	=> Data_Bus,
             		Input_Enable 	=> Control_Bus(14),
