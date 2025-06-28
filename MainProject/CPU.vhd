@@ -3,7 +3,8 @@ use ieee.std_logic_1164.all;
 
 entity CPU is
     port (
-	Clock			: in std_logic;
+	Clock			: in std_logic; -- fast clock used for rising edge in registers
+	Slow_Clock		: in std_logic; -- all inputs will be enabled only when Slow Clock is on
 	Reset			: in std_logic;
 
 	Memory_In		: in std_logic_vector(7 downto 0);
@@ -119,10 +120,13 @@ begin
         	);
 	
 	PC_Low_Input_Enable <=
-		Control_Bus(6) -- default input to PC Low Input Enable
-		or Reset -- enable input if Reset asserted
-		or Control_Bus(11) -- enable input if Increment PC asserted
-		or Control_Bus(18); -- enable input if JMP Enable Asserted
+		(
+			Control_Bus(6) -- default input to PC Low Input Enable
+			or Reset -- enable input if Reset asserted
+			or Control_Bus(11) -- enable input if Increment PC asserted
+			or Control_Bus(18) -- enable input if JMP Enable Asserted)
+		)
+		and Slow_Clock; -- enable input only if Slow Clock is on
 	
 	-- RESET PC High Mux, directs Reset and Increment input
 	PC_High_Mux_Selector(0) <= Control_Bus(18); -- JMP Enable

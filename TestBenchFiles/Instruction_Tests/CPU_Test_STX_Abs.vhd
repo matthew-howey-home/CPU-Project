@@ -17,6 +17,7 @@ architecture Behavioral of CPU_Test_STX_Abs is
     component CPU
         port (
 		Clock			: in std_logic;
+		Slow_Clock		: in std_logic;
 		Reset			: in std_logic;
 		Memory_In		: in std_logic_vector(7 downto 0);
 
@@ -47,6 +48,7 @@ begin
     UUT: CPU
         port map (
             	Clock			=> Clock_Test,
+		Slow_Clock		=> '1', -- always set to 1 for test purposes
 		Reset			=> Reset_Test,
 		Memory_In		=> Memory_In_Test,
 		
