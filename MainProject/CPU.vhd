@@ -45,7 +45,9 @@ architecture Behavioral of CPU is
 	signal Increment_PC_High_Carry_Out	: std_logic;
 
 	signal MAR_Out_Low			: std_logic_vector(7 downto 0);
+	signal MAR_Low_Input_Enable		: std_logic;
 	signal MAR_Out_High			: std_logic_vector(7 downto 0);
+	signal MAR_High_Input_Enable		: std_logic;
 
 	signal Decoder_FSM_In			: std_logic_vector(7 downto 0);
 	signal Decoder_FSM_Out			: std_logic_vector(7 downto 0);
@@ -145,17 +147,19 @@ begin
         	);
 
 	PC_High_Input_Enable <=
-		Control_Bus(7) -- default input to PC High Input Enable
-		or Reset -- enable input if Reset asserted
-		or Control_Bus(11) -- enable input if Increment PC asserted
-		or Control_Bus(18); -- enable input if JMP Enable Asserted
-
+		(
+			Control_Bus(7) -- default input to PC High Input Enable
+			or Reset -- enable input if Reset asserted
+			or Control_Bus(11) -- enable input if Increment PC asserted
+			or Control_Bus(18) -- enable input if JMP Enable Asserted
+		)
+		and Slow_Clock; -- enable input only if Slow Clock is on
  
 	-- FINITE STATE MACHINE
 	FSM: entity work.eight_bit_register_rtl
 		port map (
 	    		Data_Input 	=> FSM_Register_In,
-            		Input_Enable 	=> '1',
+            		Input_Enable 	=> Slow_Clock,
             		Clock 		=> Clock,
 			Output_Enable 	=> '1',
 
@@ -164,20 +168,22 @@ begin
 
 	-- SPECIAL PURPOSE REGISTERS
 
+	MAR_Low_Input_Enable <= Control_Bus(0) and Slow_Clock;
 	MAR_Low: entity work.eight_bit_register_rtl
 		port map (
 	    		Data_Input 	=> Data_Bus,
-            		Input_Enable 	=> Control_Bus(0),
+            		Input_Enable 	=> MAR_Low_Input_Enable,
             		Clock 		=> Clock,
 			Output_Enable 	=> Control_Bus(1),
 
             		Output 		=> MAR_Out_Low
         	);
-
+	
+	MAR_High_Input_Enable <= Control_Bus(2) and Slow_Clock;
 	MAR_High: entity work.eight_bit_register_rtl
 		port map (
 	    		Data_Input 	=> Data_Bus,
-            		Input_Enable 	=> Control_Bus(2),
+            		Input_Enable 	=> MAR_High_Input_Enable,
             		Clock 		=> Clock,
 			Output_Enable 	=> Control_Bus(3),
 			Output 		=> MAR_Out_High
