@@ -52,12 +52,17 @@ architecture Behavioral of CPU is
 	signal Decoder_FSM_In			: std_logic_vector(7 downto 0);
 	signal Decoder_FSM_Out			: std_logic_vector(7 downto 0);
 
+	signal IR_Input_Enable			: std_logic;
+
 	signal Instruction			: std_logic_vector(7 downto 0);
 	signal Control_Bus			: std_logic_vector(18 downto 0);
 	signal Data_Bus				: std_logic_vector(7 downto 0);
 
+	signal A_Register_Input_Enable		: std_logic;
 	signal A_Reg_Output			: std_logic_vector(7 downto 0);
+	signal X_Register_Input_Enable		: std_logic;
 	signal X_Reg_Output			: std_logic_vector(7 downto 0);
+	signal Y_Register_Input_Enable		: std_logic;
 	signal Y_Reg_Output			: std_logic_vector(7 downto 0);
 
 begin
@@ -243,10 +248,11 @@ begin
             		carry_out	=> Increment_PC_High_Carry_Out
         	);
 
+	IR_Input_Enable <= Control_Bus(10) and Slow_Clock;
 	IR: entity work.eight_bit_register_rtl
 		port map (
 	    		Data_Input 	=> Data_Bus,
-            		Input_Enable 	=> Control_Bus(10),
+            		Input_Enable 	=> IR_Input_Enable,
             		Clock 		=> Clock,
 			Output_Enable 	=> '1', -- always outputting to Instruction Decoder
 
@@ -255,10 +261,11 @@ begin
 
 	-- Accumulator
 	
+	A_Register_Input_Enable <= Control_Bus(12) and Slow_Clock;
 	A_Register: entity work.eight_bit_register_rtl
 		port map (
 	    		Data_Input 	=> Data_Bus,
-            		Input_Enable 	=> Control_Bus(12),
+            		Input_Enable 	=> A_Register_Input_Enable,
             		Clock 		=> Clock,
 			Output_Enable 	=> '1', -- always outputting to expose for external monitoring
 
@@ -273,10 +280,11 @@ begin
         	);
 
 	-- General Purpose registers
+	X_Register_Input_Enable <= Control_Bus(13) and Slow_Clock;
 	X_Register: entity work.eight_bit_register_rtl
 		port map (
 	    		Data_Input 	=> Data_Bus,
-            		Input_Enable 	=> Control_Bus(13),
+            		Input_Enable 	=> X_Register_Input_Enable,
             		Clock 		=> Clock,
 			Output_Enable 	=> '1', -- always outputting to expose for external monitoring
 
@@ -289,11 +297,12 @@ begin
            		enable	=> Control_Bus(16), -- X_Reg_Output_Enable,
            		output	=> Data_Bus
         	);
-
+	
+	Y_Register_Input_Enable <= Control_Bus(14) and Slow_Clock;
 	Y_Register: entity work.eight_bit_register_rtl
 		port map (
 	    		Data_Input 	=> Data_Bus,
-            		Input_Enable 	=> Control_Bus(14),
+            		Input_Enable 	=> Y_Register_Input_Enable,
             		Clock 		=> Clock,
 			Output_Enable 	=> '1', -- always outputting to expose for external monitoring
 
@@ -308,7 +317,7 @@ begin
         	);
 	
 	Memory_Read_Enable <= Control_Bus(4);
-	Memory_Write_Enable <= Control_Bus(5);
+	Memory_Write_Enable <= Control_Bus(5) and Slow_Clock;
 	Memory_Out_Low <= MAR_Out_Low;
 	Memory_Out_High <= MAR_Out_High;
 	Memory_Data_Out <= Data_Bus;
