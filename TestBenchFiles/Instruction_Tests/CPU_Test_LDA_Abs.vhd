@@ -19,10 +19,10 @@ architecture Behavioral of CPU_Test_LDA_Abs is
 		Clock			: in std_logic;
 		Slow_Clock		: in std_logic;
 		Reset			: in std_logic;
-		Memory_In		: in std_logic_vector(7 downto 0);
+		Memory_Data_In		: in std_logic_vector(7 downto 0);
 
-		Memory_Out_Low		: out std_logic_vector(7 downto 0);
-		Memory_Out_High		: out std_logic_vector(7 downto 0);
+		Memory_Address_Low	: out std_logic_vector(7 downto 0);
+		Memory_Address_High	: out std_logic_vector(7 downto 0);
 		Memory_Read_Enable	: out std_logic;
 
 		A_Reg_External_Output	: out std_logic_vector(7 downto 0)		
@@ -32,9 +32,9 @@ architecture Behavioral of CPU_Test_LDA_Abs is
 	-- Signal declarations
 	signal Clock_Test			: std_logic;
 	signal Reset_Test			: std_logic;
-	signal Memory_In_Test			: std_logic_vector(7 downto 0);
-	signal Memory_Out_Low_Test		: std_logic_vector(7 downto 0);
-	signal Memory_Out_High_Test		: std_logic_vector(7 downto 0);
+	signal Memory_Data_In_Test		: std_logic_vector(7 downto 0);
+	signal Memory_Address_Low_Test		: std_logic_vector(7 downto 0);
+	signal Memory_Address_High_Test		: std_logic_vector(7 downto 0);
 	signal Memory_Read_Enable_Test		: std_logic;
 	signal A_Reg_External_Output_Test	: std_logic_vector(7 downto 0);
 
@@ -46,10 +46,10 @@ begin
             	Clock			=> Clock_Test,
 		Slow_Clock		=> '1', -- always set to 1 for test purposes
 		Reset			=> Reset_Test,
-		Memory_In		=> Memory_In_Test,
+		Memory_Data_In		=> Memory_Data_In_Test,
 		
-		Memory_Out_Low		=> Memory_Out_Low_Test,
-		Memory_Out_High		=> Memory_Out_High_Test,
+		Memory_Address_Low	=> Memory_Address_Low_Test,
+		Memory_Address_High	=> Memory_Address_High_Test,
 		Memory_Read_Enable 	=> Memory_Read_Enable_Test,
 
 		A_Reg_External_Output => A_Reg_External_Output_Test
@@ -88,8 +88,8 @@ begin
 		wait for 10 ns;
 		
 		report "Running tests for CPU reading Memory location 0000000000000000";
-		assert Memory_Out_Low_Test = "00000000"	report "Test 1: Memory_Out_Low_Test should equal 00000000" severity error;
-		assert Memory_Out_High_Test = "00000000" report "Test 2: Memory_Out_High_Test should equal 00000000" severity error;
+		assert Memory_Address_Low_Test = "00000000"	report "Test 1: Memory_Address_Low_Test should equal 00000000" severity error;
+		assert Memory_Address_High_Test = "00000000" report "Test 2: Memory_Address_High_Test should equal 00000000" severity error;
 		assert Memory_Read_Enable_Test = '1' report "Test 3: Memory_Read_Enable_Test should equal 1" severity error;
 
 		Clock_Test	<= '0';
@@ -100,8 +100,8 @@ begin
 		wait for 10 ns;
 
 		report "Running tests for CPU reading Memory location &01 0000000000000001";
-		assert Memory_Out_Low_Test = "00000001"	report "Test 1: Memory_Out_Low_Test should equal 00000001" severity error;
-		assert Memory_Out_High_Test = "00000000" report "Test 2: Memory_Out_High_Test should equal 00000000" severity error;
+		assert Memory_Address_Low_Test = "00000001"	report "Test 1: Memory_Address_Low_Test should equal 00000001" severity error;
+		assert Memory_Address_High_Test = "00000000" report "Test 2: Memory_Address_High_Test should equal 00000000" severity error;
 		assert Memory_Read_Enable_Test = '1' report "Test 3: Memory_Read_Enable_Test should equal 1" severity error;
 		
 		Clock_Test	<= '0';
@@ -112,8 +112,8 @@ begin
 		wait for 10 ns;
 
 		report "Running tests for CPU reading Memory location &02 0000000000000010";
-		assert Memory_Out_Low_Test = "00000010"	report "Test 1: Memory_Out_Low_Test should equal 00000010" severity error;
-		assert Memory_Out_High_Test = "00000000" report "Test 2: Memory_Out_High_Test should equal 00000000" severity error;
+		assert Memory_Address_Low_Test = "00000010"	report "Test 1: Memory_Address_Low_Test should equal 00000010" severity error;
+		assert Memory_Address_High_Test = "00000000" report "Test 2: Memory_Address_High_Test should equal 00000000" severity error;
 		assert Memory_Read_Enable_Test = '1' report "Test 3: Memory_Read_Enable_Test should equal 1" severity error;
 		
 		Clock_Test	<= '0';
@@ -124,8 +124,8 @@ begin
 		wait for 10 ns;
 
 		report "Running tests for CPU reading Memory locationm &0100 0000000100000000";
-		assert Memory_Out_Low_Test = "00000000"	report "Test 1: Memory_Out_Low_Test should equal 00000000" severity error;
-		assert Memory_Out_High_Test = "00000001" report "Test 2: Memory_Out_High_Test should equal 00000001" severity error;
+		assert Memory_Address_Low_Test = "00000000"	report "Test 1: Memory_Address_Low_Test should equal 00000000" severity error;
+		assert Memory_Address_High_Test = "00000001" report "Test 2: Memory_Address_High_Test should equal 00000001" severity error;
 		assert Memory_Read_Enable_Test = '1' report "Test 3: Memory_Read_Enable_Test should equal 1" severity error;
 		
 		-- One more clock cycle to make value of A Register visible  
@@ -145,18 +145,18 @@ begin
     	begin
         	wait for 1 ns;  -- Wait for a small time to simulate memory access time
         
-        	if Memory_Read_Enable_Test = '1' and Memory_Out_Low_Test = "00000000" and Memory_Out_High_Test = "00000000" then
-            		Memory_In_Test <= "00100001"; -- LDA &
+        	if Memory_Read_Enable_Test = '1' and Memory_Address_Low_Test = "00000000" and Memory_Address_High_Test = "00000000" then
+            		Memory_Data_In_Test <= "00100001"; -- LDA &
 		-- When reading memory location where value is stored - &0100 or "00000001-00000000"
-		elsif Memory_Read_Enable_Test = '1' and Memory_Out_High_Test = "00000000"  and Memory_Out_Low_Test = "00000001" then
-			Memory_In_Test <= "00000001"; -- High byte of Hex Value &0100
-		elsif Memory_Read_Enable_Test = '1' and Memory_Out_High_Test = "00000000" and Memory_Out_Low_Test = "00000010" then
-			Memory_In_Test <= "00000000"; -- Low byte of Hex Value &0100
+		elsif Memory_Read_Enable_Test = '1' and Memory_Address_High_Test = "00000000"  and Memory_Address_Low_Test = "00000001" then
+			Memory_Data_In_Test <= "00000001"; -- High byte of Hex Value &0100
+		elsif Memory_Read_Enable_Test = '1' and Memory_Address_High_Test = "00000000" and Memory_Address_Low_Test = "00000010" then
+			Memory_Data_In_Test <= "00000000"; -- Low byte of Hex Value &0100
 		-- When reading value at memory location &0100 - actual value is decimal #54 or "00110110"
-		elsif Memory_Read_Enable_Test = '1' and Memory_Out_High_Test = "00000001" and Memory_Out_Low_Test = "00000000" then
-			Memory_In_Test <= "00110110"; -- value is decimal #54
+		elsif Memory_Read_Enable_Test = '1' and Memory_Address_High_Test = "00000001" and Memory_Address_Low_Test = "00000000" then
+			Memory_Data_In_Test <= "00110110"; -- value is decimal #54
         	else
-            		Memory_In_Test <= "ZZZZZZZZ";  -- Default data value when the condition is not met
+            		Memory_Data_In_Test <= "ZZZZZZZZ";  -- Default data value when the condition is not met
         	end if;
 		--sim_time <= sim_time + 1 ns;
 

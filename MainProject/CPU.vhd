@@ -7,11 +7,11 @@ entity CPU is
 	Slow_Clock		: in std_logic; -- all inputs will be enabled only when Slow Clock is on
 	Reset			: in std_logic;
 
-	Memory_In		: in std_logic_vector(7 downto 0);
+	Memory_Data_In		: in std_logic_vector(7 downto 0);
 	
 
-	Memory_Out_Low		: out std_logic_vector(7 downto 0);
-	Memory_Out_High		: out std_logic_vector(7 downto 0);
+	Memory_Address_Low	: out std_logic_vector(7 downto 0);
+	Memory_Address_High	: out std_logic_vector(7 downto 0);
 	Memory_Read_Enable	: out std_logic;
 	Memory_Write_Enable	: out std_logic;
 	Memory_Data_Out		: out std_logic_vector(7 downto 0);
@@ -195,9 +195,9 @@ begin
         	);
 	
 	-- connects byte fetched from memory to Data Bus if Memory Read Enable is set
-	Memory_In_Tristate_Buffer: entity work.Eight_Bit_Tristate_Buffer
+	Memory_Data_In_Tristate_Buffer: entity work.Eight_Bit_Tristate_Buffer
 		port map (
-			input		=> Memory_In,
+			input		=> Memory_Data_In,
 			enable		=> Control_Bus(4), -- Memory Read Enable
 			output		=> Data_Bus
 		);
@@ -213,7 +213,7 @@ begin
         	);
 	
 	Increment_PC_Low_In 	<= PC_Low_Out;
-	Memory_Out_Low 		<= PC_Low_Out;
+	Memory_Address_Low 	<= PC_Low_Out;
 
 	PC_High: entity work.eight_bit_register_rtl
 		port map (
@@ -226,7 +226,7 @@ begin
         	);
 
 	Increment_PC_High_In 	<= PC_High_Out;
-	Memory_Out_High 	<= PC_High_Out;
+	Memory_Address_High 	<= PC_High_Out;
 
 	Increment_PC_Low: entity work.ADD_Component
 		port map (
@@ -318,8 +318,8 @@ begin
 	
 	Memory_Read_Enable <= Control_Bus(4);
 	Memory_Write_Enable <= Control_Bus(5) and Slow_Clock;
-	Memory_Out_Low <= MAR_Out_Low;
-	Memory_Out_High <= MAR_Out_High;
+	Memory_Address_Low <= MAR_Out_Low;
+	Memory_Address_High <= MAR_Out_High;
 	Memory_Data_Out <= Data_Bus;
 	A_Reg_External_Output <= A_Reg_Output;
 	X_Reg_External_Output <= X_Reg_Output;
