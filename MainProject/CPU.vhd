@@ -18,7 +18,9 @@ entity CPU is
 
 	A_Reg_External_Output	: out std_logic_vector(7 downto 0);
 	X_Reg_External_Output	: out std_logic_vector(7 downto 0);
-	Y_Reg_External_Output	: out std_logic_vector(7 downto 0)
+	Y_Reg_External_Output	: out std_logic_vector(7 downto 0);
+
+	PC_Low_External_Output	: out std_logic_vector(7 downto 0)
     );
 end entity  CPU;
 
@@ -324,5 +326,6 @@ begin
 	A_Reg_External_Output <= A_Reg_Output;
 	X_Reg_External_Output <= X_Reg_Output;
 	Y_Reg_External_Output <= Y_Reg_Output;
+	PC_Low_External_Output <= PC_Low_Out;
 	
 end architecture Behavioral;
