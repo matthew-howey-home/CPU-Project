@@ -20,13 +20,14 @@ entity CPU is
 	X_Reg_External_Output	: out std_logic_vector(7 downto 0);
 	Y_Reg_External_Output	: out std_logic_vector(7 downto 0);
 
-	PC_Low_External_Output	: out std_logic_vector(7 downto 0)
+	PC_Low_External_Output	: out std_logic_vector(7 downto 0);
+	FSM_Reg_External_Output	: out std_logic_vector(7 downto 0)
     );
 end entity  CPU;
 
 architecture Behavioral of CPU is
 	signal FSM_Register_Initial_State	: std_logic_vector(7 downto 0);
-	signal FSM_Register_In			: std_logic_vector(7 downto 0);
+	signal FSM_Register_In			: std_logic_vector(7 downto 0) := (others => '0');
 
 	signal PC_Low_Initial_State		: std_logic_vector(7 downto 0);
 	signal PC_Low_In			: std_logic_vector(7 downto 0);
@@ -328,4 +329,5 @@ begin
 	Y_Reg_External_Output <= Y_Reg_Output;
 	PC_Low_External_Output <= PC_Low_Out;
 	
+	FSM_Reg_External_Output	<= Decoder_FSM_In;
 end architecture Behavioral;
