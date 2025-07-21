@@ -66,7 +66,10 @@ begin
 	Internal_Step_1_Fetch_Instruction <=
 		not FSM_In(7) and	not FSM_In(6) and	not FSM_In(5) and	not FSM_In(4) and
 		not FSM_In(3) and 	not FSM_In(2) and	not FSM_In(1) and 	FSM_In(0);
-
+	
+	-- Note: if FSM_In = "00000010", and the instruction is not recognised, then none of the conditions below will be met
+	-- So the FSM will then be set back to zero
+		
 	-- if FSM_In = "00000010" and Instruction is 00010001 Step One of Load Immediate Value to Register - Load A Reg with value from Memory, and Inc PC
 	Internal_LD_Reg_Immediate_Step_1_LDA <=
 		not FSM_In(7) and	not FSM_In(6) and	not FSM_In(5) and	not FSM_In(4) and
