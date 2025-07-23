@@ -34,6 +34,7 @@ architecture Behavioral of CPU is
 	signal PC_Low_Input_Enable		: std_logic;
 	signal PC_Low_Mux_Selector		: std_logic_vector(1 downto 0);
 	signal PC_Low_Out			: std_logic_vector(7 downto 0);
+	signal PC_Low_Out_Internal		: std_logic_vector(7 downto 0);
 	signal Increment_PC_Low_In		: std_logic_vector(7 downto 0);
 	signal PC_Low_Incremented		: std_logic_vector(7 downto 0);
 	signal Increment_PC_Low_Carry_Out	: std_logic;
@@ -210,9 +211,15 @@ begin
 	    		Data_Input 	=> PC_Low_In,
             		Input_Enable 	=> PC_Low_Input_Enable,
             		Clock 		=> Clock,
-			Output_Enable 	=> Control_Bus(7),
+			Output_Enable 	=> '1', -- always outputting to expose for external monitoring
+            		Output 		=> PC_Low_Out_Internal
+        	);
 
-            		Output 		=> PC_Low_Out
+	PC_Low_Out_Mux: entity work.Eight_Bit_Tristate_Buffer
+		port map (
+	    		input	=> PC_Low_Out_Internal,
+           		enable	=> Control_Bus(7), -- PC_Low_Output_Enable,
+           		output	=> PC_Low_Out
         	);
 	
 	Increment_PC_Low_In 	<= PC_Low_Out;
@@ -327,7 +334,7 @@ begin
 	A_Reg_External_Output <= A_Reg_Output;
 	X_Reg_External_Output <= X_Reg_Output;
 	Y_Reg_External_Output <= Y_Reg_Output;
-	PC_Low_External_Output <= PC_Low_Out;
+	PC_Low_External_Output <= PC_Low_Out_Internal;
 	
 	FSM_Reg_External_Output	<= Decoder_FSM_In;
 end architecture Behavioral;
