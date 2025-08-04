@@ -56,7 +56,7 @@ architecture Behavioral of ALU_Interface is
    signal Internal_Output_From_Result_Register	: std_logic_vector(7 downto 0);
 
    begin
-	Temp_Input_Reg		: entity work.Eight_Bit_Register
+	Temp_Input_Reg		: entity work.Eight_Bit_Register_RTL
         	port map (
 	    		Data_Input		=> Input_Operand_1,
 			Input_Enable		=> Enable_Input_For_Temp_Input_Reg,
