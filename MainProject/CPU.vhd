@@ -69,6 +69,21 @@ architecture Behavioral of CPU is
 	signal Y_Register_Input_Enable		: std_logic;
 	signal Y_Reg_Output			: std_logic_vector(7 downto 0);
 
+	signal ALU_Opcode			: std_logic_vector(2 downto 0);
+	signal ALU_Input_Carry			: std_logic;
+	signal ALU_Input_Negative		: std_logic;
+	signal ALU_Enable_Input_For_Temp_Input_Reg : std_logic;
+	signal ALU_Enable_Operation		: std_logic;
+	signal ALU_Enable_Flags_Input		: std_logic;
+	signal ALU_Enable_Output_Final		: std_logic;
+	signal ALU_Control_Clear_Carry		: std_logic;
+	signal ALU_Control_Clear_Negative	: std_logic;
+	signal ALU_Control_Clear_Zero		: std_logic;
+
+	signal Carry_Flag			: std_logic;
+	signal Negative_Flag			: std_logic;
+	signal Zero_Flag			: std_logic;
+
 begin
 	FSM_Register_Initial_State 	<= "00000000";
 	PC_Low_Initial_State 		<= "00000000";
@@ -101,6 +116,36 @@ begin
 			Y_Reg_Output_Enable			=> Control_Bus(17),
 			JMP_Enable				=> Control_Bus(18)
         	);
+
+	-- ALU
+	ALU_Interface: entity work.ALU_Interface
+		port map (
+			Clock					=> Clock,
+       
+			-- main inputs
+			Opcode  				=> ALU_Opcode,
+			Input_Operand_1				=> Data_Bus,
+        		Input_Operand_2				=> Data_Bus,
+			Input_Carry				=> ALU_Input_Carry,
+			Input_Negative				=> ALU_Input_Negative,
+	
+			-- Enable Controls
+			Enable_Input_For_Temp_Input_Reg		=> ALU_Enable_Input_For_Temp_Input_Reg,
+			Enable_Operation			=> ALU_Enable_Operation,
+			Enable_Flags_Input			=> ALU_Enable_Flags_Input,
+			Enable_Output_Final			=> ALU_Enable_Output_Final,
+	
+			-- Other Control Signals
+			Control_Clear_Carry			=> ALU_Control_Clear_Carry,
+			Control_Clear_Negative			=> ALU_Control_Clear_Negative,
+			Control_Clear_Zero			=> ALU_Control_Clear_Zero,
+
+			-- Final Outputs
+			Output_Final				=> Data_Bus,
+			Output_From_Carry_Flag			=> Carry_Flag,
+			Output_From_Negative_Flag		=> Negative_Flag,
+			Output_From_Zero_Flag			=> Zero_Flag
+		);
 
 
 	-- RESET FSM MUX, connect FSM_Initial_State to FSM input if Reset is asserted, otherwise connect output from decoder (next state)
