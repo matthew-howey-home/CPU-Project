@@ -54,7 +54,7 @@ signal Internal_ST_Reg_Absolute_Step_3_STY	: std_logic;
 signal Internal_JMP_Step_1			: std_logic;
 signal Internal_JMP_Step_2			: std_logic;
 signal Internal_JMP_Step_3			: std_logic;
-signal Internal_AND_Step_1			: std_logic;
+signal Internal_ALU_Step_1			: std_logic;
 
 begin
 	--************ Setting signal to represent current step based on current FSM Value **********-------
@@ -167,12 +167,12 @@ begin
 	Internal_JMP_Step_3 <=
 		not FSM_In(7) and	not FSM_In(6) and	not FSM_In(5) and	not FSM_In(4) and
 		FSM_In(3) and		not FSM_In(2) and	not FSM_In(1) and	not FSM_In(0);
-		
-	-- if FSM_In = "00000010" and Instruction is 10000000 set Step One of AND Operation
-	Internal_AND_Step_1 <=
+	
+	-- if FSM_In = "00000010" and Instruction is 1xxx0000 set Step One of ALU Operation
+	Internal_ALU_Step_1 <=
 		not FSM_In(7) and	not FSM_In(6) and	not FSM_In(5) and	not FSM_In(4) and
 		not FSM_In(3) and 	not FSM_In(2) and	FSM_In(1) and		not FSM_In(0) and
-		Instruction(7) and	not Instruction(6) and	not Instruction(5) and 	not Instruction(4) and
+		Instruction(7) and
 		not Instruction(3) and	not Instruction(2) and	not Instruction(1) and 	not Instruction(0);
 
  	--************** Set next value of FSM based on Current Step **************--
