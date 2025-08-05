@@ -200,11 +200,15 @@ begin
 	-- if Internal_JMP_Step_2			set FSM_Out = "00001000" (JMP Step 3)
 	-- if Internal_JMP_Step_3			set FSM_Out = "00000001" (Back to Step 1 Fetch Instruction)
 
+	-- if Internal_ALU_Step_1			set FSM_Out = "00001001" (ALU Step 2)
+
 	FSM_Out(7) <= '0';
  	FSM_Out(6) <= '0';
 	FSM_Out(5) <= '0';
 	FSM_Out(4) <= '0';
-	FSM_Out(3) <= Internal_JMP_Step_2;
+	FSM_Out(3) <= 
+		Internal_JMP_Step_2 or
+		Internal_ALU_Step_1;
 	FSM_Out(2) <=
 		Internal_LD_Reg_Absolute_Step_2 or
 		Internal_ST_Reg_Absolute_Step_1 or
@@ -229,7 +233,8 @@ begin
 		Internal_ST_Reg_Absolute_Step_3_STX or
 		Internal_ST_Reg_Absolute_Step_3_STY or
 		Internal_JMP_Step_1 or
-		Internal_JMP_Step_3;
+		Internal_JMP_Step_3 or
+		Internal_ALU_Step_1;
 
 	PC_Low_Output_Enable	<=
 		Internal_Step_1_Fetch_Instruction or
