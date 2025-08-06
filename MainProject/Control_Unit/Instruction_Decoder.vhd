@@ -168,7 +168,7 @@ begin
 		not FSM_In(7) and	not FSM_In(6) and	not FSM_In(5) and	not FSM_In(4) and
 		FSM_In(3) and		not FSM_In(2) and	not FSM_In(1) and	not FSM_In(0);
 	
-	-- if FSM_In = "00000010" and Instruction is 1xxx0000 set Step One of ALU Operation - Load MAR (high) and increment PC
+	-- if FSM_In = "00000010" and Instruction is 1xxx0000 set Step One of ALU Operation - Output Enable Reg A, Input Enable ALU Temp Reg 
 	Internal_ALU_Step_1 <=
 		not FSM_In(7) and	not FSM_In(6) and	not FSM_In(5) and	not FSM_In(4) and
 		not FSM_In(3) and 	not FSM_In(2) and	FSM_In(1) and		not FSM_In(0) and
@@ -246,8 +246,7 @@ begin
 		Internal_ST_Reg_Absolute_Step_1 or
 		Internal_ST_Reg_Absolute_Step_2 or
 		Internal_JMP_Step_1 or
-		Internal_JMP_Step_2 or
-		Internal_ALU_Step_1;
+		Internal_JMP_Step_2;
 
 	MAR_Low_Input_Enable	<=
 		Internal_LD_Reg_Absolute_Step_2 or
@@ -264,14 +263,12 @@ begin
 		Internal_ST_Reg_Absolute_Step_1 or
 		Internal_ST_Reg_Absolute_Step_2 or
 		Internal_JMP_Step_1 or
-		Internal_JMP_Step_2 or
-		Internal_ALU_Step_1;
+		Internal_JMP_Step_2;
 
 	MAR_High_Input_Enable	<=
 		Internal_LD_Reg_Absolute_Step_1 or
 		Internal_ST_Reg_Absolute_Step_1 or
-		Internal_JMP_Step_1 or
-		Internal_ALU_Step_1;
+		Internal_JMP_Step_1;
 
 	PC_Low_Input_Enable  <= '0';
 	PC_High_Input_Enable <= '0';
@@ -307,8 +304,7 @@ begin
 		Internal_ST_Reg_Absolute_Step_2 or
 		Internal_JMP_Step_1 or
 		Internal_JMP_Step_2 or
-		Internal_JMP_Step_3 or
-		Internal_ALU_Step_1;
+		Internal_JMP_Step_3;
 
 	Memory_Write_Enable <=
 		Internal_ST_Reg_Absolute_Step_3_STA or
@@ -329,7 +325,8 @@ begin
 		Internal_LD_Reg_Absolute_Step_3_LDY;
 
 	A_Reg_Output_Enable			<=
-		Internal_ST_Reg_Absolute_Step_3_STA;
+		Internal_ST_Reg_Absolute_Step_3_STA or
+		Internal_ALU_Step_1;
 	X_Reg_Output_Enable			<=
 		Internal_ST_Reg_Absolute_Step_3_STX;
 	Y_Reg_Output_Enable			<=
@@ -337,6 +334,12 @@ begin
 
 	JMP_Enable <=
 		Internal_JMP_Step_3;
+
+	ALU_Enable_Input_For_Temp_Input_Reg <=
+		Internal_ALU_Step_1;
+		
+
+	
 
 	-- To increment PC you must also assert PC Output Enable control signals
 	Increment_PC <=
@@ -348,7 +351,6 @@ begin
 		Internal_LD_Reg_Absolute_Step_2 or
 		Internal_ST_Reg_Absolute_Step_1 or
 		Internal_ST_Reg_Absolute_Step_2 or
-		Internal_JMP_Step_1 or
-		Internal_ALU_Step_1;
+		Internal_JMP_Step_1;
 
 end architecture Behavioral;
