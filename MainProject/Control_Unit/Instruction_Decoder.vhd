@@ -168,7 +168,7 @@ begin
 		not FSM_In(7) and	not FSM_In(6) and	not FSM_In(5) and	not FSM_In(4) and
 		FSM_In(3) and		not FSM_In(2) and	not FSM_In(1) and	not FSM_In(0);
 	
-	-- if FSM_In = "00000010" and Instruction is 1xxx0000 set Step One of ALU Operation - Output Enable Reg A, Input Enable ALU Temp Reg 
+	-- if FSM_In = "00000010" and Instruction is 1xxx0000 set Step One of ALU Operation - Output Enable Reg A, Input Enable ALU Temp Reg
 	Internal_ALU_Step_1 <=
 		not FSM_In(7) and	not FSM_In(6) and	not FSM_In(5) and	not FSM_In(4) and
 		not FSM_In(3) and 	not FSM_In(2) and	FSM_In(1) and		not FSM_In(0) and
@@ -338,9 +338,6 @@ begin
 	ALU_Enable_Input_For_Temp_Input_Reg <=
 		Internal_ALU_Step_1;
 		
-
-	
-
 	-- To increment PC you must also assert PC Output Enable control signals
 	Increment_PC <=
 		Internal_Step_1_Fetch_Instruction or
