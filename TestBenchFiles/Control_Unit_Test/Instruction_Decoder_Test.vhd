@@ -31,7 +31,8 @@ architecture Behavioral of Instruction_Decoder_Test is
 		A_Reg_Output_Enable			: out std_logic;
 		X_Reg_Output_Enable			: out std_logic;
 		Y_Reg_Output_Enable			: out std_logic;
-		JMP_Enable				: out std_logic
+		JMP_Enable				: out std_logic;
+		ALU_Enable_Input_For_Temp_Input_Reg	: out std_logic
         );
     end component Instruction_Decoder;
 
@@ -57,6 +58,7 @@ architecture Behavioral of Instruction_Decoder_Test is
 	signal X_Reg_Output_Enable_Test				: std_logic;
 	signal Y_Reg_Output_Enable_Test				: std_logic;
 	signal JMP_Enable_Test					: std_logic;
+	signal ALU_Enable_Input_For_Temp_Input_Reg_Test		: std_logic;
 
 begin
     -- Instantiate the Instruction_Decoder module
@@ -82,7 +84,8 @@ begin
 		A_Reg_Output_Enable				=> A_Reg_Output_Enable_Test,
 		X_Reg_Output_Enable				=> X_Reg_Output_Enable_Test,
 		Y_Reg_Output_Enable				=> Y_Reg_Output_Enable_Test,
-		JMP_Enable					=> JMP_Enable_Test
+		JMP_Enable					=> JMP_Enable_Test,
+		ALU_Enable_Input_For_Temp_Input_Reg		=> ALU_Enable_Input_For_Temp_Input_Reg_Test
         );
 
     -- Stimulus process to apply test vectors
@@ -316,6 +319,14 @@ begin
 	assert JMP_Enable_Test = '1'				report "Unconditional Jump to Absolute Address Step Three: JMP_Enable_Test should equal 1" severity error;
 		
 	assert FSM_Out_Test = "00000001"	report "Unconditional Jump to Absolute Address Step Two: FSM_Out_Test should equal 00000001" severity error;
+
+	report "************ TESTS FOR SUBROUTINE: ALU Operation, AND Opcode 000, FSM 00000010 ************";
+	FSM_In_Test	<= "00000010";
+	Instruction_Test <= "10000000";
+	wait for 10 ns;
+
+	assert A_Reg_Output_Enable_Test = '1' report "ALU Operation Opcode 000 Step One: A_Reg_Output_Enable_Test should equal 1" severity error;
+	assert ALU_Enable_Input_For_Temp_Input_Reg_Test = '1' report "ALU Operation Opcode 000 Step One: ALU_Enable_Input_For_Temp_Input_Reg_Test should equal 1" severity error;
 
         -- End the simulation
         wait;
