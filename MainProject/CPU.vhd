@@ -59,7 +59,7 @@ architecture Behavioral of CPU is
 	signal IR_Input_Enable			: std_logic;
 
 	signal Instruction			: std_logic_vector(7 downto 0);
-	signal Control_Bus			: std_logic_vector(19 downto 0);
+	signal Control_Bus			: std_logic_vector(20 downto 0);
 	signal Data_Bus				: std_logic_vector(7 downto 0);
 
 	signal A_Register_Input_Enable		: std_logic;
@@ -73,7 +73,7 @@ architecture Behavioral of CPU is
 	signal ALU_Input_Carry			: std_logic;
 	signal ALU_Input_Negative		: std_logic;
 	-- signal ALU_Enable_Input_For_Temp_Input_Reg : std_logic;
-	signal ALU_Enable_Operation		: std_logic;
+	-- signal ALU_Enable_Operation		: std_logic;
 	signal ALU_Enable_Flags_Input		: std_logic;
 	signal ALU_Enable_Output_Final		: std_logic;
 	signal ALU_Control_Clear_Carry		: std_logic;
@@ -115,7 +115,11 @@ begin
 			X_Reg_Output_Enable			=> Control_Bus(16),
 			Y_Reg_Output_Enable			=> Control_Bus(17),
 			JMP_Enable				=> Control_Bus(18),
-			ALU_Enable_Input_For_Temp_Input_Reg	=> Control_Bus(19)
+			ALU_Enable_Input_For_Temp_Input_Reg	=> Control_Bus(19),
+			ALU_Enable_Operation			=> Control_Bus(20),
+			ALU_Opcode(0)				=> Control_Bus(21),
+			ALU_Opcode(1)				=> Control_Bus(22),
+			ALU_Opcode(2)				=> Control_Bus(23)
         	);
 
 	-- ALU
@@ -124,7 +128,9 @@ begin
 			Clock					=> Clock,
        
 			-- main inputs
-			Opcode  				=> ALU_Opcode,
+			Opcode(0)				=> Control_Bus(21),
+			Opcode(1)				=> Control_Bus(22),
+			Opcode(2)				=> Control_Bus(23),
 			Input_Operand_1				=> Data_Bus,
         		Input_Operand_2				=> Data_Bus,
 			Input_Carry				=> ALU_Input_Carry,
@@ -132,7 +138,7 @@ begin
 	
 			-- Enable Controls
 			Enable_Input_For_Temp_Input_Reg		=> Control_Bus(19),
-			Enable_Operation			=> ALU_Enable_Operation,
+			Enable_Operation			=> Control_Bus(20),
 			Enable_Flags_Input			=> ALU_Enable_Flags_Input,
 			Enable_Output_Final			=> ALU_Enable_Output_Final,
 	
