@@ -55,6 +55,7 @@ signal Internal_JMP_Step_1			: std_logic;
 signal Internal_JMP_Step_2			: std_logic;
 signal Internal_JMP_Step_3			: std_logic;
 signal Internal_ALU_Step_1			: std_logic;
+signal Internal_ALU_Step_2			: std_logic;
 
 begin
 	--************ Setting signal to represent current step based on current FSM Value **********-------
@@ -174,6 +175,11 @@ begin
 		not FSM_In(3) and 	not FSM_In(2) and	FSM_In(1) and		not FSM_In(0) and
 		Instruction(7) and
 		not Instruction(3) and	not Instruction(2) and	not Instruction(1) and 	not Instruction(0);
+
+	-- if FSM_In = "00001001" set Step Two of ALU Operation
+	Internal_ALU_Step_2 <=
+		not FSM_In(7) and	not FSM_In(6) and	not FSM_In(5) and	not FSM_In(4) and
+		FSM_In(3) and 		not FSM_In(2) and	not FSM_In(1) and	FSM_In(0);
 
  	--************** Set next value of FSM based on Current Step **************--
 
