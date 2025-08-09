@@ -82,7 +82,7 @@ architecture Behavioral of ALU_Interface is
 	-- but if the clear_negative_flag_control bit is set, this overrides it and sets the negative flag to zero. 
 	Internal_Input_To_Negative_Flag <= not Control_Clear_Negative and Internal_Negative_Out_From_Op;
 
-	Negative_Flag		: entity work.Edge_Triggered_Flip_Flop
+	Negative_Flag		: entity work.Edge_Triggered_Flip_Flop_RTL
 		port map (
 			Data_Input		=> Internal_Input_To_Negative_Flag,
 			-- flags should be loaded when operation takes place
@@ -110,7 +110,7 @@ architecture Behavioral of ALU_Interface is
         	);
 
 	-- Load result of operation, ready for Final Output
-	Operation_Result_Register	: entity work.Eight_Bit_Register
+	Operation_Result_Register	: entity work.Eight_Bit_Register_RTL
         	port map (
 	    		Data_Input		=> Internal_Output_From_ALU,
 			Input_Enable		=> Enable_Operation,
@@ -130,7 +130,7 @@ architecture Behavioral of ALU_Interface is
 	-- but if the Control_Clear_Zero bit is set, this overrides it and sets the zero flag to zero. 
 	Internal_Input_To_Zero_Flag <= (not Control_Clear_Zero) and Internal_Output_From_Zero_Check;
 
-	Zero_Flag			: entity work.Edge_Triggered_Flip_Flop
+	Zero_Flag			: entity work.Edge_Triggered_Flip_Flop_RTL
 		port map (
 			Data_Input		=> Internal_Input_To_Zero_Flag,
 			-- flags should be loaded when operation takes place
