@@ -18,7 +18,7 @@ entity  ALU_Interface is
 	Input_Negative				: in std_logic;
 	
 	-- Enable Controls
-	Enable_Input_For_Temp_Input_Reg		: in std_logic;
+	Enable_Operand_1_Temp_Storage		: in std_logic;
 	Enable_Operation			: in std_logic;
 	Enable_Flags_Input			: in std_logic;
 	Enable_Output_Final			: in std_logic;
@@ -38,7 +38,7 @@ entity  ALU_Interface is
 end entity  ALU_Interface;
 
 architecture Behavioral of ALU_Interface is
-   signal Internal_Temp_Input_Reg_Output	: std_logic_vector(7 downto 0);
+   signal Internal_Temp_Operand_1_Storage_Output	: std_logic_vector(7 downto 0);
 
    signal Internal_Input_To_Carry_Flag		: std_logic;
    signal Internal_Input_To_Negative_Flag	: std_logic;
@@ -56,14 +56,14 @@ architecture Behavioral of ALU_Interface is
    signal Internal_Output_From_Result_Register	: std_logic_vector(7 downto 0);
 
    begin
-	Temp_Input_Reg		: entity work.Eight_Bit_Register_RTL
+	Temp_Operand_1_Storage		: entity work.Eight_Bit_Register_RTL
         	port map (
 	    		Data_Input		=> Input_Operand_1,
-			Input_Enable		=> Enable_Input_For_Temp_Input_Reg,
+			Input_Enable		=> Enable_Operand_1_Temp_Storage,
 			Clock			=> Clock,
             		Output_Enable		=> '1',
 
-			Output			=> Internal_Temp_Input_Reg_Output
+			Output			=> Internal_Temp_Operand_1_Storage_Output
         	);
 	
 	-- carry flag is set by the result of an operation (Internal_Carry_Out_From_Op)
@@ -97,7 +97,7 @@ architecture Behavioral of ALU_Interface is
 	    		opcode			=> Opcode,
 			-- first input is read from temporary input register
 			-- second input is read directly from the bus 
-			input_1			=> Internal_Temp_Input_Reg_Output,
+			input_1			=> Internal_Temp_Operand_1_Storage_Output,
 			input_2			=> Input_Operand_2,
 			-- carry in is the result of the previous carry out
 			carry_in		=> Internal_Output_From_Carry_Flag,

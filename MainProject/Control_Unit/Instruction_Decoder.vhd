@@ -29,7 +29,7 @@ entity Instruction_Decoder is
 	X_Reg_Output_Enable			: out std_logic;
 	Y_Reg_Output_Enable			: out std_logic;
 	JMP_Enable				: out std_logic;
-	ALU_Enable_Input_For_Temp_Input_Reg	: out std_logic;
+	Enable_Operand_1_Temp_Storage		: out std_logic;
 	ALU_Enable_Operation			: out std_logic;
 	ALU_Opcode				: out std_logic_vector(2 downto 0)
     );
@@ -348,7 +348,7 @@ begin
 	JMP_Enable <=
 		Internal_JMP_Step_3;
 
-	ALU_Enable_Input_For_Temp_Input_Reg <=
+	Enable_Operand_1_Temp_Storage <=
 		Internal_ALU_Step_1;
 
 	ALU_Enable_Operation <=

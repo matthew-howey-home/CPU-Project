@@ -24,7 +24,7 @@ architecture Behavioral of ALU_Interface_Test is
 		Input_Negative				: in std_logic;
 		
 		-- Enable Controls
-		Enable_Input_For_Temp_Input_Reg		: in std_logic;
+		Enable_Operand_1_Temp_Storage		: in std_logic;
 		Enable_Operation			: in std_logic;
 		Enable_Flags_Input			: in std_logic;
 		Enable_Output_Final			: in std_logic;
@@ -53,7 +53,7 @@ architecture Behavioral of ALU_Interface_Test is
 	signal Input_Negative_Test			: std_logic;
 	
 	-- Enable Controls
-	signal Enable_Input_For_Temp_Input_Reg_Test	: std_logic;
+	signal Enable_Operand_1_Temp_Storage_Test	: std_logic;
 	signal Enable_Operation_Test			: std_logic;
 	signal Enable_Flags_Input_Test			: std_logic;
 	signal Enable_Output_Final_Test			: std_logic;
@@ -90,7 +90,7 @@ begin
 		Input_Negative				=> Input_Negative_Test,
 	
 		-- Enable Controls
-		Enable_Input_For_Temp_Input_Reg		=> Enable_Input_For_Temp_Input_Reg_Test,
+		Enable_Operand_1_Temp_Storage		=> Enable_Operand_1_Temp_Storage_Test,
 		Enable_Operation			=> Enable_Operation_Test,
 		Enable_Flags_Input			=> Enable_Flags_Input_Test,
 		Enable_Output_Final			=> Enable_Output_Final_Test,
@@ -128,13 +128,13 @@ begin
 	report "Load Temp Input Reg with first operand";
 	Clock_Test <= '0';
 	Input_Operand_1_Test			<= "01011011";
-	Enable_Input_For_Temp_Input_Reg_Test	<= '1';
+	Enable_Operand_1_Temp_Storage_Test	<= '1';
 	wait for 10 ns;
 	Clock_Test <= '1';
 	wait for 10 ns;
 
 	-- clear inputs / controls
-	Enable_Input_For_Temp_Input_Reg_Test 	<= '0';
+	Enable_Operand_1_Temp_Storage_Test 	<= '0';
 	Input_Operand_1_Test 			<= "ZZZZZZZZ";
 	
 	report "Set second operand and opcode, and enable operation";
@@ -172,13 +172,13 @@ begin
 	report "Load Temp Input Reg with first operand";
 	Clock_Test 				<= '0';
 	Input_Operand_1_Test			<= "11011011";
-	Enable_Input_For_Temp_Input_Reg_Test	<= '1';
+	Enable_Operand_1_Temp_Storage_Test	<= '1';
 	wait for 10 ns;
 	Clock_Test <= '1';
 	wait for 10 ns;
 
 	-- clear inputs / controls
-	Enable_Input_For_Temp_Input_Reg_Test 	<= '0';
+	Enable_Operand_1_Temp_Storage_Test 	<= '0';
 	Input_Operand_1_Test 			<= "ZZZZZZZZ";
 
 	report "Set second operand and opcode, and enable operation";
@@ -240,13 +240,13 @@ begin
 	report "Load Temp Input Reg with first operand";
 	Clock_Test 				<= '0';
 	Input_Operand_1_Test			<= "11101010";
-	Enable_Input_For_Temp_Input_Reg_Test	<= '1';
+	Enable_Operand_1_Temp_Storage_Test	<= '1';
 	wait for 10 ns;
 	Clock_Test <= '1';
 	wait for 10 ns;
 
 	-- clear inputs / controls
-	Enable_Input_For_Temp_Input_Reg_Test 	<= '0';
+	Enable_Operand_1_Temp_Storage_Test 	<= '0';
 	Input_Operand_1_Test 			<= "ZZZZZZZZ";
 
 	report "Set second operand and opcode, and enable operation";
