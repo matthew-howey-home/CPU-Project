@@ -14,7 +14,6 @@ architecture behavior of Edge_Triggered_Flip_Flop_Test is
         port (
         	Data_Input	: in std_logic;
         	Input_Enable	: in std_logic;
-		Output_Enable	: in std_logic;
 		Clock		: in std_logic;
         	Output		: out std_logic
     	);
@@ -23,7 +22,6 @@ architecture behavior of Edge_Triggered_Flip_Flop_Test is
     -- Signal declarations
     signal Data_Input_Test	: std_logic;
     signal Input_Enable_Test	: std_logic;
-    signal Output_Enable_Test	: std_logic;
     signal Clock_Test		: std_logic;
     signal Output_Test		: std_logic;
 
@@ -32,7 +30,6 @@ begin
     UUT: Edge_Triggered_Flip_Flop_RTL port map (
         Data_Input	=> Data_Input_Test,
         Input_Enable	=> Input_Enable_Test,
-	Output_Enable	=> Output_Enable_Test,
 	Clock		=> Clock_Test,
         Output		=> Output_Test
     );
@@ -44,7 +41,6 @@ begin
 	
 	Data_Input_Test		<= '1';
 	Input_Enable_Test	<= '1';
-	Output_Enable_Test	<= '1';
 	Clock_Test		<= '0';
 
 	wait for 10 ns;

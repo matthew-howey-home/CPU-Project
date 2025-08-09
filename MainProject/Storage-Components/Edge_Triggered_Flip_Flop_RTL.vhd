@@ -7,7 +7,6 @@ entity edge_triggered_flip_flop_rtl is
        	Data_Input	: in std_logic;
         Input_Enable	: in std_logic;
 	Clock		: in std_logic;
-	Output_Enable	: in std_logic;
 
         Output		: out std_logic
     );
@@ -25,5 +24,5 @@ begin
         end if;
     end process;
 
-    Output <= flip_flop_internal when Output_Enable = '1' else 'Z';
+    Output <= flip_flop_internal;
 end Behavioral;
