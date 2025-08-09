@@ -59,7 +59,7 @@ architecture Behavioral of CPU is
 	signal IR_Input_Enable			: std_logic;
 
 	signal Instruction			: std_logic_vector(7 downto 0);
-	signal Control_Bus			: std_logic_vector(20 downto 0);
+	signal Control_Bus			: std_logic_vector(23 downto 0);
 	signal Data_Bus				: std_logic_vector(7 downto 0);
 
 	signal A_Register_Input_Enable		: std_logic;
