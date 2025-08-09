@@ -70,7 +70,7 @@ architecture Behavioral of ALU_Interface is
 	-- but if the Control_Clear_Carry bit is set, this overrides it and sets the carry flag to zero. 
 	Internal_Input_To_Carry_Flag <= (not Control_Clear_Carry) and Internal_Carry_Out_From_Op;
 
-	Carry_Flag		: entity work.Edge_Triggered_Flip_Flop
+	Carry_Flag		: entity work.Edge_Triggered_Flip_Flop_RTL
 		port map (
 			Data_Input		=> Internal_Input_To_Carry_Flag,
 			Input_Enable		=> Enable_Flags_Input,
