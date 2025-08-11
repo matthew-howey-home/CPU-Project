@@ -106,7 +106,7 @@ begin
 		Clock_Test	<= '1';
 		wait for 10 ns;
 	
-		report "Running tests for Loading A Register with value 00110101 (#53)";
+		report "Running tests for Loading A Register with value 00110101 (#35)";
 		assert A_Reg_External_Output_Test = "00110101"	report "Test: A_Reg_External_Output_Test should equal 00110101" severity error;
 
 		report "Running tests for CPU reading Memory location &02 0000000000000010"; 
@@ -121,11 +121,25 @@ begin
 		Clock_Test	<= '1';
 		wait for 10 ns;
 
-		-- One cycle to load accumulator into the ALU temporary register (not directly tested)
+		report "One cycle to load accumulator into the ALU temporary register (not directly tested)";
 		Clock_Test	<= '0';
 		wait for 10 ns;
 		Clock_Test	<= '1';
 		wait for 10 ns;
+
+		report "Running tests for CPU reading Memory location &03 0000000000000011"; 
+		assert Memory_Address_Low_Test = "00000011"	report "Test 1: Memory_Address_Low_Test should equal 00000011" severity error;
+		assert Memory_Address_High_Test = "00000000" report "Test 2: Memory_Address_High_Test should equal 00000000" severity error;
+		assert Memory_Read_Enable_Test = '1' report "Test 3: Memory_Read_Enable_Test should equal 1" severity error;
+
+		report "One further cycle to allow result to appear in accumulator";
+		Clock_Test	<= '0';
+		wait for 10 ns;
+		Clock_Test	<= '1';
+		wait for 10 ns;
+
+		report "Running tests for Result of 35 AND 47  = 05 in the accumulator";
+		assert A_Reg_External_Output_Test = "01010101"	report "Test: A_Reg_External_Output_Test should equal 00000101" severity error;
 
 		wait;
 	end process stimulus_proc;
@@ -143,6 +157,8 @@ begin
 		-- now give AND instruction with value of second operand
 		elsif Memory_Read_Enable_Test = '1' and Memory_Address_Low_Test = "00000010" and Memory_Address_High_Test = "00000000" then
 			Memory_Data_In_Test <= "10000000"; -- AND #
+		elsif Memory_Read_Enable_Test = '1' and Memory_Address_Low_Test = "00000011" and Memory_Address_High_Test = "00000000" then
+			Memory_Data_In_Test <= "01000111"; -- # 47
         	else
             		Memory_Data_In_Test <= "ZZZZZZZZ";  -- Default data value when the condition is not met
         	end if;
