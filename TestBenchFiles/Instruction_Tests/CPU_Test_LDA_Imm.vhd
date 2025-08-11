@@ -103,9 +103,6 @@ begin
 		assert Memory_Address_High_Test = "00000000" report "Test 2: Memory_Address_High_Test should equal 00000000" severity error;
 		assert Memory_Read_Enable_Test = '1' report "Test 3: Memory_Read_Enable_Test should equal 1" severity error;
 		
-		Clock_Test	<= '0';
-		wait for 10 ns;
-
 		-- One more clock cycle to make value of A Register and PC increment visible  
 		Clock_Test	<= '0';
 		wait for 10 ns;
