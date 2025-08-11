@@ -99,10 +99,15 @@ begin
 		assert Memory_Address_Low_Test = "00000001"	report "Test 1: Memory_Address_Low_Test should equal 00000001" severity error;
 		assert Memory_Address_High_Test = "00000000" report "Test 2: Memory_Address_High_Test should equal 00000000" severity error;
 		assert Memory_Read_Enable_Test = '1' report "Test 3: Memory_Read_Enable_Test should equal 1" severity error;
-		
+
+		-- One more clock cycle to make value of A Register and PC increment visible  
 		Clock_Test	<= '0';
 		wait for 10 ns;
-
+		Clock_Test	<= '1';
+		wait for 10 ns;
+	
+		report "Running tests for Loading A Register with value 00110101 (#53)";
+		assert A_Reg_External_Output_Test = "00110101"	report "Test: A_Reg_External_Output_Test should equal 00110101" severity error;
 		wait;
 	end process stimulus_proc;
 
