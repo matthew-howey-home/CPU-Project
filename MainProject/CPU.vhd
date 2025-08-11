@@ -128,9 +128,7 @@ begin
 			Clock					=> Clock,
        
 			-- main inputs
-			Opcode(0)				=> Control_Bus(21),
-			Opcode(1)				=> Control_Bus(22),
-			Opcode(2)				=> Control_Bus(23),
+			Opcode					=> ALU_Opcode,
 			Input_Operand_1				=> Data_Bus,
         		Input_Operand_2				=> Data_Bus,
 			Input_Carry				=> ALU_Input_Carry,
