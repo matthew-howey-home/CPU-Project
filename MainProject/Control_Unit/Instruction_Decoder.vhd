@@ -355,9 +355,9 @@ begin
 		Internal_ALU_Step_2;
 
 	-- ALU Operation Instruction is 1xxx0000 with xxx in the Instruction, so xxx (4-6 bits) determines the ALU opcode
-	ALU_Opcode(0) <= Instruction(4) when Internal_ALU_Step_2 = '1' else 'Z';
-	ALU_Opcode(1) <= Instruction(5) when Internal_ALU_Step_2 = '1' else 'Z';
-	ALU_Opcode(2) <= Instruction(6) when Internal_ALU_Step_2 = '1' else 'Z';
+	ALU_Opcode(0) <= Instruction(4);
+	ALU_Opcode(1) <= Instruction(5);
+	ALU_Opcode(2) <= Instruction(6);
 	
 	-- To increment PC you must also assert PC Output Enable control signals
 	Increment_PC <=

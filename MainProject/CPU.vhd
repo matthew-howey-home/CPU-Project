@@ -69,7 +69,7 @@ architecture Behavioral of CPU is
 	signal Y_Register_Input_Enable		: std_logic;
 	signal Y_Reg_Output			: std_logic_vector(7 downto 0);
 
-	signal ALU_Opcode			: std_logic_vector(2 downto 0);
+	-- signal ALU_Opcode			: std_logic_vector(2 downto 0);
 	signal ALU_Input_Carry			: std_logic;
 	signal ALU_Input_Negative		: std_logic;
 	-- signal Enable_Operand_1_Temp_Storage : std_logic;
@@ -128,7 +128,10 @@ begin
 			Clock					=> Clock,
        
 			-- main inputs
-			Opcode					=> ALU_Opcode,
+			Opcode(0)				=> Control_Bus(21),
+			Opcode(1)				=> Control_Bus(22),
+			Opcode(2)				=> Control_Bus(23),
+
 			Input_Operand_1				=> Data_Bus,
         		Input_Operand_2				=> Data_Bus,
 			Input_Carry				=> ALU_Input_Carry,
