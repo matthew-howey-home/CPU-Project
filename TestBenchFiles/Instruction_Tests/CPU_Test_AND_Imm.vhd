@@ -108,6 +108,25 @@ begin
 	
 		report "Running tests for Loading A Register with value 00110101 (#53)";
 		assert A_Reg_External_Output_Test = "00110101"	report "Test: A_Reg_External_Output_Test should equal 00110101" severity error;
+
+		report "Running tests for CPU reading Memory location &02 0000000000000010"; 
+		assert Memory_Address_Low_Test = "00000010"	report "Test 1: Memory_Address_Low_Test should equal 00000010" severity error;
+		assert Memory_Address_High_Test = "00000000" report "Test 2: Memory_Address_High_Test should equal 00000000" severity error;
+		assert Memory_Read_Enable_Test = '1' report "Test 3: Memory_Read_Enable_Test should equal 1" severity error;
+
+		Clock_Test	<= '0';
+		wait for 10 ns;
+
+		report "Instruction is 10000000 AND # ";
+		Clock_Test	<= '1';
+		wait for 10 ns;
+
+		-- One cycle to load accumulator into the ALU temporary register (not directly tested)
+		Clock_Test	<= '0';
+		wait for 10 ns;
+		Clock_Test	<= '1';
+		wait for 10 ns;
+
 		wait;
 	end process stimulus_proc;
 
@@ -121,6 +140,9 @@ begin
             		Memory_Data_In_Test <= "00010001"; -- LDA #
 		elsif Memory_Read_Enable_Test = '1' and Memory_Address_Low_Test = "00000001" and Memory_Address_High_Test = "00000000" then
 			Memory_Data_In_Test <= "00110101"; -- #53
+		-- now give AND instruction with value of second operand
+		elsif Memory_Read_Enable_Test = '1' and Memory_Address_Low_Test = "00000010" and Memory_Address_High_Test = "00000000" then
+			Memory_Data_In_Test <= "10000000"; -- AND #
         	else
             		Memory_Data_In_Test <= "ZZZZZZZZ";  -- Default data value when the condition is not met
         	end if;
