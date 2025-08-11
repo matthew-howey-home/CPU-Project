@@ -139,7 +139,7 @@ begin
 		wait for 10 ns;
 
 		report "Running tests for Result of 35 AND 47  = 05 in the accumulator";
-		assert A_Reg_External_Output_Test = "01010101"	report "Test: A_Reg_External_Output_Test should equal 00000101" severity error;
+		assert A_Reg_External_Output_Test = "00000101"	report "Test: A_Reg_External_Output_Test should equal 00000101" severity error;
 
 		wait;
 	end process stimulus_proc;
