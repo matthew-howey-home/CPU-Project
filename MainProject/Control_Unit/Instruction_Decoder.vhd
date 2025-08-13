@@ -31,7 +31,8 @@ entity Instruction_Decoder is
 	JMP_Enable				: out std_logic;
 	Enable_Operand_1_Temp_Storage		: out std_logic;
 	ALU_Enable_Operation			: out std_logic;
-	ALU_Opcode				: out std_logic_vector(2 downto 0)
+	ALU_Opcode				: out std_logic_vector(2 downto 0);
+	ALU_Enable_Final_Output			: out std_logic
     );
 end entity Instruction_Decoder;
 
@@ -58,6 +59,7 @@ signal Internal_JMP_Step_2			: std_logic;
 signal Internal_JMP_Step_3			: std_logic;
 signal Internal_ALU_Step_1			: std_logic;
 signal Internal_ALU_Step_2			: std_logic;
+signal Internal_ALU_Step_3			: std_logic;
 
 begin
 	--************ Setting signal to represent current step based on current FSM Value **********-------
@@ -178,10 +180,15 @@ begin
 		Instruction(7) and
 		not Instruction(3) and	not Instruction(2) and	not Instruction(1) and 	not Instruction(0);
 
-	-- if FSM_In = "00001001" set Step Two of ALU Operation - Load ALU with value from Memory, Load ALU with Opcode from IR, and Inc PC
+	-- if FSM_In = "00001001" set Step Two of ALU Operation - Load ALU with value from Memory, Load ALU with Opcode from IR, Enable ALU Op, and Inc PC
 	Internal_ALU_Step_2 <=
 		not FSM_In(7) and	not FSM_In(6) and	not FSM_In(5) and	not FSM_In(4) and
 		FSM_In(3) and 		not FSM_In(2) and	not FSM_In(1) and	FSM_In(0);
+
+	-- if FSM_In = "00001010" set Step Three of ALU Operation - Enable Final Output from ALU, Load output from ALU into A Register
+	Internal_ALU_Step_3 <=
+		not FSM_In(7) and	not FSM_In(6) and	not FSM_In(5) and	not FSM_In(4) and
+		FSM_In(3) and 		not FSM_In(2) and	FSM_In(1) and		not FSM_In(0);
 
  	--************** Set next value of FSM based on Current Step **************--
 
@@ -209,7 +216,8 @@ begin
 	-- if Internal_JMP_Step_3			set FSM_Out = "00000001" (Back to Step 1 Fetch Instruction)
 
 	-- if Internal_ALU_Step_1			set FSM_Out = "00001001" (ALU Step 2)
-	-- if Internal_ALU_Step_2			set FSM_Out = "00000001" (Back to Step 1 Fetch Instruction)
+	-- if Internal_ALU_Step_2			set FSM_Out = "00001010" (ALU Step 3)
+	-- if Internal_ALU_Step_3			set FSM_Out = "00000001" (Back to Step 1 Fetch Instruction)
 
 	FSM_Out(7) <= '0';
  	FSM_Out(6) <= '0';
@@ -217,7 +225,8 @@ begin
 	FSM_Out(4) <= '0';
 	FSM_Out(3) <= 
 		Internal_JMP_Step_2 or
-		Internal_ALU_Step_1;
+		Internal_ALU_Step_1 or
+		Internal_ALU_Step_2;
 	FSM_Out(2) <=
 		Internal_LD_Reg_Absolute_Step_2 or
 		Internal_ST_Reg_Absolute_Step_1 or
@@ -227,7 +236,8 @@ begin
 		Internal_Step_1_Fetch_Instruction or
 		Internal_LD_Reg_Absolute_Step_1 or
 		Internal_ST_Reg_Absolute_Step_2 or
-		Internal_JMP_Step_1;
+		Internal_JMP_Step_1 or
+		Internal_ALU_Step_2;
 	FSM_Out(0) <=		
 		Internal_Step_0_Initial_State or
 		Internal_LD_Reg_Immediate_Step_1_LDA or
@@ -244,7 +254,7 @@ begin
 		Internal_JMP_Step_1 or
 		Internal_JMP_Step_3 or
 		Internal_ALU_Step_1 or
-		Internal_ALU_Step_2;
+		Internal_ALU_Step_3;
 
 	PC_Low_Output_Enable	<=
 		Internal_Step_1_Fetch_Instruction or
@@ -329,7 +339,8 @@ begin
 
 	A_Reg_Input_Enable			<=
 		Internal_LD_Reg_Immediate_Step_1_LDA or
-		Internal_LD_Reg_Absolute_Step_3_LDA;
+		Internal_LD_Reg_Absolute_Step_3_LDA or
+		Internal_ALU_Step_3;
 	X_Reg_Input_Enable			<=
 		Internal_LD_Reg_Immediate_Step_1_LDX or
 		Internal_LD_Reg_Absolute_Step_3_LDX;
@@ -353,6 +364,9 @@ begin
 
 	ALU_Enable_Operation <=
 		Internal_ALU_Step_2;
+
+	ALU_Enable_Final_Output <=
+		Internal_ALU_Step_3;
 
 	-- ALU Operation Instruction is 1xxx0000 with xxx in the Instruction, so xxx (4-6 bits) determines the ALU opcode
 	ALU_Opcode(0) <= Instruction(4);

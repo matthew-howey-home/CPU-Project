@@ -33,7 +33,8 @@ architecture Behavioral of Instruction_Decoder_Test is
 		Y_Reg_Output_Enable			: out std_logic;
 		JMP_Enable				: out std_logic;
 		Enable_Operand_1_Temp_Storage		: out std_logic;
-		ALU_Opcode				: out std_logic_vector(2 downto 0)
+		ALU_Opcode				: out std_logic_vector(2 downto 0);
+		ALU_Enable_Final_Output			: out std_logic
         );
     end component Instruction_Decoder;
 
@@ -61,6 +62,7 @@ architecture Behavioral of Instruction_Decoder_Test is
 	signal JMP_Enable_Test					: std_logic;
 	signal Enable_Operand_1_Temp_Storage_Test		: std_logic;
 	signal ALU_Opcode_Test					: std_logic_vector(2 downto 0);
+	signal ALU_Enable_Final_Output_Test			: std_logic;
 
 begin
     -- Instantiate the Instruction_Decoder module
@@ -88,7 +90,8 @@ begin
 		Y_Reg_Output_Enable				=> Y_Reg_Output_Enable_Test,
 		JMP_Enable					=> JMP_Enable_Test,
 		Enable_Operand_1_Temp_Storage			=> Enable_Operand_1_Temp_Storage_Test,
-		ALU_Opcode					=> ALU_Opcode_Test
+		ALU_Opcode					=> ALU_Opcode_Test,
+		ALU_Enable_Final_Output				=> ALU_Enable_Final_Output_Test
         );
 
     -- Stimulus process to apply test vectors
@@ -347,7 +350,16 @@ begin
 
 	assert ALU_Opcode_Test = "000"		report "ALU Operation Opcode 000 Step Two: ALU_Opcode_Test should equal 000" severity error;
 
-	assert FSM_Out_Test = "00000001" 	report "ALU Operation Opcode 000 Step Two: FSM_Out_Test should equal 00000001" severity error;
+	assert FSM_Out_Test = "00001010" 	report "ALU Operation Opcode 000 Step Two: FSM_Out_Test should equal 00001010" severity error;
+
+	report "Running Tests for ALU Operation, AND Opcode 000 Step Three: Enable ALU Final Output, Enable Input to A Reg";
+	FSM_In_Test	<= "00001010";
+	wait for 10 ns;
+
+	assert ALU_Enable_Final_Output_Test = '1'	report "ALU Operation Opcode 000 Step Three: ALU_Enable_Final_Output_Test should equal 1" severity error;
+	assert A_Reg_Input_Enable_Test = '1'		report "ALU Operation Opcode 000 Step Three: A_Reg_Input_Enable_Test should equal 1" severity error;
+
+	assert FSM_Out_Test = "00000001" 	report "ALU Operation Opcode 000 Step Three: FSM_Out_Test should equal 00000001" severity error;
 
 	report "************ TESTS FOR SUBROUTINE: ALU Operation, Opcode 101, FSM 00000010, 00001001 ************";
 
@@ -373,7 +385,16 @@ begin
 
 	assert ALU_Opcode_Test = "101"		report "ALU Operation Opcode 101 Step Two: ALU_Opcode_Test should equal 101" severity error;
 
-	assert FSM_Out_Test = "00000001" 	report "ALU Operation Opcode 000 Step Two: FSM_Out_Test should equal 00000001" severity error;
+	assert FSM_Out_Test = "00001010" 	report "ALU Operation Opcode 101 Step Two: FSM_Out_Test should equal 00001010" severity error;
+
+	report "Running Tests for ALU Operation, AND Opcode 101 Step Three: Enable ALU Final Output, Enable Input to A Reg";
+	FSM_In_Test	<= "00001010";
+	wait for 10 ns;
+
+	assert ALU_Enable_Final_Output_Test = '1'	report "ALU Operation Opcode 101 Step Three: ALU_Enable_Final_Output_Test should equal 1" severity error;
+	assert A_Reg_Input_Enable_Test = '1'		report "ALU Operation Opcode 101 Step Three: A_Reg_Input_Enable_Test should equal 1" severity error;
+
+	assert FSM_Out_Test = "00000001" 	report "ALU Operation Opcode 101 Step Three: FSM_Out_Test should equal 00000001" severity error;
 
 
 
