@@ -72,10 +72,10 @@ architecture Behavioral of CPU is
 	-- signal ALU_Opcode			: std_logic_vector(2 downto 0);
 	signal ALU_Input_Carry			: std_logic;
 	signal ALU_Input_Negative		: std_logic;
-	-- signal Enable_Operand_1_Temp_Storage : std_logic;
-	-- signal ALU_Enable_Operation		: std_logic;
+	signal Enable_Operand_1_Temp_Storage : std_logic;
+	signal ALU_Enable_Operation		: std_logic;
 	signal ALU_Enable_Flags_Input		: std_logic;
-	-- signal ALU_Enable_Output_Final		: std_logic;
+	signal ALU_Enable_Output_Final		: std_logic;
 	signal ALU_Control_Clear_Carry		: std_logic;
 	signal ALU_Control_Clear_Negative	: std_logic;
 	signal ALU_Control_Clear_Zero		: std_logic;
@@ -124,6 +124,11 @@ begin
         	);
 
 	-- ALU
+	Enable_Operand_1_Temp_Storage 	<= Control_Bus(19) and Slow_Clock;
+	ALU_Enable_Operation 		<= Control_Bus(20) and Slow_Clock;
+	ALU_Enable_Output_Final		<= Control_Bus(24) and Slow_Clock;
+	
+	
 	ALU_Interface: entity work.ALU_Interface
 		port map (
 			Clock					=> Clock,
@@ -139,10 +144,10 @@ begin
 			Input_Negative				=> ALU_Input_Negative,
 	
 			-- Enable Controls
-			Enable_Operand_1_Temp_Storage		=> Control_Bus(19),
-			Enable_Operation			=> Control_Bus(20),
+			Enable_Operand_1_Temp_Storage		=> Enable_Operand_1_Temp_Storage,
+			Enable_Operation			=> ALU_Enable_Operation,
 			Enable_Flags_Input			=> ALU_Enable_Flags_Input,
-			Enable_Output_Final			=> Control_Bus(24),
+			Enable_Output_Final			=> ALU_Enable_Output_Final,
 	
 			-- Other Control Signals
 			Control_Clear_Carry			=> ALU_Control_Clear_Carry,
