@@ -1,4 +1,4 @@
--- Test of CPU Instruction 1110000 - ADD Imm x47, Add x47 to the value in the accumulator
+-- Test of CPU Instruction 11100000 - ADD Imm x47, Add x47 to the value in the accumulator
 
 library ieee;
 use ieee.std_logic_1164.all;
