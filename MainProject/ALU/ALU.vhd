@@ -117,7 +117,7 @@ begin
 
 	not_component: entity work.NOT_Component
 		port map (
-			input	=> input_1,
+			input	=> input_2,
 			output	=> not_output
 		);
 
@@ -176,7 +176,7 @@ begin
 
 	shr_component: entity  work.SHR_Component
 		port map (
-			input	=> input_1,
+			input	=> input_2,
 			output	=> shr_output
 		);
 
@@ -205,7 +205,7 @@ begin
 
 	shl_component: entity  work.SHL_Component
 		port map (
-			input	=> input_1,
+			input	=> input_2,
 			output	=> shl_output
 		);
 
