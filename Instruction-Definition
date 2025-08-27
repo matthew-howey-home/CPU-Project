@@ -53,3 +53,35 @@ FSM States
 00000010
 00000111
 00001000
+
+10000000 AND # - "And" immediate value with accumulator, store result in accumulator. 2 bytes
+FSM States
+00000010
+00001001
+00001010
+
+10010000 OR # - "Or" immediate value with accumulator, store result in accumulator. 2 bytes
+FSM States
+00000010
+00001001
+00001010
+
+10100000 NOT # - "Not" (invert) value and store in accumulator. 2 bytes.
+FSM States
+00000010
+00001001
+00001010
+
+10110000 XOR # - "Xor" (exclusive or) value with accumulator, store result in accumulator. 2 bytes.
+FSM States
+00000010
+00001001
+00001010
+
+11000000 SHR # - Shift value right, store result in accumulator. 2 bytes.
+FSM States
+00000010
+00001001
+00001010
+
+
