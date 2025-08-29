@@ -57,9 +57,10 @@ signal Internal_ST_Reg_Absolute_Step_3_STY	: std_logic;
 signal Internal_JMP_Step_1			: std_logic;
 signal Internal_JMP_Step_2			: std_logic;
 signal Internal_JMP_Step_3			: std_logic;
-signal Internal_ALU_Step_1			: std_logic;
-signal Internal_ALU_Step_2			: std_logic;
-signal Internal_ALU_Step_3			: std_logic;
+signal Internal_ALU_Imm_Step_1			: std_logic;
+signal Internal_ALU_Imm_Step_2			: std_logic;
+signal Internal_ALU_Imm_Step_3			: std_logic;
+signal Internal_ALU_Abs_Step_1			: std_logic;
 
 begin
 	--************ Setting signal to represent current step based on current FSM Value **********-------
@@ -173,22 +174,29 @@ begin
 		not FSM_In(7) and	not FSM_In(6) and	not FSM_In(5) and	not FSM_In(4) and
 		FSM_In(3) and		not FSM_In(2) and	not FSM_In(1) and	not FSM_In(0);
 	
-	-- if FSM_In = "00000010" and Instruction is 1xxx0000 set Step One of ALU Operation - Output Enable Reg A, Input Enable ALU Temp Reg
-	Internal_ALU_Step_1 <=
+	-- if FSM_In = "00000010" and Instruction is 1xxx0000 set Step One of ALU Operation Imm - Output Enable Reg A, Input Enable ALU Temp Reg
+	Internal_ALU_Imm_Step_1 <=
 		not FSM_In(7) and	not FSM_In(6) and	not FSM_In(5) and	not FSM_In(4) and
 		not FSM_In(3) and 	not FSM_In(2) and	FSM_In(1) and		not FSM_In(0) and
 		Instruction(7) and
 		not Instruction(3) and	not Instruction(2) and	not Instruction(1) and 	not Instruction(0);
 
-	-- if FSM_In = "00001001" set Step Two of ALU Operation - Load ALU with value from Memory, Load ALU with Opcode from IR, Enable ALU Op, and Inc PC
-	Internal_ALU_Step_2 <=
+	-- if FSM_In = "00001001" set Step Two of ALU Operation Imm - Load ALU with value from Memory, Load ALU with Opcode from IR, Enable ALU Op, and Inc PC
+	Internal_ALU_Imm_Step_2 <=
 		not FSM_In(7) and	not FSM_In(6) and	not FSM_In(5) and	not FSM_In(4) and
 		FSM_In(3) and 		not FSM_In(2) and	not FSM_In(1) and	FSM_In(0);
 
-	-- if FSM_In = "00001010" set Step Three of ALU Operation - Enable Final Output from ALU, Load output from ALU into A Register
-	Internal_ALU_Step_3 <=
+	-- if FSM_In = "00001010" set Step Three of ALU Operation Imm - Enable Final Output from ALU, Load output from ALU into A Register
+	Internal_ALU_Imm_Step_3 <=
 		not FSM_In(7) and	not FSM_In(6) and	not FSM_In(5) and	not FSM_In(4) and
 		FSM_In(3) and 		not FSM_In(2) and	FSM_In(1) and		not FSM_In(0);
+
+	-- if FSM_In = "00000010" and Instruction is 1xxx1000 set Step One of ALU Operation ABS - Output Enable Reg A, Input Enable ALU Temp Reg
+	Internal_ALU_Abs_Step_1 <=
+		not FSM_In(7) and	not FSM_In(6) and	not FSM_In(5) and	not FSM_In(4) and
+		not FSM_In(3) and 	not FSM_In(2) and	FSM_In(1) and		not FSM_In(0) and
+		Instruction(7) and
+		Instruction(3) and	not Instruction(2) and	not Instruction(1) and 	not Instruction(0);
 
  	--************** Set next value of FSM based on Current Step **************--
 
@@ -215,9 +223,9 @@ begin
 	-- if Internal_JMP_Step_2			set FSM_Out = "00001000" (JMP Step 3)
 	-- if Internal_JMP_Step_3			set FSM_Out = "00000001" (Back to Step 1 Fetch Instruction)
 
-	-- if Internal_ALU_Step_1			set FSM_Out = "00001001" (ALU Step 2)
-	-- if Internal_ALU_Step_2			set FSM_Out = "00001010" (ALU Step 3)
-	-- if Internal_ALU_Step_3			set FSM_Out = "00000001" (Back to Step 1 Fetch Instruction)
+	-- if Internal_ALU_Imm_Step_1			set FSM_Out = "00001001" (ALU Imm Step 2)
+	-- if Internal_ALU_Imm_Step_2			set FSM_Out = "00001010" (ALU Imm Step 3)
+	-- if Internal_ALU_Imm_Step_3			set FSM_Out = "00000001" (Back to Step 1 Fetch Instruction)
 
 	FSM_Out(7) <= '0';
  	FSM_Out(6) <= '0';
@@ -225,8 +233,8 @@ begin
 	FSM_Out(4) <= '0';
 	FSM_Out(3) <= 
 		Internal_JMP_Step_2 or
-		Internal_ALU_Step_1 or
-		Internal_ALU_Step_2;
+		Internal_ALU_Imm_Step_1 or
+		Internal_ALU_Imm_Step_2;
 	FSM_Out(2) <=
 		Internal_LD_Reg_Absolute_Step_2 or
 		Internal_ST_Reg_Absolute_Step_1 or
@@ -237,7 +245,7 @@ begin
 		Internal_LD_Reg_Absolute_Step_1 or
 		Internal_ST_Reg_Absolute_Step_2 or
 		Internal_JMP_Step_1 or
-		Internal_ALU_Step_2;
+		Internal_ALU_Imm_Step_2;
 	FSM_Out(0) <=		
 		Internal_Step_0_Initial_State or
 		Internal_LD_Reg_Immediate_Step_1_LDA or
@@ -253,8 +261,8 @@ begin
 		Internal_ST_Reg_Absolute_Step_3_STY or
 		Internal_JMP_Step_1 or
 		Internal_JMP_Step_3 or
-		Internal_ALU_Step_1 or
-		Internal_ALU_Step_3;
+		Internal_ALU_Imm_Step_1 or
+		Internal_ALU_Imm_Step_3;
 
 	PC_Low_Output_Enable	<=
 		Internal_Step_1_Fetch_Instruction or
@@ -267,7 +275,7 @@ begin
 		Internal_ST_Reg_Absolute_Step_2 or
 		Internal_JMP_Step_1 or
 		Internal_JMP_Step_2 or
-		Internal_ALU_Step_2;
+		Internal_ALU_Imm_Step_2;
 
 	MAR_Low_Input_Enable	<=
 		Internal_LD_Reg_Absolute_Step_2 or
@@ -285,7 +293,7 @@ begin
 		Internal_ST_Reg_Absolute_Step_2 or
 		Internal_JMP_Step_1 or
 		Internal_JMP_Step_2 or
-		Internal_ALU_Step_2;
+		Internal_ALU_Imm_Step_2;
 
 	MAR_High_Input_Enable	<=
 		Internal_LD_Reg_Absolute_Step_1 or
@@ -327,7 +335,7 @@ begin
 		Internal_JMP_Step_1 or
 		Internal_JMP_Step_2 or
 		Internal_JMP_Step_3 or
-		Internal_ALU_Step_2;
+		Internal_ALU_Imm_Step_2;
 
 	Memory_Write_Enable <=
 		Internal_ST_Reg_Absolute_Step_3_STA or
@@ -340,7 +348,7 @@ begin
 	A_Reg_Input_Enable			<=
 		Internal_LD_Reg_Immediate_Step_1_LDA or
 		Internal_LD_Reg_Absolute_Step_3_LDA or
-		Internal_ALU_Step_3;
+		Internal_ALU_Imm_Step_3;
 	X_Reg_Input_Enable			<=
 		Internal_LD_Reg_Immediate_Step_1_LDX or
 		Internal_LD_Reg_Absolute_Step_3_LDX;
@@ -350,7 +358,7 @@ begin
 
 	A_Reg_Output_Enable			<=
 		Internal_ST_Reg_Absolute_Step_3_STA or
-		Internal_ALU_Step_1;
+		Internal_ALU_Imm_Step_1;
 	X_Reg_Output_Enable			<=
 		Internal_ST_Reg_Absolute_Step_3_STX;
 	Y_Reg_Output_Enable			<=
@@ -360,13 +368,13 @@ begin
 		Internal_JMP_Step_3;
 
 	Enable_Operand_1_Temp_Storage <=
-		Internal_ALU_Step_1;
+		Internal_ALU_Imm_Step_1;
 
 	ALU_Enable_Operation <=
-		Internal_ALU_Step_2;
+		Internal_ALU_Imm_Step_2;
 
 	ALU_Enable_Final_Output <=
-		Internal_ALU_Step_3;
+		Internal_ALU_Imm_Step_3;
 
 	-- ALU Operation Instruction is 1xxx0000 with xxx in the Instruction, so xxx (4-6 bits) determines the ALU opcode
 	ALU_Opcode(0) <= Instruction(4);
@@ -384,6 +392,6 @@ begin
 		Internal_ST_Reg_Absolute_Step_1 or
 		Internal_ST_Reg_Absolute_Step_2 or
 		Internal_JMP_Step_1 or
-		Internal_ALU_Step_2;
+		Internal_ALU_Imm_Step_2;
 
 end architecture Behavioral;
