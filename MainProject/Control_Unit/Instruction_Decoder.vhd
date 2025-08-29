@@ -227,6 +227,8 @@ begin
 	-- if Internal_ALU_Imm_Step_2			set FSM_Out = "00001010" (ALU Imm Step 3)
 	-- if Internal_ALU_Imm_Step_3			set FSM_Out = "00000001" (Back to Step 1 Fetch Instruction)
 
+	-- if Internal_ALU_Abs_Step_1			set FSM_Out = "00001011" (ALU Abs Step 2)
+
 	FSM_Out(7) <= '0';
  	FSM_Out(6) <= '0';
 	FSM_Out(5) <= '0';
@@ -234,7 +236,8 @@ begin
 	FSM_Out(3) <= 
 		Internal_JMP_Step_2 or
 		Internal_ALU_Imm_Step_1 or
-		Internal_ALU_Imm_Step_2;
+		Internal_ALU_Imm_Step_2 or
+		Internal_ALU_Abs_Step_1;
 	FSM_Out(2) <=
 		Internal_LD_Reg_Absolute_Step_2 or
 		Internal_ST_Reg_Absolute_Step_1 or
@@ -245,7 +248,8 @@ begin
 		Internal_LD_Reg_Absolute_Step_1 or
 		Internal_ST_Reg_Absolute_Step_2 or
 		Internal_JMP_Step_1 or
-		Internal_ALU_Imm_Step_2;
+		Internal_ALU_Imm_Step_2 or
+		Internal_ALU_Abs_Step_1;
 	FSM_Out(0) <=		
 		Internal_Step_0_Initial_State or
 		Internal_LD_Reg_Immediate_Step_1_LDA or
@@ -262,7 +266,8 @@ begin
 		Internal_JMP_Step_1 or
 		Internal_JMP_Step_3 or
 		Internal_ALU_Imm_Step_1 or
-		Internal_ALU_Imm_Step_3;
+		Internal_ALU_Imm_Step_3 or
+		Internal_ALU_Abs_Step_1;
 
 	PC_Low_Output_Enable	<=
 		Internal_Step_1_Fetch_Instruction or
@@ -358,7 +363,8 @@ begin
 
 	A_Reg_Output_Enable			<=
 		Internal_ST_Reg_Absolute_Step_3_STA or
-		Internal_ALU_Imm_Step_1;
+		Internal_ALU_Imm_Step_1 or
+		Internal_ALU_Abs_Step_1;
 	X_Reg_Output_Enable			<=
 		Internal_ST_Reg_Absolute_Step_3_STX;
 	Y_Reg_Output_Enable			<=
@@ -368,7 +374,8 @@ begin
 		Internal_JMP_Step_3;
 
 	Enable_Operand_1_Temp_Storage <=
-		Internal_ALU_Imm_Step_1;
+		Internal_ALU_Imm_Step_1 or
+		Internal_ALU_Abs_Step_1;
 
 	ALU_Enable_Operation <=
 		Internal_ALU_Imm_Step_2;
