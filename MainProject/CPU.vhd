@@ -59,7 +59,7 @@ architecture Behavioral of CPU is
 	signal IR_Input_Enable			: std_logic;
 
 	signal Instruction			: std_logic_vector(7 downto 0);
-	signal Control_Bus			: std_logic_vector(25 downto 0);
+	signal Control_Bus			: std_logic_vector(28 downto 0);
 	signal Data_Bus				: std_logic_vector(7 downto 0);
 
 	signal A_Register_Input_Enable		: std_logic;
@@ -121,7 +121,10 @@ begin
 			ALU_Opcode(1)				=> Control_Bus(22),
 			ALU_Opcode(2)				=> Control_Bus(23),
 			ALU_Enable_Final_Output			=> Control_Bus(24),
-			ALU_Enable_Flags_Input			=> Control_Bus(25)
+			ALU_Enable_Flags_Input			=> Control_Bus(25),
+			ALU_Control_Clear_Carry			=> Control_Bus(26),
+			ALU_Control_Clear_Negative		=> Control_Bus(27),
+			ALU_Control_Clear_Zero			=> Control_Bus(28)
         	);
 
 	-- ALU
@@ -129,6 +132,11 @@ begin
 	ALU_Enable_Operation 		<= Control_Bus(20) and Slow_Clock;
 	ALU_Enable_Output_Final		<= Control_Bus(24) and Slow_Clock;
 	ALU_Enable_Flags_Input		<= Control_Bus(25) and Slow_Clock;
+	
+	ALU_Control_Clear_Carry		<= Control_Bus(26);
+	ALU_Control_Clear_Negative	<= Control_Bus(27);
+	ALU_Control_Clear_Zero		<= Control_Bus(28);
+	
 	
 	
 	ALU_Interface: entity work.ALU_Interface

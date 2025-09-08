@@ -33,7 +33,10 @@ entity Instruction_Decoder is
 	ALU_Enable_Operation			: out std_logic;
 	ALU_Opcode				: out std_logic_vector(2 downto 0);
 	ALU_Enable_Final_Output			: out std_logic;
-	ALU_Enable_Flags_Input			: out std_logic
+	ALU_Enable_Flags_Input			: out std_logic;
+	ALU_Control_Clear_Carry			: out std_logic;
+	ALU_Control_Clear_Negative		: out std_logic;
+	ALU_Control_Clear_Zero			: out std_logic
     );
 end entity Instruction_Decoder;
 
@@ -386,6 +389,11 @@ begin
 
 	ALU_Enable_Flags_Input <=
 		Internal_ALU_Imm_Step_2;
+
+	ALU_Control_Clear_Carry 	<= '0';
+	ALU_Control_Clear_Negative 	<= '0';
+	ALU_Control_Clear_Zero 		<= '0';
+	
 		
 
 	-- ALU Operation Instruction is 1xxx0000 with xxx in the Instruction, so xxx (4-6 bits) determines the ALU opcode
