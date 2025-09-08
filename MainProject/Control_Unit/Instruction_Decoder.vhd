@@ -32,7 +32,8 @@ entity Instruction_Decoder is
 	Enable_Operand_1_Temp_Storage		: out std_logic;
 	ALU_Enable_Operation			: out std_logic;
 	ALU_Opcode				: out std_logic_vector(2 downto 0);
-	ALU_Enable_Final_Output			: out std_logic
+	ALU_Enable_Final_Output			: out std_logic;
+	ALU_Enable_Flags_Input			: out std_logic
     );
 end entity Instruction_Decoder;
 
@@ -181,7 +182,7 @@ begin
 		Instruction(7) and
 		not Instruction(3) and	not Instruction(2) and	not Instruction(1) and 	not Instruction(0);
 
-	-- if FSM_In = "00001001" set Step Two of ALU Operation Imm - Load ALU with value from Memory, Load ALU with Opcode from IR, Enable ALU Op, and Inc PC
+	-- if FSM_In = "00001001" set Step Two of ALU Operation Imm - Load ALU with value from Memory, Load ALU with Opcode from IR, Enable ALU Op & flags input, and Inc PC
 	Internal_ALU_Imm_Step_2 <=
 		not FSM_In(7) and	not FSM_In(6) and	not FSM_In(5) and	not FSM_In(4) and
 		FSM_In(3) and 		not FSM_In(2) and	not FSM_In(1) and	FSM_In(0);
@@ -382,6 +383,10 @@ begin
 
 	ALU_Enable_Final_Output <=
 		Internal_ALU_Imm_Step_3;
+
+	ALU_Enable_Flags_Input <=
+		Internal_ALU_Imm_Step_2;
+		
 
 	-- ALU Operation Instruction is 1xxx0000 with xxx in the Instruction, so xxx (4-6 bits) determines the ALU opcode
 	ALU_Opcode(0) <= Instruction(4);
