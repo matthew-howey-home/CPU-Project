@@ -67,6 +67,8 @@ signal Internal_ALU_Imm_Step_3			: std_logic;
 signal Internal_ALU_Abs_Step_1			: std_logic;
 signal Internal_ALU_Abs_Step_2			: std_logic;
 signal Internal_ALU_Abs_Step_3			: std_logic;
+signal Internal_ALU_Abs_Step_4			: std_logic;
+
 
 begin
 	--************ Setting signal to represent current step based on current FSM Value **********-------
@@ -209,10 +211,19 @@ begin
 		not FSM_In(7) and	not FSM_In(6) and	not FSM_In(5) and	not FSM_In(4) and
 		FSM_In(3) and 		not FSM_In(2) and	FSM_In(1) and		FSM_In(0);
 
-	-- if FSM_IN = "00001100" set Step Three of ALU Operation ABS - Load MAR Low and Inc PC
+	-- if FSM_In = "00001100" set Step Three of ALU Operation ABS - Load MAR Low and Inc PC
 	Internal_ALU_Abs_Step_3 <=
 		not FSM_In(7) and	not FSM_In(6) and	not FSM_In(5) and	not FSM_In(4) and
 		FSM_In(3) and 		FSM_In(2) and		not FSM_In(1) and	not FSM_In(0);
+
+	-- if FSM_In = "00001101" set Step Four of ALU Operation ABS - Load ALU with value from Memory(using MAR), Load ALU with Opcode from IR
+	-- Enable ALU Op & flags input
+	Internal_ALU_Abs_Step_3 <=
+		not FSM_In(7) and	not FSM_In(6) and	not FSM_In(5) and	not FSM_In(4) and
+		FSM_In(3) and 		FSM_In(2) and		not FSM_In(1) and	FSM_In(0);
+
+
+
 
  	--************** Set next value of FSM based on Current Step **************--
 
@@ -246,6 +257,7 @@ begin
 	-- if Internal_ALU_Abs_Step_1			set FSM_Out = "00001011" (ALU Abs Step 2)
 	-- if Internal_ALU_Abs_Step_2			set FSM_Out = "00001100" (ALU Abs Step 3)
 	-- if Internal_ALU_Abs_Step_3			set FSM_Out = "00001101" (ALU Abs Step 4)
+	-- if Internal_ALU_Abs_Step_4			set FSM_Out = "00001110" (ALU Abs Step 5)
 
 	FSM_Out(7) <= '0';
  	FSM_Out(6) <= '0';
@@ -257,21 +269,24 @@ begin
 		Internal_ALU_Imm_Step_2 or
 		Internal_ALU_Abs_Step_1 or
 		Internal_ALU_Abs_Step_2 or
-		Internal_ALU_Abs_Step_3;
+		Internal_ALU_Abs_Step_3 or
+		Internal_ALU_Abs_Step_4;
 	FSM_Out(2) <=
 		Internal_LD_Reg_Absolute_Step_2 or
 		Internal_ST_Reg_Absolute_Step_1 or
 		Internal_ST_Reg_Absolute_Step_2 or
 		Internal_ALU_Abs_Step_3 or
 		Internal_JMP_Step_1 or
-		Internal_ALU_Abs_Step_2;
+		Internal_ALU_Abs_Step_2 or
+		Internal_ALU_Abs_Step_4;
 	FSM_Out(1) <=
 		Internal_Step_1_Fetch_Instruction or
 		Internal_LD_Reg_Absolute_Step_1 or
 		Internal_ST_Reg_Absolute_Step_2 or
 		Internal_JMP_Step_1 or
 		Internal_ALU_Imm_Step_2 or
-		Internal_ALU_Abs_Step_1;
+		Internal_ALU_Abs_Step_1 or
+		Internal_ALU_Abs_Step_4;
 	FSM_Out(0) <=		
 		Internal_Step_0_Initial_State or
 		Internal_LD_Reg_Immediate_Step_1_LDA or
@@ -344,7 +359,8 @@ begin
 		Internal_ST_Reg_Absolute_Step_3_STA or
 		Internal_ST_Reg_Absolute_Step_3_STX or
 		Internal_ST_Reg_Absolute_Step_3_STY or
-		Internal_JMP_Step_3;
+		Internal_JMP_Step_3 or
+		Internal_ALU_Abs_Step_4;
 	MAR_High_Output_Enable	<=
 		Internal_LD_Reg_Absolute_Step_3_LDA or
 		Internal_LD_Reg_Absolute_Step_3_LDX or
@@ -352,7 +368,8 @@ begin
 		Internal_ST_Reg_Absolute_Step_3_STA or
 		Internal_ST_Reg_Absolute_Step_3_STX or
 		Internal_ST_Reg_Absolute_Step_3_STY or
-		Internal_JMP_Step_3;
+		Internal_JMP_Step_3 or
+		Internal_ALU_Abs_Step_4;
 
 	Memory_Read_Enable			<=
 		Internal_Step_1_Fetch_Instruction or
@@ -371,7 +388,8 @@ begin
 		Internal_JMP_Step_3 or
 		Internal_ALU_Imm_Step_2 or
 		Internal_ALU_Abs_Step_2 or
-		Internal_ALU_Abs_Step_3;
+		Internal_ALU_Abs_Step_3 or
+		Internal_ALU_Abs_Step_4;
 
 	Memory_Write_Enable <=
 		Internal_ST_Reg_Absolute_Step_3_STA or
@@ -409,13 +427,15 @@ begin
 		Internal_ALU_Abs_Step_1;
 
 	ALU_Enable_Operation <=
-		Internal_ALU_Imm_Step_2;
+		Internal_ALU_Imm_Step_2 or
+		Internal_ALU_Abs_Step_4;
 
 	ALU_Enable_Final_Output <=
 		Internal_ALU_Imm_Step_3;
 
 	ALU_Enable_Flags_Input <=
-		Internal_ALU_Imm_Step_2;
+		Internal_ALU_Imm_Step_2 or
+		Internal_ALU_Abs_Step_4;
 
 	ALU_Control_Clear_Carry 	<= '0';
 	ALU_Control_Clear_Negative 	<= '0';
