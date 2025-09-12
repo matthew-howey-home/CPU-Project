@@ -68,6 +68,7 @@ signal Internal_ALU_Abs_Step_1			: std_logic;
 signal Internal_ALU_Abs_Step_2			: std_logic;
 signal Internal_ALU_Abs_Step_3			: std_logic;
 signal Internal_ALU_Abs_Step_4			: std_logic;
+signal Internal_ALU_Abs_Step_5			: std_logic;
 
 
 begin
@@ -218,9 +219,14 @@ begin
 
 	-- if FSM_In = "00001101" set Step Four of ALU Operation ABS - Load ALU with value from Memory(using MAR), Load ALU with Opcode from IR
 	-- Enable ALU Op & flags input
-	Internal_ALU_Abs_Step_3 <=
+	Internal_ALU_Abs_Step_4 <=
 		not FSM_In(7) and	not FSM_In(6) and	not FSM_In(5) and	not FSM_In(4) and
 		FSM_In(3) and 		FSM_In(2) and		not FSM_In(1) and	FSM_In(0);
+
+	-- if FSM_In = "00001110" set Step Five of ALU Operation ABS
+	Internal_ALU_Abs_Step_5 <=
+		not FSM_In(7) and	not FSM_In(6) and	not FSM_In(5) and	not FSM_In(4) and
+		FSM_In(3) and 		FSM_In(2) and		FSM_In(1) and		not FSM_In(0);
 
 
 
@@ -258,6 +264,7 @@ begin
 	-- if Internal_ALU_Abs_Step_2			set FSM_Out = "00001100" (ALU Abs Step 3)
 	-- if Internal_ALU_Abs_Step_3			set FSM_Out = "00001101" (ALU Abs Step 4)
 	-- if Internal_ALU_Abs_Step_4			set FSM_Out = "00001110" (ALU Abs Step 5)
+	-- if Internal_ALU_Abs_Step_5			set FSM_Out = "00000001" (Back to Step 1 Fetch Instruction)
 
 	FSM_Out(7) <= '0';
  	FSM_Out(6) <= '0';
@@ -305,7 +312,8 @@ begin
 		Internal_ALU_Imm_Step_1 or
 		Internal_ALU_Imm_Step_3 or
 		Internal_ALU_Abs_Step_1 or
-		Internal_ALU_Abs_Step_3;
+		Internal_ALU_Abs_Step_3 or
+		Internal_ALU_Abs_Step_5;
 
 	PC_Low_Output_Enable	<=
 		Internal_Step_1_Fetch_Instruction or
