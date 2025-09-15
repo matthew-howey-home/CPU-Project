@@ -326,7 +326,7 @@ begin
 		
 	assert FSM_Out_Test = "00000001"	report "Unconditional Jump to Absolute Address Step Two: FSM_Out_Test should equal 00000001" severity error;
 
-	report "************ TESTS FOR SUBROUTINE: ALU Operation, AND Opcode 000, FSM 00000010, 00001001 ************";
+	report "************ TESTS FOR SUBROUTINE: ALU Operation Imm, AND Opcode 000, FSM 00000010, 00001001 ************";
 
 	report "Running Tests for ALU Operation, AND Opcode 000 Step One: Load A Reg to Temp ALU Reg";
 	FSM_In_Test	<= "00000010";
@@ -361,7 +361,7 @@ begin
 
 	assert FSM_Out_Test = "00000001" 	report "ALU Operation Opcode 000 Step Three: FSM_Out_Test should equal 00000001" severity error;
 
-	report "************ TESTS FOR SUBROUTINE: ALU Operation, Opcode 101, FSM 00000010, 00001001 ************";
+	report "************ TESTS FOR SUBROUTINE: ALU Operation Imm, Opcode 101, FSM 00000010, 00001001 ************";
 
 	report "Running Tests for ALU Operation, AND Opcode 101 Step One: Load A Reg to Temp ALU Reg";
 	FSM_In_Test	<= "00000010";
@@ -396,6 +396,18 @@ begin
 
 	assert FSM_Out_Test = "00000001" 	report "ALU Operation Opcode 101 Step Three: FSM_Out_Test should equal 00000001" severity error;
 
+
+	report "************ TESTS FOR SUBROUTINE: ALU Operation Abs, Opcode 011, FSM 00000010, 00001011, 00001100, 00001101, 00001110 ************";
+
+	report "Running Tests for ALU Operation, Opcode 011 Step One: Load A Reg to Temp ALU Reg";
+	FSM_In_Test	<= "00000010";
+	Instruction_Test <= "10111000";
+	wait for 10 ns;
+
+	assert A_Reg_Output_Enable_Test = '1' 			report "ALU Operation Opcode 011 Step One: A_Reg_Output_Enable_Test should equal 1" severity error;
+	assert Enable_Operand_1_Temp_Storage_Test = '1' 	report "ALU Operation Opcode 011 Step One: Enable_Operand_1_Temp_Storage_Test should equal 1" severity error;
+
+	assert FSM_Out_Test = "00001011" 			report "ALU Operation Opcode 011 Step One: FSM_Out_Test should equal 00001011" severity error;
 
 
         -- End the simulation
