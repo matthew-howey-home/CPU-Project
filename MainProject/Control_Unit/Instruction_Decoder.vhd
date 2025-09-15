@@ -223,7 +223,7 @@ begin
 		not FSM_In(7) and	not FSM_In(6) and	not FSM_In(5) and	not FSM_In(4) and
 		FSM_In(3) and 		FSM_In(2) and		not FSM_In(1) and	FSM_In(0);
 
-	-- if FSM_In = "00001110" set Step Five of ALU Operation ABS
+	-- if FSM_In = "00001110" set Step Five of ALU Operation ABS - Enable ALU output and A Reg input to store result
 	Internal_ALU_Abs_Step_5 <=
 		not FSM_In(7) and	not FSM_In(6) and	not FSM_In(5) and	not FSM_In(4) and
 		FSM_In(3) and 		FSM_In(2) and		FSM_In(1) and		not FSM_In(0);
@@ -410,7 +410,8 @@ begin
 	A_Reg_Input_Enable			<=
 		Internal_LD_Reg_Immediate_Step_1_LDA or
 		Internal_LD_Reg_Absolute_Step_3_LDA or
-		Internal_ALU_Imm_Step_3;
+		Internal_ALU_Imm_Step_3 or
+		Internal_ALU_Abs_Step_5;
 	X_Reg_Input_Enable			<=
 		Internal_LD_Reg_Immediate_Step_1_LDX or
 		Internal_LD_Reg_Absolute_Step_3_LDX;
@@ -439,7 +440,8 @@ begin
 		Internal_ALU_Abs_Step_4;
 
 	ALU_Enable_Final_Output <=
-		Internal_ALU_Imm_Step_3;
+		Internal_ALU_Imm_Step_3 or
+		Internal_ALU_Abs_Step_5;
 
 	ALU_Enable_Flags_Input <=
 		Internal_ALU_Imm_Step_2 or
