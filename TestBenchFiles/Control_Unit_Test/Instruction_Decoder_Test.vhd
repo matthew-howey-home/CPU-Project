@@ -34,7 +34,9 @@ architecture Behavioral of Instruction_Decoder_Test is
 		JMP_Enable				: out std_logic;
 		Enable_Operand_1_Temp_Storage		: out std_logic;
 		ALU_Opcode				: out std_logic_vector(2 downto 0);
-		ALU_Enable_Final_Output			: out std_logic
+		ALU_Enable_Final_Output			: out std_logic;
+		ALU_Enable_Operation			: out std_logic;
+		ALU_Enable_Flags_Input			: out std_logic
         );
     end component Instruction_Decoder;
 
@@ -47,8 +49,8 @@ architecture Behavioral of Instruction_Decoder_Test is
 	signal MAR_High_Input_Enable_Test			: std_logic;
 	signal PC_Low_Output_Enable_Test			: std_logic;
 	signal PC_High_Output_Enable_Test			: std_logic;
-	signal MAR_Low_Output_Enable_Test		: std_logic;
-	signal MAR_High_Output_Enable_Test		: std_logic;
+	signal MAR_Low_Output_Enable_Test			: std_logic;
+	signal MAR_High_Output_Enable_Test			: std_logic;
 	signal Memory_Read_Enable_Test				: std_logic;
 	signal Memory_Write_Enable_Test				: std_logic;
 	signal IR_Input_Enable_Test				: std_logic;
@@ -63,6 +65,8 @@ architecture Behavioral of Instruction_Decoder_Test is
 	signal Enable_Operand_1_Temp_Storage_Test		: std_logic;
 	signal ALU_Opcode_Test					: std_logic_vector(2 downto 0);
 	signal ALU_Enable_Final_Output_Test			: std_logic;
+	signal ALU_Enable_Operation_Test			: std_logic;
+	signal ALU_Enable_Flags_Input_Test			: std_logic;
 
 begin
     -- Instantiate the Instruction_Decoder module
@@ -91,7 +95,9 @@ begin
 		JMP_Enable					=> JMP_Enable_Test,
 		Enable_Operand_1_Temp_Storage			=> Enable_Operand_1_Temp_Storage_Test,
 		ALU_Opcode					=> ALU_Opcode_Test,
-		ALU_Enable_Final_Output				=> ALU_Enable_Final_Output_Test
+		ALU_Enable_Final_Output				=> ALU_Enable_Final_Output_Test,
+		ALU_Enable_Operation				=> ALU_Enable_Operation_Test,
+		ALU_Enable_Flags_Input				=> ALU_Enable_Flags_Input_Test
         );
 
     -- Stimulus process to apply test vectors
@@ -399,16 +405,55 @@ begin
 
 	report "************ TESTS FOR SUBROUTINE: ALU Operation Abs, Opcode 011, FSM 00000010, 00001011, 00001100, 00001101, 00001110 ************";
 
-	report "Running Tests for ALU Operation, Opcode 011 Step One: Load A Reg to Temp ALU Reg";
+	report "Running Tests for ALU Abs Operation, Opcode 011 Step One: Load A Reg to Temp ALU Reg";
 	FSM_In_Test	<= "00000010";
 	Instruction_Test <= "10111000";
 	wait for 10 ns;
 
-	assert A_Reg_Output_Enable_Test = '1' 			report "ALU Operation Opcode 011 Step One: A_Reg_Output_Enable_Test should equal 1" severity error;
-	assert Enable_Operand_1_Temp_Storage_Test = '1' 	report "ALU Operation Opcode 011 Step One: Enable_Operand_1_Temp_Storage_Test should equal 1" severity error;
+	assert A_Reg_Output_Enable_Test = '1' 			report "ALU Abs Operation Opcode 011 Step One: A_Reg_Output_Enable_Test should equal 1" severity error;
+	assert Enable_Operand_1_Temp_Storage_Test = '1' 	report "ALU Abs Operation Opcode 011 Step One: Enable_Operand_1_Temp_Storage_Test should equal 1" severity error;
 
-	assert FSM_Out_Test = "00001011" 			report "ALU Operation Opcode 011 Step One: FSM_Out_Test should equal 00001011" severity error;
+	assert FSM_Out_Test = "00001011" 			report "ALU Abs Operation Opcode 011 Step One: FSM_Out_Test should equal 00001011" severity error;
 
+	report "Running Tests for ALU Operation, Opcode 011 Step Two: Read from memory into MAR High, increment PC";
+	FSM_In_Test	<= "00001011";
+	Instruction_Test <= "10111000";
+	wait for 10 ns;
+
+	assert PC_High_Output_Enable_Test = '1'	report "ALU Abs Operation Opcode 011 Step Two: PC_High_Output_Enable_Test should equal 1" severity error;
+	assert PC_Low_Output_Enable_Test = '1'	report "ALU Abs Operation Opcode 011 Step Two: PC_Low_Output_Enable_Test should equal 1" severity error;
+	assert Memory_Read_Enable_Test = '1'	report "ALU Abs Operation Opcode 011 Step Two: Memory_Read_Enable_Test should equal 1" severity error;
+	assert MAR_High_Input_Enable_Test = '1'	report "ALU Abs Operation Opcode 011 Step Two: MAR_High_Input_Enable_Test should equal 1" severity error;
+	assert Increment_PC_Test = '1'		report "ALU Abs Operation Opcode 011 Step Two: Increment_PC_Test should equal 1" severity error;
+
+	assert FSM_Out_Test = "00001100" 	report "ALU Abs Operation Opcode 011 Step Two: FSM_Out_Test should equal 00001100" severity error;
+
+	report "Running Tests for ALU Operation, Opcode 011 Step Three: Read from memory into MAR Low, increment PC";
+	FSM_In_Test	<= "00001100";
+	Instruction_Test <= "10111000";
+	wait for 10 ns;
+
+	assert PC_High_Output_Enable_Test = '1'	report "ALU Abs Operation Opcode 011 Step Three: PC_High_Output_Enable_Test should equal 1" severity error;
+	assert PC_Low_Output_Enable_Test = '1'	report "ALU Abs Operation Opcode 011 Step Three: PC_Low_Output_Enable_Test should equal 1" severity error;
+	assert Memory_Read_Enable_Test = '1'	report "ALU Abs Operation Opcode 011 Step Three: Memory_Read_Enable_Test should equal 1" severity error;
+	assert MAR_Low_Input_Enable_Test = '1'	report "ALU Abs Operation Opcode 011 Step Three: MAR_Low_Input_Enable_Test should equal 1" severity error;
+	assert Increment_PC_Test = '1'		report "ALU Abs Operation Opcode 011 Step Three: Increment_PC_Test should equal 1" severity error;
+
+	assert FSM_Out_Test = "00001101" 	report "ALU Abs Operation Opcode 011 Step Three: FSM_Out_Test should equal 00001101" severity error;
+
+	report "Running Tests for ALU Operation, Opcode 011 Step Four: Load Memory into ALU operand(using MAR), enable ALU Operation and Flags";
+	FSM_In_Test	<= "00001101";
+	Instruction_Test <= "10111000";
+	wait for 10 ns;
+
+	assert MAR_High_Output_Enable_Test = '1'	report "ALU Abs Operation Opcode 011 Step Four: MAR_High_Output_Enable_Test should equal 1" severity error;
+	assert MAR_Low_Output_Enable_Test = '1'		report "ALU Abs Operation Opcode 011 Step Four: MAR_Low_Output_Enable_Test should equal 1" severity error;
+	assert Memory_Read_Enable_Test = '1'		report "ALU Abs Operation Opcode 011 Step Four: Memory_Read_Enable_Test should equal 1" severity error;
+	assert ALU_Opcode_Test = "011"			report "ALU Abs Operation Opcode 011 Step Four: ALU_Opcode_Test should equal 011" severity error;
+	assert ALU_Enable_Operation_Test = '1'		report "ALU Abs Operation Opcode 011 Step Four: ALU_Enable_Operation should equal 1" severity error;
+	assert ALU_Enable_Flags_Input_Test = '1'		report "ALU Abs Operation Opcode 011 Step Four: ALU_Enable_Flags_Input_Test should equal 1" severity error;
+
+	assert FSM_Out_Test = "00001110" 	report "ALU Abs Operation Opcode 011 Step Three: FSM_Out_Test should equal 00001101" severity error;
 
         -- End the simulation
         wait;
