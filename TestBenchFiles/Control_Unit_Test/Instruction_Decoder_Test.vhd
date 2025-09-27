@@ -455,6 +455,17 @@ begin
 
 	assert FSM_Out_Test = "00001110" 	report "ALU Abs Operation Opcode 011 Step Three: FSM_Out_Test should equal 00001101" severity error;
 
+	report "Running Tests for ALU Operation, Opcode 011 Step Five: ";
+	FSM_In_Test	<= "00001110";
+	Instruction_Test <= "10111000";
+	wait for 10 ns;
+
+	assert ALU_Enable_Final_Output_Test = '1'	report "ALU Abs Operation Opcode 011 Step Five: ALU_Enable_Final_Output_Test should equal 1" severity error;
+	assert A_Reg_Input_Enable_Test = '1'			report "ALU Abs Operation Opcode 011 Step Four: A_Reg_Input_Enable should equal 1" severity error;
+	
+
+	assert FSM_Out_Test = "00000001" 	report "ALU Abs Operation Opcode 011 Step Three: FSM_Out_Test should equal 00000001" severity error;
+
         -- End the simulation
         wait;
     end process stimulus_proc;
