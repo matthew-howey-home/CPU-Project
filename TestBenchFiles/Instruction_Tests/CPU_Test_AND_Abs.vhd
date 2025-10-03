@@ -82,9 +82,19 @@ begin
 		wait for 10 ns;
 		-- continue through CPU cycles
 
+		report "Step 1: Fetch Instruction";
+		Clock_Test	<= '1';
+		wait for 10 ns;
+
+		report "Running tests for CPU reading Memory location 0000000000000000";
+		assert Memory_Address_Low_Test = "00000000"	report "Test 1: Memory_Address_Low_Test should equal 00000000" severity error;
+		
+
+		wait;
+
 	end process stimulus_proc;
 
--- Simulate memory response
+	-- Simulate memory response
     	process
     	begin
         	wait for 1 ns;  -- Wait for a small time to simulate memory access time
@@ -93,7 +103,7 @@ begin
         	if Memory_Read_Enable_Test = '1' and Memory_Address_Low_Test = "00000000" and Memory_Address_High_Test = "00000000" then
             		Memory_Data_In_Test <= "00010001"; -- LDA #
 		elsif Memory_Read_Enable_Test = '1' and Memory_Address_Low_Test = "00000001" and Memory_Address_High_Test = "00000000" then
-			Memory_Data_In_Test <= "00110101"; -- #53
+			Memory_Data_In_Test <= "00110101"; -- #35
 		-- now give AND instruction with value of second operand
 		elsif Memory_Read_Enable_Test = '1' and Memory_Address_Low_Test = "00000010" and Memory_Address_High_Test = "00000000" then
 			Memory_Data_In_Test <= "10001000"; -- AND
