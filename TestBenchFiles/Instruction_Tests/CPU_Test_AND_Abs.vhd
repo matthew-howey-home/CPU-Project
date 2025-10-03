@@ -82,7 +82,7 @@ begin
 		wait for 10 ns;
 		-- continue through CPU cycles
 
-		report "Step 1: Fetch Instruction";
+		report "Fetch Instruction LDA#";
 		Clock_Test	<= '1';
 		wait for 10 ns;
 
@@ -98,6 +98,7 @@ begin
 		Clock_Test	<= '1';
 		wait for 10 ns;
 
+		report "Step 1 of LDA: Fetch Immediate value and load into A";
 		report "Running tests for CPU reading Memory location &01 0000000000000001";
 		assert Memory_Address_Low_Test = "00000001"	report "Test 1: Memory_Address_Low_Test should equal 00000001" severity error;
 		assert Memory_Address_High_Test = "00000000" report "Test 2: Memory_Address_High_Test should equal 00000000" severity error;
@@ -112,6 +113,55 @@ begin
 		report "Running tests for Loading A Register with value 00110101 (#35)";
 		assert A_Reg_External_Output_Test = "00110101"	report "Test: A_Reg_External_Output_Test should equal 00110101" severity error;
 
+		report "Fetch Instruction AND Abs";
+		report "Running tests for CPU reading Memory location &02 0000000000000010"; 
+		assert Memory_Address_Low_Test = "00000010"	report "Test 1: Memory_Address_Low_Test should equal 00000010" severity error;
+		assert Memory_Address_High_Test = "00000000" report "Test 2: Memory_Address_High_Test should equal 00000000" severity error;
+		assert Memory_Read_Enable_Test = '1' report "Test 3: Memory_Read_Enable_Test should equal 1" severity error;
+
+		Clock_Test	<= '0';
+		wait for 10 ns;
+		Clock_Test	<= '1';
+		wait for 10 ns;
+
+		report "Step 1 of AND Abs: Load Acc into Temp ALU Reg";
+		report "Nothing to test on step 1"; 
+
+		Clock_Test	<= '0';
+		wait for 10 ns;
+		Clock_Test	<= '1';
+		wait for 10 ns;
+
+		report "Step 2 of AND Abs: Load MAR High from mem location &03";
+		report "Running tests for CPU reading Memory location &03 0000000000000011"; 
+		assert Memory_Address_Low_Test = "00000011"	report "Test 1: Memory_Address_Low_Test should equal 00000011" severity error;
+		assert Memory_Address_High_Test = "00000000" report "Test 2: Memory_Address_High_Test should equal 00000000" severity error;
+		assert Memory_Read_Enable_Test = '1' report "Test 3: Memory_Read_Enable_Test should equal 1" severity error;
+
+		Clock_Test	<= '0';
+		wait for 10 ns;
+		Clock_Test	<= '1';
+		wait for 10 ns;
+
+		report "Step 3 of AND Abs: Load MAR Low from mem location &04";
+		report "Running tests for CPU reading Memory location &04 0000000000000100"; 
+		assert Memory_Address_Low_Test = "00000100"	report "Test 1: Memory_Address_Low_Test should equal 00000100" severity error;
+		assert Memory_Address_High_Test = "00000000" report "Test 2: Memory_Address_High_Test should equal 00000000" severity error;
+		assert Memory_Read_Enable_Test = '1' report "Test 3: Memory_Read_Enable_Test should equal 1" severity error;
+
+		Clock_Test	<= '0';
+		wait for 10 ns;
+		Clock_Test	<= '1';
+		wait for 10 ns;
+
+		report "Step 4 of AND Abs: ALU Operation";
+		report "Nothing to test on step 4"; 
+
+		Clock_Test	<= '0';
+		wait for 10 ns;
+		Clock_Test	<= '1';
+		wait for 10 ns;
+
 		wait;
 
 	end process stimulus_proc;
@@ -122,17 +172,20 @@ begin
         	wait for 1 ns;  -- Wait for a small time to simulate memory access time
         
 		-- LDA # 53 (load accumulator with first operand of AND operation)
-        	if Memory_Read_Enable_Test = '1' and Memory_Address_Low_Test = "00000000" and Memory_Address_High_Test = "00000000" then
+        	if Memory_Read_Enable_Test = '1' and Memory_Address_High_Test = "00000000" and Memory_Address_Low_Test = "00000000" then
             		Memory_Data_In_Test <= "00010001"; -- LDA #
-		elsif Memory_Read_Enable_Test = '1' and Memory_Address_Low_Test = "00000001" and Memory_Address_High_Test = "00000000" then
+		elsif Memory_Read_Enable_Test = '1' and Memory_Address_High_Test = "00000000" and Memory_Address_Low_Test = "00000001" then
 			Memory_Data_In_Test <= "00110101"; -- #35
 		-- now give AND instruction with value of second operand
-		elsif Memory_Read_Enable_Test = '1' and Memory_Address_Low_Test = "00000010" and Memory_Address_High_Test = "00000000" then
-			Memory_Data_In_Test <= "10001000"; -- AND
-		-- TODO put read memory address in next two locations
-		-- then simulate responses from those to memory locations. (use LDA Abs as example!)
-		-- elsif Memory_Read_Enable_Test = '1' and Memory_Address_Low_Test = "00000011" and Memory_Address_High_Test = "00000000" then
-		-- 	Memory_Data_In_Test <= "01000111"; -- & 47
+		elsif Memory_Read_Enable_Test = '1' and Memory_Address_High_Test = "00000000" and Memory_Address_Low_Test = "00000010" then
+			Memory_Data_In_Test <= "10001000"; -- AND &
+		elsif Memory_Read_Enable_Test = '1' and Memory_Address_High_Test = "00000000"  and Memory_Address_Low_Test = "00000001" then
+			Memory_Data_In_Test <= "00000001"; -- High byte of Hex Value &0100
+		elsif Memory_Read_Enable_Test = '1' and Memory_Address_High_Test = "00000000" and Memory_Address_Low_Test = "00000010" then
+			Memory_Data_In_Test <= "00000000"; -- Low byte of Hex Value &0100
+		-- then simulate responses from memory location &0100. (use LDA Abs as example!)
+		elsif Memory_Read_Enable_Test = '1' and Memory_Address_High_Test = "00000001" and Memory_Address_Low_Test = "00000000" then
+			Memory_Data_In_Test <= "00110110"; -- value is hex 36
         	else
             		Memory_Data_In_Test <= "ZZZZZZZZ";  -- Default data value when the condition is not met
         	end if;
